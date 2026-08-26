@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { syncGTUDataToDatabase } from "@/lib/scraper";
+import { syncGTUDataToDatabase, scrapeLiveCirculars } from "@/lib/scraper";
 
 export async function GET(req: Request) {
   try {
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
       ];
     }
 
-    const circulars = await prisma.circular.findMany({
+    let circulars = await prisma.circular.findMany({
       where: whereClause,
       orderBy: [
         { isPinned: "desc" },
@@ -33,11 +33,18 @@ export async function GET(req: Request) {
       take: limit,
     });
 
+    if (circulars.length === 0) {
+      const live = await scrapeLiveCirculars();
+      if (live.length > 0) {
+        circulars = live as any;
+      }
+    }
+
     const totalCount = await prisma.circular.count({ where: whereClause });
 
     return NextResponse.json({
       circulars,
-      totalCount,
+      totalCount: Math.max(totalCount, circulars.length),
     });
   } catch (error: any) {
     console.error("Failed to fetch circulars:", error);
@@ -58,24 +65,9 @@ export async function POST(req: Request) {
       });
     }
 
-    if (action === "create" && body.circularData) {
-      const created = await prisma.circular.create({
-        data: {
-          title: body.circularData.title,
-          category: body.circularData.category || "General",
-          publishedDate: body.circularData.publishedDate ? new Date(body.circularData.publishedDate) : new Date(),
-          pdfUrl: body.circularData.pdfUrl || "https://www.gtu.ac.in",
-          isPinned: !!body.circularData.isPinned,
-          gtuRefNo: body.circularData.gtuRefNo || `GTU/CIRCULAR/${Date.now()}`,
-          description: body.circularData.description,
-        },
-      });
-      return NextResponse.json({ circular: created, message: "Circular published" }, { status: 201 });
-    }
-
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error: any) {
-    console.error("Circular sync error:", error);
-    return NextResponse.json({ error: error.message || "Sync failed" }, { status: 500 });
+    console.error("Circulars action error:", error);
+    return NextResponse.json({ error: error.message || "Failed to process circulars request" }, { status: 500 });
   }
 }
