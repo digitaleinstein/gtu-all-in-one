@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { syncGTUDataToDatabase } from "@/lib/scraper";
+import { syncGTUDataToDatabase, scrapeLiveResults } from "@/lib/scraper";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
 import { generateGTUStudentResults } from "@/lib/gtu-results-engine";
 
@@ -14,25 +14,50 @@ export async function GET(req: Request) {
     const session = await getServerSession(authOptions);
     const userId = (session?.user as any)?.id;
 
-    // 1. Fetch live declared results list
+    // 1. Fetch real-time live declared results list from GTU
     if (action === "declared") {
       const course = searchParams.get("course");
       const semester = searchParams.get("semester");
       const search = searchParams.get("search");
 
+      let liveResults: any[] = [];
+      try {
+        liveResults = await scrapeLiveResults();
+      } catch (e) {
+        console.warn("Live GTU result fetch fallback:", e);
+      }
+
+      if (liveResults.length > 0) {
+        let filtered = liveResults;
+        if (course && course !== "ALL") {
+          filtered = filtered.filter((r) => r.course === course);
+        }
+        if (semester && semester !== "ALL") {
+          filtered = filtered.filter((r) => r.semester === parseInt(semester, 10));
+        }
+        if (search) {
+          const q = search.toLowerCase();
+          filtered = filtered.filter((r) => r.examTitle.toLowerCase().includes(q));
+        }
+        return NextResponse.json({
+          liveFromGTU: true,
+          results: filtered,
+          totalCount: filtered.length,
+        });
+      }
+
+      // DB Fallback
       const whereClause: any = {};
       if (course && course !== "ALL") whereClause.course = course;
       if (semester && semester !== "ALL") whereClause.semester = parseInt(semester, 10);
-      if (search) {
-        whereClause.examTitle = { contains: search };
-      }
+      if (search) whereClause.examTitle = { contains: search };
 
       const results = await prisma.liveResult.findMany({
         where: whereClause,
         orderBy: { declaredDate: "desc" },
       });
 
-      return NextResponse.json({ results });
+      return NextResponse.json({ liveFromGTU: false, results });
     }
 
     // 2. Fetch student subscriptions
@@ -154,7 +179,6 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true, message: "Alert removed" });
   } catch (error: any) {
-    console.error("Delete subscription error:", error);
     return NextResponse.json({ error: "Failed to delete subscription" }, { status: 500 });
   }
 }
