@@ -89,20 +89,24 @@ export interface GTUSubject {
 }
 
 export const GTU_POPULAR_SUBJECTS: GTUSubject[] = [
-  // Sem 1 & 2
+  // Sem 1 & 2 (Common First Year)
   { code: "3110005", name: "Basic Electrical Engineering (BEE)", course: "BE", branch: "Computer Engineering", semester: 1, credits: 4 },
   { code: "3110006", name: "Basic Mechanical Engineering (BME)", course: "BE", branch: "Mechanical Engineering", semester: 1, credits: 4 },
   { code: "3110014", name: "Mathematics - 1 (Calculus)", course: "BE", branch: "Computer Engineering", semester: 1, credits: 4 },
   { code: "3110015", name: "Mathematics - 2 (Vector Calculus & Linear Algebra)", course: "BE", branch: "Computer Engineering", semester: 2, credits: 4 },
   { code: "3110002", name: "English", course: "BE", branch: "Computer Engineering", semester: 1, credits: 2 },
   { code: "3110003", name: "Programming for Problem Solving (PPS)", course: "BE", branch: "Computer Engineering", semester: 2, credits: 5 },
-  
+  { code: "3110013", name: "Engineering Graphics & Design (EGD)", course: "BE", branch: "Civil Engineering", semester: 2, credits: 4 },
+  { code: "3110016", name: "Basic Electronics", course: "BE", branch: "Electronics & Communication Engineering", semester: 2, credits: 4 },
+
   // Sem 3
   { code: "3130702", name: "Data Structures (DS)", course: "BE", branch: "Computer Engineering", semester: 3, credits: 5 },
   { code: "3130703", name: "Database Management Systems (DBMS)", course: "BE", branch: "Computer Engineering", semester: 3, credits: 5 },
   { code: "3130704", name: "Digital Fundamentals (DF)", course: "BE", branch: "Computer Engineering", semester: 3, credits: 4 },
   { code: "3130006", name: "Probability and Statistics (P&S)", course: "BE", branch: "Computer Engineering", semester: 3, credits: 4 },
   { code: "3130008", name: "Design Engineering - I A", course: "BE", branch: "Computer Engineering", semester: 3, credits: 3 },
+  { code: "3131904", name: "Material Science and Metallurgy", course: "BE", branch: "Mechanical Engineering", semester: 3, credits: 4 },
+  { code: "3130606", name: "Geotechnical Engineering", course: "BE", branch: "Civil Engineering", semester: 3, credits: 4 },
 
   // Sem 4
   { code: "3140702", name: "Operating System (OS)", course: "BE", branch: "Computer Engineering", semester: 4, credits: 4 },
@@ -110,6 +114,8 @@ export const GTU_POPULAR_SUBJECTS: GTUSubject[] = [
   { code: "3140707", name: "Computer Organization & Architecture (COA)", course: "BE", branch: "Computer Engineering", semester: 4, credits: 4 },
   { code: "3140708", name: "Discrete Mathematics (DM)", course: "BE", branch: "Computer Engineering", semester: 4, credits: 4 },
   { code: "3140709", name: "Principles of Economics and Management (PEM)", course: "BE", branch: "Computer Engineering", semester: 4, credits: 3 },
+  { code: "3141901", name: "Fluid Mechanics and Hydraulics", course: "BE", branch: "Mechanical Engineering", semester: 4, credits: 4 },
+  { code: "3140603", name: "Structural Analysis", course: "BE", branch: "Civil Engineering", semester: 4, credits: 5 },
 
   // Sem 5
   { code: "3150703", name: "Analysis and Design of Algorithms (ADA)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 5 },
@@ -117,6 +123,8 @@ export const GTU_POPULAR_SUBJECTS: GTUSubject[] = [
   { code: "3150710", name: "Computer Networks (CN)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 5 },
   { code: "3150711", name: "Software Engineering (SE)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 4 },
   { code: "3150713", name: "Python for Data Science", course: "BE", branch: "Computer Engineering", semester: 5, credits: 4 },
+  { code: "3151908", name: "Heat Transfer", course: "BE", branch: "Mechanical Engineering", semester: 5, credits: 5 },
+  { code: "3150611", name: "Transportation Engineering", course: "BE", branch: "Civil Engineering", semester: 5, credits: 4 },
 
   // Sem 6
   { code: "3160704", name: "Theory of Computation (TOC)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
@@ -124,6 +132,7 @@ export const GTU_POPULAR_SUBJECTS: GTUSubject[] = [
   { code: "3160712", name: "Microprocessor and Interfacing (MPI)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
   { code: "3160714", name: "Data Mining and Business Intelligence (DMBI)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
   { code: "3160716", name: "Web Technology", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
+  { code: "3161902", name: "Internal Combustion Engines", course: "BE", branch: "Mechanical Engineering", semester: 6, credits: 4 },
 
   // Sem 7
   { code: "3170701", name: "Information and Network Security (INS)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 4 },
@@ -138,21 +147,17 @@ export const GTU_POPULAR_SUBJECTS: GTUSubject[] = [
   { code: "3180709", name: "Project - II (PMMS Final Project)", course: "BE", branch: "Computer Engineering", semester: 8, credits: 8 },
   { code: "3180710", name: "Internet of Things (IoT)", course: "BE", branch: "Computer Engineering", semester: 8, credits: 4 },
 
-  // IT Subjects
-  { code: "3151605", name: "Formal Language & Automata Theory", course: "BE", branch: "Information Technology", semester: 5, credits: 4 },
-  { code: "3161608", name: "Full Stack Web Development", course: "BE", branch: "Information Technology", semester: 6, credits: 5 },
-  { code: "3171611", name: "DevOps & Cloud Automation", course: "BE", branch: "Information Technology", semester: 7, credits: 4 },
+  // Diploma Engineering
+  { code: "4330701", name: "Data Structures Using C", course: "Diploma", branch: "Computer Engineering", semester: 3, credits: 4 },
+  { code: "4340702", name: "Object Oriented Programming Using C++", course: "Diploma", branch: "Computer Engineering", semester: 4, credits: 4 },
+  { code: "4350703", name: "Database Management", course: "Diploma", branch: "Computer Engineering", semester: 5, credits: 5 },
+  { code: "4360701", name: "Network Security & Ethical Hacking", course: "Diploma", branch: "Computer Engineering", semester: 6, credits: 5 },
 
-  // Mechanical
-  { code: "3131904", name: "Material Science and Metallurgy", course: "BE", branch: "Mechanical Engineering", semester: 3, credits: 4 },
-  { code: "3141901", name: "Fluid Mechanics and Hydraulics", course: "BE", branch: "Mechanical Engineering", semester: 4, credits: 4 },
-  { code: "3151908", name: "Heat Transfer", course: "BE", branch: "Mechanical Engineering", semester: 5, credits: 5 },
-  { code: "3161902", name: "Internal Combustion Engines", course: "BE", branch: "Mechanical Engineering", semester: 6, credits: 4 },
-
-  // Civil
-  { code: "3130606", name: "Geotechnical Engineering", course: "BE", branch: "Civil Engineering", semester: 3, credits: 4 },
-  { code: "3140603", name: "Structural Analysis", course: "BE", branch: "Civil Engineering", semester: 4, credits: 5 },
-  { code: "3150611", name: "Transportation Engineering", course: "BE", branch: "Civil Engineering", semester: 5, credits: 4 },
+  // MBA & MCA
+  { code: "4519201", name: "Management Information Systems", course: "MBA", branch: "Information Technology & Systems", semester: 1, credits: 3 },
+  { code: "4529202", name: "Financial Management", course: "MBA", branch: "Finance", semester: 2, credits: 3 },
+  { code: "3610001", name: "Object Oriented Concepts with Java", course: "MCA", branch: "Computer Applications", semester: 1, credits: 4 },
+  { code: "3630002", name: "Cloud Infrastructure and Services", course: "MCA", branch: "Computer Applications", semester: 3, credits: 4 },
 ];
 
 export interface PMMSMilestoneGuide {

@@ -16,7 +16,7 @@ model User {
   course          String?              @default("BE")
   branch          String?              @default("Computer Engineering")
   semester        Int?                 @default(5)
-  college         String?              @default("GTU Affiliated Engineering Institute")
+  college         String?              @default("028 - L.D. College of Engineering, Ahmedabad")
   role            String               @default("STUDENT")
   avatar          String?
   createdAt       DateTime             @default(now())
@@ -27,6 +27,7 @@ model User {
   midsemRecords   MidsemRecord[]
   pmmsChecklists  PMMSMilestone[]
   savedPapers     SavedPaper[]
+  studentResults  StudentResult[]
 }
 
 model Paper {
@@ -118,13 +119,13 @@ model MidsemRecord {
   subjectCode        String
   subjectName        String
   credits            Int      @default(4)
-  midsemMarks        Float    @default(0) // Out of 30
+  midsemMarks        Float    @default(0)
   totalMidsemMarks   Float    @default(30)
-  internalMarks      Float    @default(0) // Out of 20 or 50
+  internalMarks      Float    @default(0)
   totalInternalMarks Float    @default(20)
-  practicalMarks     Float?   @default(0) // Out of 50 or 25
+  practicalMarks     Float?   @default(0)
   totalPracticalMarks Float?  @default(50)
-  targetGrade        String?  @default("AA") // AA, AB, BB, BC, CC, CD, DD
+  targetGrade        String?  @default("AA")
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -136,9 +137,9 @@ model MidsemRecord {
 model PMMSMilestone {
   id           String    @id @default(cuid())
   userId       String
-  milestoneKey String    // e.g. team_reg, ppr_1, canvas_aeiou, internal_guide, final_report
+  milestoneKey String
   title        String
-  phase        String    // Phase 1 (Sem 7) or Phase 2 (Sem 8)
+  phase        String
   description  String?
   isCompleted  Boolean   @default(false)
   dueDate      DateTime?
@@ -160,9 +161,35 @@ model LiveResult {
   course       String
   semester     Int
   branch       String?
-  session      String   // Summer 2024, Winter 2023
+  session      String
   resultUrl    String
   createdAt    DateTime @default(now())
 
   @@index([course, semester])
+}
+
+model StudentResult {
+  id              String   @id @default(cuid())
+  userId          String
+  enrollmentNo    String
+  semester        Int
+  examSession     String
+  examType        String   @default("Regular")
+  spi             Float
+  cpi             Float
+  cgpa            Float?
+  totalCredits    Int      @default(22)
+  earnedCredits   Int      @default(22)
+  resultStatus    String   @default("PASS")
+  currentBacklogs Int      @default(0)
+  totalBacklogs   Int      @default(0)
+  declaredDate    DateTime @default(now())
+  subjectsJson    String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, semester, examSession])
+  @@index([enrollmentNo])
 }
