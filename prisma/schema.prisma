@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String               @id @default(cuid())
+  name            String
+  email           String               @unique
+  password        String
+  enrollmentNo    String?              @unique
+  course          String?              @default("BE")
+  branch          String?              @default("Computer Engineering")
+  semester        Int?                 @default(5)
+  college         String?              @default("GTU Affiliated Engineering Institute")
+  role            String               @default("STUDENT")
+  avatar          String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  notifications   Notification[]
+  subscriptions   ResultSubscription[]
+  midsemRecords   MidsemRecord[]
+  pmmsChecklists  PMMSMilestone[]
+  savedPapers     SavedPaper[]
+}
+
+model Paper {
+  id             String       @id @default(cuid())
+  subjectCode    String
+  subjectName    String
+  course         String       // BE, Diploma, ME, MBA, MCA, B.Pharm
+  branch         String       // Computer Engineering, IT, Mechanical, Civil, EC, etc.
+  semester       Int          // 1 - 8
+  examSeason     String       // Summer, Winter
+  year           Int          // 2024, 2023, 2022, etc.
+  pdfUrl         String
+  fileSize       String?      @default("1.2 MB")
+  downloadsCount Int          @default(0)
+  createdAt      DateTime     @default(now())
+
+  savedBy        SavedPaper[]
+
+  @@index([course, branch, semester])
+  @@index([subjectCode])
+}
+
+model SavedPaper {
+  id        String   @id @default(cuid())
+  userId    String
+  paperId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paper     Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, paperId])
+}
+
+model Circular {
+  id            String   @id @default(cuid())
+  title         String
+  category      String   // Examinations, Timetables, Academic, Scholarships, General
+  publishedDate DateTime @default(now())
+  pdfUrl        String
+  isPinned      Boolean  @default(false)
+  gtuRefNo      String?
+  description   String?
+  createdAt     DateTime @default(now())
+
+  @@index([category])
+  @@index([publishedDate])
+}
+
+model ResultSubscription {
+  id           String   @id @default(cuid())
+  userId       String
+  enrollmentNo String?
+  course       String   // BE, Diploma, etc.
+  branch       String
+  semester     Int
+  examSession  String   // Summer 2024, Winter 2024, etc.
+  examType     String   @default("Regular") // Regular, Remedial, All
+  emailAlerts  Boolean  @default(true)
+  pushAlerts   Boolean  @default(true)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([course, branch, semester, examSession])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("INFO") // RESULT, CIRCULAR, EXAM, SYSTEM, MIDSEM
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+model MidsemRecord {
+  id                 String   @id @default(cuid())
+  userId             String
+  semester           Int
+  subjectCode        String
+  subjectName        String
+  credits            Int      @default(4)
+  midsemMarks        Float    @default(0) // Out of 30
+  totalMidsemMarks   Float    @default(30)
+  internalMarks      Float    @default(0) // Out of 20 or 50
+  totalInternalMarks Float    @default(20)
+  practicalMarks     Float?   @default(0) // Out of 50 or 25
+  totalPracticalMarks Float?  @default(50)
+  targetGrade        String?  @default("AA") // AA, AB, BB, BC, CC, CD, DD
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, semester])
+}
+
+model PMMSMilestone {
+  id           String    @id @default(cuid())
+  userId       String
+  milestoneKey String    // e.g. team_reg, ppr_1, canvas_aeiou, internal_guide, final_report
+  title        String
+  phase        String    // Phase 1 (Sem 7) or Phase 2 (Sem 8)
+  description  String?
+  isCompleted  Boolean   @default(false)
+  dueDate      DateTime?
+  completedAt  DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, milestoneKey])
+}
+
+model LiveResult {
+  id           String   @id @default(cuid())
+  examTitle    String
+  examCode     String?
+  declaredDate DateTime @default(now())
+  course       String
+  semester     Int
+  branch       String?
+  session      String   // Summer 2024, Winter 2023
+  resultUrl    String
+  createdAt    DateTime @default(now())
+
+  @@index([course, semester])
+}
