@@ -98,7 +98,7 @@ export function PapersHub() {
 
   const handleDirectDownload = async (paper: any) => {
     try {
-      const downloadUrl = `/api/papers/download?id=${paper.id}&subjectCode=${paper.subjectCode}&year=${paper.year}&season=${paper.examSeason}&course=${paper.course}&sem=${paper.semester}`;
+      const downloadUrl = `/api/papers/download?id=${paper.id}&subjectCode=${paper.subjectCode}&subjectName=${encodeURIComponent(paper.subjectName)}&branch=${encodeURIComponent(paper.branch)}&year=${paper.year}&season=${paper.examSeason}&course=${paper.course}&sem=${paper.semester}`;
       
       setPapers((prev) =>
         prev.map((p) =>

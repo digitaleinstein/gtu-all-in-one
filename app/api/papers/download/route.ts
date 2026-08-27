@@ -3,42 +3,55 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { getGTUSubjectQuestions } from "@/lib/gtu-paper-questions";
+import { GTU_POPULAR_SUBJECTS } from "@/lib/gtu-data";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const subjectCode = searchParams.get("subjectCode");
+    const subjectCode = searchParams.get("subjectCode") || "3150703";
+    const paramSubjectName = searchParams.get("subjectName");
+    const paramBranch = searchParams.get("branch");
     const paramYear = searchParams.get("year");
     const paramSeason = searchParams.get("season");
     const paramCourse = searchParams.get("course");
     const paramSem = searchParams.get("sem");
 
     let paper = null;
-    if (id) {
-      paper = await prisma.paper.findUnique({ where: { id } });
-    } else if (subjectCode) {
+    if (id && !id.startsWith("dyn_")) {
+      paper = await prisma.paper.findUnique({ where: { id } }).catch(() => null);
+    }
+    if (!paper && subjectCode) {
       paper = await prisma.paper.findFirst({
         where: {
           subjectCode,
           ...(paramYear ? { year: parseInt(paramYear, 10) } : {}),
           ...(paramSeason ? { examSeason: paramSeason } : {}),
         },
-      });
+      }).catch(() => null);
     }
 
-    const paperData = paper || {
-      id: id || "sample_paper",
-      subjectCode: subjectCode || "3150703",
-      subjectName: "Analysis and Design of Algorithms",
-      course: paramCourse || "BE",
-      branch: "Computer Engineering",
-      semester: paramSem ? parseInt(paramSem, 10) : 5,
-      examSeason: paramSeason || "Summer",
-      year: paramYear ? parseInt(paramYear, 10) : 2026,
+    // Look up subject metadata in master GTU subjects list
+    const subjectMeta = GTU_POPULAR_SUBJECTS.find((s) => s.code === subjectCode);
+
+    const paperData = {
+      id: id || "gtu_paper",
+      subjectCode: subjectCode,
+      subjectName:
+        paramSubjectName ||
+        paper?.subjectName ||
+        subjectMeta?.name ||
+        "Gujarat Technological University Subject",
+      course: paramCourse || paper?.course || subjectMeta?.course || "BE",
+      branch: paramBranch || paper?.branch || subjectMeta?.branch || "Engineering",
+      semester: paramSem
+        ? parseInt(paramSem, 10)
+        : paper?.semester || subjectMeta?.semester || 5,
+      examSeason: paramSeason || paper?.examSeason || "Summer",
+      year: paramYear ? parseInt(paramYear, 10) : paper?.year || 2026,
     };
 
-    if (paper) {
+    if (paper && paper.id) {
       await prisma.paper.update({
         where: { id: paper.id },
         data: { downloadsCount: { increment: 1 } },
@@ -47,7 +60,7 @@ export async function GET(req: Request) {
 
     // Generate GTU Examination PDF using pdf-lib
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([595.28, 841.89]); // A4 Size: 595 x 842 points
+    const page = pdfDoc.addPage([595.28, 841.89]); // A4 Size: 595.28 x 841.89 points
     const { width, height } = page.getSize();
 
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -126,7 +139,7 @@ export async function GET(req: Request) {
 
     y -= 65;
 
-    // Dynamic Questions Data
+    // Dynamic Questions Data for exact subject
     const questions = getGTUSubjectQuestions(
       paperData.subjectCode,
       paperData.subjectName,
@@ -223,11 +236,13 @@ export async function GET(req: Request) {
 
     const pdfBytes = await pdfDoc.save();
 
+    const safeFilename = `GTU_${paperData.course}_Sem${paperData.semester}_${paperData.subjectCode}_${paperData.examSeason}${paperData.year}.pdf`.replace(/[^a-zA-Z0-9._-]/g, "_");
+
     return new NextResponse(Buffer.from(pdfBytes), {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="GTU_${paperData.course}_Sem${paperData.semester}_${paperData.subjectCode}_${paperData.examSeason}${paperData.year}.pdf"`,
+        "Content-Disposition": `attachment; filename="${safeFilename}"`,
         "Cache-Control": "public, max-age=86400",
       },
     });

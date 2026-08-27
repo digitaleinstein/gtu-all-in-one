@@ -56,7 +56,7 @@ export function PDFViewerModal({
   const handleDownload = async () => {
     try {
       setDownloading(true);
-      const downloadUrl = `/api/papers/download?id=${paper.id}&subjectCode=${paper.subjectCode}&year=${paper.year}&season=${paper.examSeason}&course=${paper.course}&sem=${paper.semester}`;
+      const downloadUrl = `/api/papers/download?id=${paper.id}&subjectCode=${paper.subjectCode}&subjectName=${encodeURIComponent(paper.subjectName)}&branch=${encodeURIComponent(paper.branch)}&year=${paper.year}&season=${paper.examSeason}&course=${paper.course}&sem=${paper.semester}`;
       
       const link = document.createElement("a");
       link.href = downloadUrl;
