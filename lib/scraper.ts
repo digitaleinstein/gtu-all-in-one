@@ -24,12 +24,10 @@ export interface ScrapedResult {
 function parseGTUDate(dateStr: string): Date {
   if (!dateStr) return new Date();
   const cleaned = dateStr.trim();
-  // Format like "25-Aug-2026" or "25/08/2026" or "25-08-2026"
   const d = new Date(cleaned);
   if (!isNaN(d.getTime())) {
     return d;
   }
-  // Try DD-MM-YYYY
   const parts = cleaned.split(/[-/.]/);
   if (parts.length === 3) {
     const day = parseInt(parts[0], 10);
@@ -61,15 +59,21 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
     const $ = cheerio.load(html);
     const circulars: ScrapedCircular[] = [];
 
-    // 1. Parse structured .post-content cards with explicit upload dates
+    // Parse structured .post-content cards with explicit upload dates & nested links
     $(".post-content").each((_, container) => {
       const $c = $(container);
-      const $link = $c.find("h3 a[href], a[href*='gtusitecirculars']").last();
-      const title = $link.text().trim().replace(/\s+/g, " ");
-      let href = $link.attr("href") || "";
-      const dateText = $c.find("p[id*='UploadDate'], p[id*='lblUploadDate'], p.date").text().trim();
+      let href = "";
+      $c.find("a").each((_, a) => {
+        const h = $(a).attr("href") || "";
+        if (h && h !== "#" && (h.includes(".pdf") || h.includes("uploads") || h.includes("gtusitecirculars") || h.startsWith("http"))) {
+          href = h;
+        }
+      });
 
-      if (title.length > 5 && (href.includes(".pdf") || href.includes("uploads") || href.includes("gtusitecirculars"))) {
+      const title = $c.find("h3").text().trim().replace(/\s+/g, " ");
+      const dateText = $c.find("p[id*='UploadDate'], p[id*='lblUploadDate'], p.date, p").first().text().trim();
+
+      if (title.length > 5 && href) {
         if (!href.startsWith("http")) {
           href = `https://www.gtu.ac.in/${href.replace(/^\//, "")}`;
         }
@@ -106,7 +110,7 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
     // Sort by publication date descending
     circulars.sort((a, b) => b.publishedDate.getTime() - a.publishedDate.getTime());
 
-    return circulars.slice(0, 50);
+    return circulars.slice(0, 60);
   } catch (error) {
     console.error("Live GTU circular scraper failed:", error);
     return [];
