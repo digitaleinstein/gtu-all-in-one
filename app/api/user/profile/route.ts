@@ -3,15 +3,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { resolveOrCreateDbUser } from "@/lib/auth-user-helper";
 
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const dbUser = await resolveOrCreateDbUser(session);
+    if (!dbUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const userId = (session.user as any).id;
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: dbUser.id },
       select: {
         id: true,
         name: true,
@@ -44,14 +45,14 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const dbUser = await resolveOrCreateDbUser(session);
+    if (!dbUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const userId = (session.user as any).id;
     const body = await req.json();
     const { name, enrollmentNo, course, branch, semester, college } = body;
 
     const updated = await prisma.user.update({
-      where: { id: userId },
+      where: { id: dbUser.id },
       data: {
         name: name || undefined,
         enrollmentNo: enrollmentNo || undefined,

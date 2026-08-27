@@ -4,11 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { PMMS_DEFAULT_MILESTONES } from "@/lib/gtu-data";
+import { resolveOrCreateDbUser } from "@/lib/auth-user-helper";
 
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as any)?.id;
+    const dbUser = await resolveOrCreateDbUser(session);
+    const userId = dbUser?.id;
 
     let userMilestones: any[] = [];
     if (userId) {
@@ -49,11 +51,12 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const dbUser = await resolveOrCreateDbUser(session);
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = dbUser.id;
     const body = await req.json();
     const { milestoneKey, isCompleted, notes, title, phase } = body;
 

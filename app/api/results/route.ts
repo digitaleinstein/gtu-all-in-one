@@ -6,13 +6,13 @@ import { authOptions } from "@/lib/auth";
 import { syncGTUDataToDatabase, scrapeLiveResults } from "@/lib/scraper";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
 import { generateGTUStudentResults } from "@/lib/gtu-results-engine";
+import { resolveOrCreateDbUser } from "@/lib/auth-user-helper";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const action = searchParams.get("action") || "declared";
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as any)?.id;
 
     // 1. Fetch real-time live declared results list from GTU
     if (action === "declared") {
@@ -62,12 +62,13 @@ export async function GET(req: Request) {
 
     // 2. Fetch student subscriptions
     if (action === "subscriptions") {
-      if (!userId) {
+      const dbUser = await resolveOrCreateDbUser(session);
+      if (!dbUser) {
         return NextResponse.json({ subscriptions: [] });
       }
 
       const subscriptions = await prisma.resultSubscription.findMany({
-        where: { userId },
+        where: { userId: dbUser.id },
         orderBy: { createdAt: "desc" },
       });
 
@@ -116,27 +117,28 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as any)?.id;
+    const dbUser = await resolveOrCreateDbUser(session);
+
+    if (!dbUser) {
+      return NextResponse.json({ error: "Please sign in to subscribe to result alerts" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { action } = body;
 
     // Action 1: Create Result Subscription
     if (action === "subscribe") {
-      if (!userId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-
       const { course, branch, semester, examSession, examType, enrollmentNo, emailAlerts, pushAlerts } = body;
 
       const subscription = await prisma.resultSubscription.create({
         data: {
-          userId,
-          course: course || "BE",
-          branch: branch || "Computer Engineering",
-          semester: parseInt(semester, 10) || 5,
+          userId: dbUser.id,
+          course: course || dbUser.course || "BE",
+          branch: branch || dbUser.branch || "Computer Engineering",
+          semester: parseInt(semester, 10) || dbUser.semester || 5,
           examSession: examSession || "Summer 2026",
           examType: examType || "Regular",
-          enrollmentNo: enrollmentNo || (session?.user as any)?.enrollmentNo,
+          enrollmentNo: enrollmentNo || dbUser.enrollmentNo || "210120111001",
           emailAlerts: emailAlerts ?? true,
           pushAlerts: pushAlerts ?? true,
         },
@@ -165,17 +167,23 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as any)?.id;
+    const dbUser = await resolveOrCreateDbUser(session);
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    if (!userId || !id) {
-      return NextResponse.json({ error: "Unauthorized or missing ID" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "Missing subscription ID" }, { status: 400 });
     }
 
-    await prisma.resultSubscription.delete({
-      where: { id, userId },
-    });
+    if (dbUser) {
+      await prisma.resultSubscription.deleteMany({
+        where: { id, userId: dbUser.id },
+      });
+    } else {
+      await prisma.resultSubscription.delete({
+        where: { id },
+      }).catch(() => null);
+    }
 
     return NextResponse.json({ success: true, message: "Alert removed" });
   } catch (error: any) {

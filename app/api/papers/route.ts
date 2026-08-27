@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { GTU_POPULAR_SUBJECTS } from "@/lib/gtu-data";
+import { resolveOrCreateDbUser } from "@/lib/auth-user-helper";
 
 const RECENT_EXAM_CYCLES = [
   { year: 2026, season: "Summer" },
@@ -28,7 +29,8 @@ export async function GET(req: Request) {
     const savedOnly = searchParams.get("savedOnly") === "true";
 
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as any)?.id;
+    const dbUser = await resolveOrCreateDbUser(session);
+    const userId = dbUser?.id;
 
     const whereClause: any = {};
 
@@ -119,22 +121,18 @@ export async function GET(req: Request) {
         papers = [...papers, ...dynamicPapers];
         papers.sort((a, b) => {
           if (b.year !== a.year) return b.year - a.year;
-          if (b.examSeason !== a.examSeason) return b.examSeason.localeCompare(a.examSeason);
+          if (b.examSeason !== a.examSeason) return b.examSeason === "Winter" ? 1 : -1;
           return a.subjectCode.localeCompare(b.subjectCode);
         });
       }
     }
 
-    const formattedPapers = papers.map((p) => ({
-      ...p,
-      isSaved: p.savedBy && p.savedBy.length > 0,
-      pdfUrl: `/api/papers/download?id=${p.id}&subjectCode=${p.subjectCode}&year=${p.year}&season=${p.examSeason}&course=${p.course}&sem=${p.semester}`,
-    }));
-
     return NextResponse.json({
-      success: true,
-      totalCount: formattedPapers.length,
-      papers: formattedPapers,
+      papers: papers.map((p) => ({
+        ...p,
+        isSaved: userId ? p.savedBy && p.savedBy.length > 0 : false,
+      })),
+      totalCount: papers.length,
     });
   } catch (error: any) {
     console.error("Failed to fetch papers:", error);
@@ -145,16 +143,17 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
+    const dbUser = await resolveOrCreateDbUser(session);
+
+    if (!dbUser) {
+      return NextResponse.json({ error: "Please sign in to bookmark papers" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { action, paperId, paperData } = body;
 
     // Action 1: Toggle Bookmark / Saved Paper
     if (action === "toggleBookmark") {
-      if (!session?.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-
-      const userId = (session.user as any).id;
       let targetPaperId = paperId;
 
       if (!targetPaperId || targetPaperId.startsWith("dyn_")) {
@@ -178,7 +177,7 @@ export async function POST(req: Request) {
       const existingBookmark = await prisma.savedPaper.findUnique({
         where: {
           userId_paperId: {
-            userId,
+            userId: dbUser.id,
             paperId: targetPaperId,
           },
         },
@@ -192,7 +191,7 @@ export async function POST(req: Request) {
       } else {
         await prisma.savedPaper.create({
           data: {
-            userId,
+            userId: dbUser.id,
             paperId: targetPaperId,
           },
         });

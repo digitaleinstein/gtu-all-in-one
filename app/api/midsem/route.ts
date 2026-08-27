@@ -4,17 +4,19 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { GTU_POPULAR_SUBJECTS } from "@/lib/gtu-data";
+import { resolveOrCreateDbUser } from "@/lib/auth-user-helper";
 
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const dbUser = await resolveOrCreateDbUser(session);
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const semester = parseInt(searchParams.get("semester") || `${(session.user as any).semester || 5}`, 10);
-    const userId = (session.user as any).id;
+    const semester = parseInt(searchParams.get("semester") || `${dbUser.semester || 5}`, 10);
+    const userId = dbUser.id;
 
     let records = await prisma.midsemRecord.findMany({
       where: {
@@ -26,8 +28,8 @@ export async function GET(req: Request) {
 
     // If student has no saved records for this semester, auto-suggest default GTU subjects for their branch/sem
     if (records.length === 0) {
-      const userBranch = (session.user as any).branch || "Computer Engineering";
-      const userCourse = (session.user as any).course || "BE";
+      const userBranch = dbUser.branch || "Computer Engineering";
+      const userCourse = dbUser.course || "BE";
       const defaults = GTU_POPULAR_SUBJECTS.filter(
         (s) => s.semester === semester && s.course === userCourse && (s.branch === userBranch || s.branch === "Computer Engineering")
       );
@@ -52,11 +54,12 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const dbUser = await resolveOrCreateDbUser(session);
+    if (!dbUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = dbUser.id;
     const body = await req.json();
     const { action, semester, records, record } = body;
 
@@ -146,11 +149,12 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const dbUser = await resolveOrCreateDbUser(session);
+    if (!dbUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const userId = (session.user as any).id;
+    const userId = dbUser.id;
 
     if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 });
 
