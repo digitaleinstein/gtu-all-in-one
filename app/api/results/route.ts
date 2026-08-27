@@ -134,7 +134,7 @@ export async function POST(req: Request) {
           course: course || "BE",
           branch: branch || "Computer Engineering",
           semester: parseInt(semester, 10) || 5,
-          examSession: examSession || "Winter 2024",
+          examSession: examSession || "Summer 2026",
           examType: examType || "Regular",
           enrollmentNo: enrollmentNo || (session?.user as any)?.enrollmentNo,
           emailAlerts: emailAlerts ?? true,

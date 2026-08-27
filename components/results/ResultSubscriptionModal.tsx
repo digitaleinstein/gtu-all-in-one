@@ -21,7 +21,7 @@ export function ResultSubscriptionModal({
   const [course, setCourse] = useState((session?.user as any)?.course || "BE");
   const [branch, setBranch] = useState((session?.user as any)?.branch || "Computer Engineering");
   const [semester, setSemester] = useState((session?.user as any)?.semester?.toString() || "5");
-  const [examSession, setExamSession] = useState("Winter 2024");
+  const [examSession, setExamSession] = useState("Summer 2026");
   const [examType, setExamType] = useState("Regular");
   const [enrollmentNo, setEnrollmentNo] = useState((session?.user as any)?.enrollmentNo || "");
   const [emailAlerts, setEmailAlerts] = useState(true);
@@ -188,9 +188,13 @@ export function ResultSubscriptionModal({
                 onChange={(e) => setExamSession(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary font-medium"
               >
-                <option value="Winter 2024">Winter 2024 (Upcoming)</option>
+                <option value="Summer 2026">Summer 2026 (Live Declaration / Upcoming)</option>
+                <option value="Winter 2026">Winter 2026 (Upcoming Nov-Dec 2026)</option>
+                <option value="Summer 2027">Summer 2027 (Upcoming May-Jun 2027)</option>
+                <option value="Winter 2025">Winter 2025 (Recent Results)</option>
+                <option value="Summer 2025">Summer 2025 (Recent Results)</option>
+                <option value="Winter 2024">Winter 2024</option>
                 <option value="Summer 2024">Summer 2024</option>
-                <option value="Winter 2023">Winter 2023</option>
               </select>
             </div>
 

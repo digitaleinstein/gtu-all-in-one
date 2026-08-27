@@ -70,15 +70,12 @@ export const GTU_BRANCHES: Record<string, string[]> = {
 
 export const GTU_EXAM_SESSIONS = [
   "Summer 2026",
+  "Winter 2026",
+  "Summer 2027",
   "Winter 2025",
   "Summer 2025",
   "Winter 2024",
   "Summer 2024",
-  "Winter 2023",
-  "Summer 2023",
-  "Winter 2022",
-  "Summer 2022",
-  "Winter 2021",
 ];
 
 export interface GTUSubject {

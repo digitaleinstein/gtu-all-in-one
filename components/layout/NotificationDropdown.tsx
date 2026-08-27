@@ -105,7 +105,7 @@ export function NotificationDropdown() {
           setIsOpen(!isOpen);
           if (!isOpen) fetchNotifications();
         }}
-        className="relative flex items-center justify-center w-9 h-9 rounded-lg border border-border bg-card/60 backdrop-blur text-foreground hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-sm"
+        className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-border bg-card/60 backdrop-blur text-foreground hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-sm shrink-0"
         aria-label="Notifications"
       >
         <Bell className="w-4 h-4 text-foreground/80" />
