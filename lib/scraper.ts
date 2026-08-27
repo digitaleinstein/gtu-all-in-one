@@ -21,8 +21,8 @@ export interface ScrapedResult {
   resultUrl: string;
 }
 
-function parseGTUDate(dateStr: string): Date {
-  if (!dateStr) return new Date();
+function parseGTUDate(dateStr: string): Date | null {
+  if (!dateStr || !dateStr.trim()) return null;
   const cleaned = dateStr.trim();
   const d = new Date(cleaned);
   if (!isNaN(d.getTime())) {
@@ -36,7 +36,7 @@ function parseGTUDate(dateStr: string): Date {
     const parsed = new Date(year, month, day);
     if (!isNaN(parsed.getTime())) return parsed;
   }
-  return new Date();
+  return null;
 }
 
 /**
@@ -72,8 +72,9 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
 
       const title = $c.find("h3").text().trim().replace(/\s+/g, " ");
       const dateText = $c.find("p[id*='UploadDate'], p[id*='lblUploadDate'], p.date, p").first().text().trim();
+      const parsedDate = parseGTUDate(dateText);
 
-      if (title.length > 5 && href) {
+      if (title.length > 5 && href && parsedDate) {
         if (!href.startsWith("http")) {
           href = `https://www.gtu.ac.in/${href.replace(/^\//, "")}`;
         }
@@ -92,22 +93,20 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
           category = "PMMS & Research";
         }
 
-        const publishedDate = parseGTUDate(dateText);
-
         if (!circulars.some((c) => c.title === title || c.pdfUrl === href)) {
           circulars.push({
             title,
             category,
-            publishedDate,
+            publishedDate: parsedDate,
             pdfUrl: href,
-            isPinned: tLower.includes("important") || tLower.includes("instruction"),
+            isPinned: tLower.includes("important") || tLower.includes("instruction") || category === "Examinations",
             description: `Official circular published on Gujarat Technological University portal (${category}).`,
           });
         }
       }
     });
 
-    // Sort by publication date descending
+    // Sort strictly by publication date descending
     circulars.sort((a, b) => b.publishedDate.getTime() - a.publishedDate.getTime());
 
     return circulars.slice(0, 60);
