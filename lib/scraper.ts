@@ -103,36 +103,6 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
       }
     });
 
-    // 2. Parse any additional AWS S3 links
-    $("a[href*='gtusitecirculars'], a[id*='lvCircular'] a").each((_, el) => {
-      const $el = $(el);
-      const title = $el.text().trim().replace(/\s+/g, " ");
-      let href = $el.attr("href") || "";
-
-      if (title.length > 5 && (href.includes(".pdf") || href.includes("uploads") || href.includes("gtusitecirculars"))) {
-        if (!href.startsWith("http")) {
-          href = `https://www.gtu.ac.in/${href.replace(/^\//, "")}`;
-        }
-
-        let category = "General";
-        const tLower = title.toLowerCase();
-        if (tLower.includes("exam") || tLower.includes("result")) category = "Examinations";
-        else if (tLower.includes("timetable")) category = "Timetables";
-        else if (tLower.includes("academic")) category = "Academic";
-
-        if (!circulars.some((c) => c.title === title || c.pdfUrl === href)) {
-          circulars.push({
-            title,
-            category,
-            publishedDate: new Date(),
-            pdfUrl: href,
-            isPinned: false,
-            description: `Official circular published on Gujarat Technological University portal (${category}).`,
-          });
-        }
-      }
-    });
-
     // Sort by publication date descending
     circulars.sort((a, b) => b.publishedDate.getTime() - a.publishedDate.getTime());
 
