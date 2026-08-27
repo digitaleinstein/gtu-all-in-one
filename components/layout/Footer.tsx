@@ -8,6 +8,7 @@ export function Footer() {
   const gtuOfficialLinks = [
     { label: "GTU Official Website", url: "https://www.gtu.ac.in" },
     { label: "GTU Result Portal", url: "https://result.gtu.ac.in" },
+    { label: "Darshan Univ Study Material", url: "https://www.darshan.ac.in/gtu-study-material" },
     { label: "GTU PMMS Portal", url: "https://pmms.gtu.ac.in" },
     { label: "100 Activity Points Portal", url: "https://gtuactivity.nic.in" },
     { label: "GTU Circulars Archive", url: "https://www.gtu.ac.in/Circular.aspx" },
@@ -46,6 +47,11 @@ export function Footer() {
               <li>
                 <Link href="/papers" className="hover:text-primary transition-colors">
                   Previous Question Papers (PYQs)
+                </Link>
+              </li>
+              <li>
+                <Link href="/materials" className="hover:text-primary transition-colors">
+                  Study Material & e-Notes (Darshan Univ)
                 </Link>
               </li>
               <li>

@@ -1,0 +1,3582 @@
+[
+  {
+    "id": "BE-3110003",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110003",
+    "subjectName": "Programming for Problem Solving",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110006",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110006",
+    "subjectName": "Basic Mechanical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110007",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110007",
+    "subjectName": "Environmental Science",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110011",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110011",
+    "subjectName": "Physics Group - I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110011-Physics-Group---I",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110011-Physics-Group---I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110014",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110014",
+    "subjectName": "Mathematics-I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110005",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110005",
+    "subjectName": "Basic Electrical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110013",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110013",
+    "subjectName": "Engineering Graphics & Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110015",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110015",
+    "subjectName": "Mathematics-II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130004",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130004",
+    "subjectName": "Effective Technical Communication",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130007",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130007",
+    "subjectName": "Indian Constitution",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130606",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130606",
+    "subjectName": "Geotechnical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130606-Geotechnical-Engineering",
+    "resourceTypes": [
+      "Tutorials - Assignments",
+      "Lab Manual"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130606-Geotechnical-Engineering"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130606-Geotechnical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130607",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130607",
+    "subjectName": "Building Constructiuon Technology",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130607-Building-Constructiuon-Technology",
+    "resourceTypes": [
+      "Presentations",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130607-Building-Constructiuon-Technology"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130607-Building-Constructiuon-Technology"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130608",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130608",
+    "subjectName": "Mechanics Of Solids",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130608-Mechanics-Of-Solids",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130608-Mechanics-Of-Solids"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130609",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130609",
+    "subjectName": "Building and Town Planning",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130609-Building-and-Town-Planning",
+    "resourceTypes": [
+      "Presentations",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130609-Building-and-Town-Planning"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130609-Building-and-Town-Planning"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140601",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140601",
+    "subjectName": "SURVEYING",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140601-SURVEYING",
+    "resourceTypes": [
+      "e-Notes",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140601-SURVEYING"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140601-SURVEYING"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140603",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140603",
+    "subjectName": "Structural Analysis - I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140603-Structural-Analysis---I",
+    "resourceTypes": [
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140603-Structural-Analysis---I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140609",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140609",
+    "subjectName": "Civil Engineering - Societal & Global Impact",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140609-Civil-Engineering---Societal-And-Global-Impact",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140609-Civil-Engineering---Societal-And-Global-Impact"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140610",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140610",
+    "subjectName": "Complex Variables and Partial Differential Equations",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140610-Complex-Variables-and-Partial-Differential-Equations",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140610-Complex-Variables-and-Partial-Differential-Equations"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140611",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140611",
+    "subjectName": "Fluid Mechanics & Hydraulics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140611-Fluid-Mechanics-And-Hydraulics",
+    "resourceTypes": [
+      "e-Notes",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140611-Fluid-Mechanics-And-Hydraulics"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140611-Fluid-Mechanics-And-Hydraulics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150611",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150611",
+    "subjectName": "TRANSPORTATION ENGINEERING",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150611-TRANSPORTATION-ENGINEERING",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150611-TRANSPORTATION-ENGINEERING"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150612",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150612",
+    "subjectName": "DESIGN OF STRUCTURES",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150612-DESIGN-OF-STRUCTURES",
+    "resourceTypes": [
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150612-DESIGN-OF-STRUCTURES"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150613",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150613",
+    "subjectName": "PAVEMENT DESIGN AND HIGHWAY CONSTRUCTION",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150613-PAVEMENT-DESIGN-AND-HIGHWAY-CONSTRUCTION",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150613-PAVEMENT-DESIGN-AND-HIGHWAY-CONSTRUCTION"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160601",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160601",
+    "subjectName": "Advanced Construction And Equipments",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160601-Advanced-Construction-And-Equipments",
+    "resourceTypes": [
+      "e-Notes",
+      "Tutorials - Assignments",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160601-Advanced-Construction-And-Equipments"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160601-Advanced-Construction-And-Equipments"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160601-Advanced-Construction-And-Equipments"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160602",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160602",
+    "subjectName": "Applied Fluid Mechanics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160602-Applied-Fluid-Mechanics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Tutorials - Assignments",
+      "Lab Manual"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160602-Applied-Fluid-Mechanics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160602-Applied-Fluid-Mechanics"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160602-Applied-Fluid-Mechanics"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160602-Applied-Fluid-Mechanics"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160603",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160603",
+    "subjectName": "Railway, Bridge And Tunnel Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160603-Railway-Bridge-And-Tunnel-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160603-Railway-Bridge-And-Tunnel-Engineering"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160603-Railway-Bridge-And-Tunnel-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160604",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160604",
+    "subjectName": "Water & Waste Water Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160604-Water-And-Waste-Water-Engineering",
+    "resourceTypes": [
+      "Tutorials - Assignments",
+      "Lab Manual"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160604-Water-And-Waste-Water-Engineering"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160604-Water-And-Waste-Water-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160607",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160607",
+    "subjectName": "Elementary Structural Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160607-Elementary-Structural-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160607-Elementary-Structural-Design"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160607-Elementary-Structural-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160608",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160608",
+    "subjectName": "Urban Transportation System",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160608-Urban-Transportation-System",
+    "resourceTypes": [
+      "Presentations",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160608-Urban-Transportation-System"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160608-Urban-Transportation-System"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170607",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170607",
+    "subjectName": "Design of Reinforced Concrete Structures",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170607-Design-of-Reinforced-Concrete-Structures",
+    "resourceTypes": [
+      "Tutorials - Assignments",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170607-Design-of-Reinforced-Concrete-Structures"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170607-Design-of-Reinforced-Concrete-Structures"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170609",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170609",
+    "subjectName": "Irrigation Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170609-Irrigation-Engineering",
+    "resourceTypes": [
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170609-Irrigation-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170610",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170610",
+    "subjectName": "Professional Practices & Valuation",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170610-Professional-Practices-And-Valuation",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170610-Professional-Practices-And-Valuation"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170610-Professional-Practices-And-Valuation"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170610-Professional-Practices-And-Valuation"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170613",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170613",
+    "subjectName": "Traffic Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170613-Traffic-Engineering",
+    "resourceTypes": [
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170613-Traffic-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180602",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180602",
+    "subjectName": "Harbour & Airport Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180602-Harbour-And-Airport-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180602-Harbour-And-Airport-Engineering"
+      },
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180602-Harbour-And-Airport-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180609",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180609",
+    "subjectName": "Foundation Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180609-Foundation-Engineering",
+    "resourceTypes": [
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180609-Foundation-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180610",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180610",
+    "subjectName": "Design of Steel Structures",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180610-Design-of-Steel-Structures",
+    "resourceTypes": [
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180610-Design-of-Steel-Structures"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180611",
+    "degree": "BE",
+    "department": "Civil Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180611",
+    "subjectName": "Construction Management",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180611-Construction-Management",
+    "resourceTypes": [
+      "Tutorials - Assignments"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Tutorials - Assignments",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180611-Construction-Management"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110005",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110005",
+    "subjectName": "Basic Electrical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110007",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110007",
+    "subjectName": "Environmental Science",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110013",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110013",
+    "subjectName": "Engineering Graphics & Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110014",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110014",
+    "subjectName": "Mathematics-I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110003",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110003",
+    "subjectName": "Programming for Problem Solving",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110006",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110006",
+    "subjectName": "Basic Mechanical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110015",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110015",
+    "subjectName": "Mathematics-II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110016",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110016",
+    "subjectName": "Basic Electronics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110016-Basic-Electronics",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110016-Basic-Electronics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110018",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110018",
+    "subjectName": "Physics Group - II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110018-Physics-Group---II",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110018-Physics-Group---II"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110018-Physics-Group---II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130004",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130004",
+    "subjectName": "Effective Technical Communication",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130006",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130006",
+    "subjectName": "Probability and Statistics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130006-Probability-and-Statistics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130006-Probability-and-Statistics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130006-Probability-and-Statistics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130007",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130007",
+    "subjectName": "Indian Constitution",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130702",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130702",
+    "subjectName": "Data Structures",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130702-Data-Structures",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130702-Data-Structures"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130702-Data-Structures"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130703",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130703",
+    "subjectName": "Database Management Systems",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130703-Database-Management-Systems",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130703-Database-Management-Systems"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130703-Database-Management-Systems"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130703-Database-Management-Systems"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130704",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130704",
+    "subjectName": "Digital Fundamentals",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130704-Digital-Fundamentals",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130704-Digital-Fundamentals"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130704-Digital-Fundamentals"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130704-Digital-Fundamentals"
+      }
+    ]
+  },
+  {
+    "id": "BE-2140705",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "2140705",
+    "subjectName": "Object Oriented Programming With C++",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2140705-Object-Oriented-Programming-With-Cpp",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2140705-Object-Oriented-Programming-With-Cpp"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2140705-Object-Oriented-Programming-With-Cpp"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2140705-Object-Oriented-Programming-With-Cpp"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140702",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140702",
+    "subjectName": "Operating System",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140702-Operating-System",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140702-Operating-System"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140702-Operating-System"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140702-Operating-System"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140702-Operating-System"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140705",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140705",
+    "subjectName": "Object Oriented Programming - I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140705-Object-Oriented-Programming---I",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140705-Object-Oriented-Programming---I"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140705-Object-Oriented-Programming---I"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140705-Object-Oriented-Programming---I"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140705-Object-Oriented-Programming---I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140707",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140707",
+    "subjectName": "Computer Organization & Architecture",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140707-Computer-Organization-And-Architecture",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140707-Computer-Organization-And-Architecture"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140707-Computer-Organization-And-Architecture"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140707-Computer-Organization-And-Architecture"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140708",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140708",
+    "subjectName": "Discrete Mathematics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140708-Discrete-Mathematics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140708-Discrete-Mathematics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140708-Discrete-Mathematics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140709",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140709",
+    "subjectName": "Principles Of Economics And Management",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140709-Principles-Of-Economics-And-Management",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140709-Principles-Of-Economics-And-Management"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140709-Principles-Of-Economics-And-Management"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150703",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150703",
+    "subjectName": "Analysis And Design Of Algorithms",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150703-Analysis-And-Design-Of-Algorithms",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150703-Analysis-And-Design-Of-Algorithms"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150703-Analysis-And-Design-Of-Algorithms"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150709",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150709",
+    "subjectName": "Professional Ethics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150709-Professional-Ethics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150709-Professional-Ethics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150709-Professional-Ethics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150710",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150710",
+    "subjectName": "Computer Networks",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150710-Computer-Networks",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150710-Computer-Networks"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150710-Computer-Networks"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150710-Computer-Networks"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150711",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150711",
+    "subjectName": "Software Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150711-Software-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150711-Software-Engineering"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150711-Software-Engineering"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150711-Software-Engineering"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150711-Software-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150712",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150712",
+    "subjectName": "Computer Graphics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150712-Computer-Graphics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150712-Computer-Graphics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150712-Computer-Graphics"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150712-Computer-Graphics"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150712-Computer-Graphics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150713",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150713",
+    "subjectName": "Python for Data Science",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150713-Python-for-Data-Science",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150713-Python-for-Data-Science"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150713-Python-for-Data-Science"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150714",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150714",
+    "subjectName": "Cyber Security",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150714-Cyber-Security",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150714-Cyber-Security"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150714-Cyber-Security"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160704",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160704",
+    "subjectName": "Theory of Computation",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160704-Theory-of-Computation",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160704-Theory-of-Computation"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160704-Theory-of-Computation"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160704-Theory-of-Computation"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160707",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160707",
+    "subjectName": "Advanced Java",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160707-Advanced-Java",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160707-Advanced-Java"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160707-Advanced-Java"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160707-Advanced-Java"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160707-Advanced-Java"
+      }
+    ]
+  },
+  {
+    "id": "BE-2160708",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "2160708",
+    "subjectName": "Web Technology",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2160708-Web-Technology",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160708-Web-Technology"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160708-Web-Technology"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160708-Web-Technology"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2160708-Web-Technology"
+      }
+    ]
+  },
+  {
+    "id": "BE-3160704",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3160704",
+    "subjectName": "Theory of Computation",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3160704-Theory-of-Computation",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160704-Theory-of-Computation"
+      }
+    ]
+  },
+  {
+    "id": "BE-3160707",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3160707",
+    "subjectName": "Advance java Programming",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3160707-Advance-java-Programming",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160707-Advance-java-Programming"
+      }
+    ]
+  },
+  {
+    "id": "BE-3160712",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3160712",
+    "subjectName": "Microprocessor and Interfacing",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3160712-Microprocessor-and-Interfacing",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Lab Manual"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160712-Microprocessor-and-Interfacing"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160712-Microprocessor-and-Interfacing"
+      },
+      {
+        "type": "Lab Manual",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160712-Microprocessor-and-Interfacing"
+      }
+    ]
+  },
+  {
+    "id": "BE-3160713",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3160713",
+    "subjectName": "WEB Programming",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3160713-WEB-Programming",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160713-WEB-Programming"
+      }
+    ]
+  },
+  {
+    "id": "BE-3160714",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3160714",
+    "subjectName": "Data Mining",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3160714-Data-Mining",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160714-Data-Mining"
+      }
+    ]
+  },
+  {
+    "id": "BE-3160716",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3160716",
+    "subjectName": "IOT and Applications",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3160716-IOT-and-Applications",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3160716-IOT-and-Applications"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170701",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170701",
+    "subjectName": "Complier Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170701-Complier-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170701-Complier-Design"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170701-Complier-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170709",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170709",
+    "subjectName": "Information and Network Security",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170709-Information-and-Network-Security",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170709-Information-and-Network-Security"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170709-Information-and-Network-Security"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170710",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170710",
+    "subjectName": "Mobile Computing and Wireless Communication",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170710-Mobile-Computing-and-Wireless-Communication",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170710-Mobile-Computing-and-Wireless-Communication"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170710-Mobile-Computing-and-Wireless-Communication"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170715",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170715",
+    "subjectName": "Data Mining and Business Intelligence",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170715-Data-Mining-and-Business-Intelligence",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170715-Data-Mining-and-Business-Intelligence"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170715-Data-Mining-and-Business-Intelligence"
+      }
+    ]
+  },
+  {
+    "id": "BE-3170701",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "3170701",
+    "subjectName": "Compiler Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3170701-Compiler-Design",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170701-Compiler-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-3170710",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "3170710",
+    "subjectName": "Mobile Computing and Wireless communication",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3170710-Mobile-Computing-and-Wireless-communication",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170710-Mobile-Computing-and-Wireless-communication"
+      }
+    ]
+  },
+  {
+    "id": "BE-3170716",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "3170716",
+    "subjectName": "Artificial Intelligence",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3170716-Artificial-Intelligence",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170716-Artificial-Intelligence"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170716-Artificial-Intelligence"
+      }
+    ]
+  },
+  {
+    "id": "BE-3170719",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "3170719",
+    "subjectName": "Distributed System",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3170719-Distributed-System",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170719-Distributed-System"
+      }
+    ]
+  },
+  {
+    "id": "BE-3170722",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "3170722",
+    "subjectName": "Big Data Analytics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3170722-Big-Data-Analytics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170722-Big-Data-Analytics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170722-Big-Data-Analytics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3170726",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "3170726",
+    "subjectName": "Mobile Application Development",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3170726-Mobile-Application-Development",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3170726-Mobile-Application-Development"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180703",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180703",
+    "subjectName": "Artificial Intelligence",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180703-Artificial-Intelligence",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180703-Artificial-Intelligence"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180712",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180712",
+    "subjectName": "Cloud Infrastructure and Services",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180712-Cloud-Infrastructure-and-Services",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180712-Cloud-Infrastructure-and-Services"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180713",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180713",
+    "subjectName": "Web Data Management",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180713-Web-Data-Management",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180713-Web-Data-Management"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180714",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180714",
+    "subjectName": "iOS Programming",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180714-iOS-Programming",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180714-iOS-Programming"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180715",
+    "degree": "BE",
+    "department": "Computer Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180715",
+    "subjectName": "Android Programming",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180715-Android-Programming",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180715-Android-Programming"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110005",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110005",
+    "subjectName": "Basic Electrical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110007",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110007",
+    "subjectName": "Environmental Science",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110013",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110013",
+    "subjectName": "Engineering Graphics & Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110014",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110014",
+    "subjectName": "Mathematics-I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110003",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110003",
+    "subjectName": "Programming for Problem Solving",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110006",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110006",
+    "subjectName": "Basic Mechanical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110015",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110015",
+    "subjectName": "Mathematics-II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110016",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110016",
+    "subjectName": "Basic Electronics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110016-Basic-Electronics",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110016-Basic-Electronics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110018",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110018",
+    "subjectName": "Physics Group - II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110018-Physics-Group---II",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110018-Physics-Group---II"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110018-Physics-Group---II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130004",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130004",
+    "subjectName": "Effective Technical Communication",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130007",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130007",
+    "subjectName": "Indian Constitution",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130906",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130906",
+    "subjectName": "Electrical Circuit Analysis",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130906-Electrical-Circuit-Analysis",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130906-Electrical-Circuit-Analysis"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130907",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130907",
+    "subjectName": "Analog and Digital Electronics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130907-Analog-and-Digital-Electronics",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130907-Analog-and-Digital-Electronics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130908",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130908",
+    "subjectName": "Applied Mathematics for Electrical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130908-Applied-Mathematics-for-Electrical-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130908-Applied-Mathematics-for-Electrical-Engineering"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130908-Applied-Mathematics-for-Electrical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140911",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140911",
+    "subjectName": "Economics for Engineers",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140911-Economics-for-Engineers",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140911-Economics-for-Engineers"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140911-Economics-for-Engineers"
+      }
+    ]
+  },
+  {
+    "id": "BE-3140915",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3140915",
+    "subjectName": "Power Electronics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3140915-Power-Electronics",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140915-Power-Electronics"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3140915-Power-Electronics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150709",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150709",
+    "subjectName": "Professional Ethics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150709-Professional-Ethics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150709-Professional-Ethics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150709-Professional-Ethics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150910",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150910",
+    "subjectName": "Electrical Machine- II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150910-Electrical-Machine--II",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150910-Electrical-Machine--II"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150910-Electrical-Machine--II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150911",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150911",
+    "subjectName": "Power System- II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150911-Power-System--II",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150911-Power-System--II"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150911-Power-System--II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150912",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150912",
+    "subjectName": "Signals and Systems",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150912-Signals-and-Systems",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150912-Signals-and-Systems"
+      }
+    ]
+  },
+  {
+    "id": "BE-3150913",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3150913",
+    "subjectName": "Disaster Management",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3150913-Disaster-Management",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3150913-Disaster-Management"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170901",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170901",
+    "subjectName": "Interconnected Power System",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170901-Interconnected-Power-System",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170901-Interconnected-Power-System"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170906",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170906",
+    "subjectName": "Advanced Power Electronics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170906-Advanced-Power--Electronics",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170906-Advanced-Power--Electronics"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170906-Advanced-Power--Electronics"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170906-Advanced-Power--Electronics"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170908",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170908",
+    "subjectName": "Switch Gear and Protection",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170908-Switch-Gear-and-Protection",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170908-Switch-Gear-and-Protection"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170908-Switch-Gear-and-Protection"
+      }
+    ]
+  },
+  {
+    "id": "BE-2170909",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2170909",
+    "subjectName": "Design of AC Machines",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2170909-Design-of--AC-Machines",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170909-Design-of--AC-Machines"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2170909-Design-of--AC-Machines"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180903",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180903",
+    "subjectName": "Power System Planning And Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180903-Power-System-Planning-And-Design",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180903-Power-System-Planning-And-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-2180911",
+    "degree": "BE",
+    "department": "Electrical Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2180911",
+    "subjectName": "Power Quality and Management",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2180911-Power-Quality-and-Management",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2180911-Power-Quality-and-Management"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110003",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110003",
+    "subjectName": "Programming for Problem Solving",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving",
+    "resourceTypes": [
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110003-Programming-for-Problem-Solving"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110006",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110006",
+    "subjectName": "Basic Mechanical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110006-Basic-Mechanical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110007",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110007",
+    "subjectName": "Environmental Science",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110007-Environmental-Science"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110011",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110011",
+    "subjectName": "Physics Group - I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110011-Physics-Group---I",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110011-Physics-Group---I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110014",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110014",
+    "subjectName": "Mathematics-I",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110014-Mathematics-I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110005",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110005",
+    "subjectName": "Basic Electrical Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110005-Basic-Electrical-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110013",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110013",
+    "subjectName": "Engineering Graphics & Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110013-Engineering-Graphics-And-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-3110015",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 1,
+    "semLabel": "Semester 1",
+    "subjectCode": "3110015",
+    "subjectName": "Mathematics-II",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3110015-Mathematics-II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130004",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130004",
+    "subjectName": "Effective Technical Communication",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations",
+      "Video Lectures"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      },
+      {
+        "type": "Video Lectures",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130004-Effective-Technical-Communication"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130005",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130005",
+    "subjectName": "Complex Variables and Partial Differential Equations",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130005-Complex-Variables-and-Partial-Differential-Equations",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130005-Complex-Variables-and-Partial-Differential-Equations"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130005-Complex-Variables-and-Partial-Differential-Equations"
+      }
+    ]
+  },
+  {
+    "id": "BE-3130007",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3130007",
+    "subjectName": "Indian Constitution",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3130007-Indian-Constitution"
+      }
+    ]
+  },
+  {
+    "id": "BE-3131904",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3131904",
+    "subjectName": "Material Science And Metallurgy",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3131904-Material-Science-And-Metallurgy",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3131904-Material-Science-And-Metallurgy"
+      }
+    ]
+  },
+  {
+    "id": "BE-3131905",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3131905",
+    "subjectName": "Engineering Thermodynamics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3131905-Engineering-Thermodynamics",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3131905-Engineering-Thermodynamics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3131906",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 3,
+    "semLabel": "Semester 3",
+    "subjectCode": "3131906",
+    "subjectName": "Kinematics And Theory Of Machines",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3131906-Kinematics-And-Theory-Of-Machines",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3131906-Kinematics-And-Theory-Of-Machines"
+      }
+    ]
+  },
+  {
+    "id": "BE-3141901",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3141901",
+    "subjectName": "Mechanical Measurement and Metrology",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3141901-Mechanical-Measurement-and-Metrology",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3141901-Mechanical-Measurement-and-Metrology"
+      }
+    ]
+  },
+  {
+    "id": "BE-3141906",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3141906",
+    "subjectName": "Fluid Mechanics and Hydraulic Machines",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3141906-Fluid-Mechanics-and-Hydraulic-Machines",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3141906-Fluid-Mechanics-and-Hydraulic-Machines"
+      }
+    ]
+  },
+  {
+    "id": "BE-3141907",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3141907",
+    "subjectName": "Fundamentals of Machine Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3141907-Fundamentals-of-Machine-Design",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3141907-Fundamentals-of-Machine-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-3141908",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3141908",
+    "subjectName": "Manufacturing Processes",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3141908-Manufacturing-Processes",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3141908-Manufacturing-Processes"
+      }
+    ]
+  },
+  {
+    "id": "BE-3141909",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 4,
+    "semLabel": "Semester 4",
+    "subjectCode": "3141909",
+    "subjectName": "Organizational Behavior",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3141909-Organizational-Behavior",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3141909-Organizational-Behavior"
+      }
+    ]
+  },
+  {
+    "id": "BE-3151909",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3151909",
+    "subjectName": "Heat Transfer",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3151909-Heat-Transfer",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3151909-Heat-Transfer"
+      }
+    ]
+  },
+  {
+    "id": "BE-3151910",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3151910",
+    "subjectName": "Operation Research",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3151910-Operation-Research",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3151910-Operation-Research"
+      }
+    ]
+  },
+  {
+    "id": "BE-3151911",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3151911",
+    "subjectName": "Dynamics of Machinery",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3151911-Dynamics-of-Machinery",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3151911-Dynamics-of-Machinery"
+      }
+    ]
+  },
+  {
+    "id": "BE-3151912",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3151912",
+    "subjectName": "Manufacturing Technology",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3151912-Manufacturing-Technology",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3151912-Manufacturing-Technology"
+      }
+    ]
+  },
+  {
+    "id": "BE-3151913",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3151913",
+    "subjectName": "Oil Hydraulics and Pneumatics (Open Elective-1)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3151913-Oil-Hydraulics-and-Pneumatics--Open-Elective-1",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3151913-Oil-Hydraulics-and-Pneumatics--Open-Elective-1"
+      }
+    ]
+  },
+  {
+    "id": "BE-3161903",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3161903",
+    "subjectName": "Computer Aided Design (Professional Elective - I)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3161903-Computer-Aided-Design--Professional-Elective---I",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3161903-Computer-Aided-Design--Professional-Elective---I"
+      }
+    ]
+  },
+  {
+    "id": "BE-3161910",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3161910",
+    "subjectName": "Applied Thermodynamics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3161910-Applied-Thermodynamics",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3161910-Applied-Thermodynamics"
+      }
+    ]
+  },
+  {
+    "id": "BE-3161917",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3161917",
+    "subjectName": "Computer Aided Manufacturing (Professional Elective - II)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3161917-Computer-Aided-Manufacturing--Professional-Elective---II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3161917-Computer-Aided-Manufacturing--Professional-Elective---II"
+      }
+    ]
+  },
+  {
+    "id": "BE-3161922",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3161922",
+    "subjectName": "Advanced Manufacturing Processes (Professional Elective - III)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3161922-Advanced-Manufacturing-Processes--Professional-Elective---III",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3161922-Advanced-Manufacturing-Processes--Professional-Elective---III"
+      }
+    ]
+  },
+  {
+    "id": "BE-3161926",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3161926",
+    "subjectName": "Industry 4.0 (Open Elective -II)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3161926-Industry-40--Open-Elective--II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3161926-Industry-40--Open-Elective--II"
+      }
+    ]
+  },
+  {
+    "id": "BE-2171901",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2171901",
+    "subjectName": "Operation Research",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2171901-Operation-Research",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171901-Operation-Research"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171901-Operation-Research"
+      }
+    ]
+  },
+  {
+    "id": "BE-2171903",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2171903",
+    "subjectName": "Computer Aided Manufacturing",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2171903-Computer-Aided-Manufacturing",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171903-Computer-Aided-Manufacturing"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171903-Computer-Aided-Manufacturing"
+      }
+    ]
+  },
+  {
+    "id": "BE-2171909",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2171909",
+    "subjectName": "Machine Design",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2171909-Machine-Design",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171909-Machine-Design"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171909-Machine-Design"
+      }
+    ]
+  },
+  {
+    "id": "BE-2171910",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2171910",
+    "subjectName": "Power Plant Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2171910-Power-Plant-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171910-Power-Plant-Engineering"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171910-Power-Plant-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2171912",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 7,
+    "semLabel": "Semester 7",
+    "subjectCode": "2171912",
+    "subjectName": "Oil Hydraulics and Pneumatics",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2171912-Oil-Hydraulics-and-Pneumatics",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171912-Oil-Hydraulics-and-Pneumatics"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2171912-Oil-Hydraulics-and-Pneumatics"
+      }
+    ]
+  },
+  {
+    "id": "BE-2181910",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2181910",
+    "subjectName": "Renewable Energy Engineering",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2181910-Renewable-Energy-Engineering",
+    "resourceTypes": [
+      "e-Notes",
+      "GTU Paper Analysis"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2181910-Renewable-Energy-Engineering"
+      },
+      {
+        "type": "GTU Paper Analysis",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2181910-Renewable-Energy-Engineering"
+      }
+    ]
+  },
+  {
+    "id": "BE-2181913",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2181913",
+    "subjectName": "Product Design and Value Engineering (Departmental Elective II)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2181913-Product-Design-and-Value-Engineering--Departmental-Elective-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2181913-Product-Design-and-Value-Engineering--Departmental-Elective-II"
+      }
+    ]
+  },
+  {
+    "id": "BE-2181914",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2181914",
+    "subjectName": "Rapid Prototyping (Departmental Elective II)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2181914-Rapid-Prototyping--Departmental-Elective-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2181914-Rapid-Prototyping--Departmental-Elective-II"
+      }
+    ]
+  },
+  {
+    "id": "BE-2181920",
+    "degree": "BE",
+    "department": "Mechanical Engineering",
+    "semester": 8,
+    "semLabel": "Semester 8",
+    "subjectCode": "2181920",
+    "subjectName": "Quality Engineering (Departmental Elective II)",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/2181920-Quality-Engineering--Departmental-Elective-II",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/2181920-Quality-Engineering--Departmental-Elective-II"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3350701",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3350701",
+    "subjectName": "Computer Maintenance And Trouble Shooting",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3350701-Computer-Maintenance-And-Trouble-Shooting",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3350701-Computer-Maintenance-And-Trouble-Shooting"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3350702",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3350702",
+    "subjectName": "Dynamic Web Page Development",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3350702-Dynamic-Web-Page-Development",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3350702-Dynamic-Web-Page-Development"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3350703",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3350703",
+    "subjectName": "Java Programming",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3350703-Java-Programming",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3350703-Java-Programming"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3350705",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 5,
+    "semLabel": "Semester 5",
+    "subjectCode": "3350705",
+    "subjectName": "Multimedia And Animation Techniques",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3350705-Multimedia-And-Animation-Techniques",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3350705-Multimedia-And-Animation-Techniques"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3360701",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3360701",
+    "subjectName": "Advance Java Programming",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3360701-Advance-Java-Programming",
+    "resourceTypes": [
+      "e-Notes",
+      "Presentations"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3360701-Advance-Java-Programming"
+      },
+      {
+        "type": "Presentations",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3360701-Advance-Java-Programming"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3360705",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3360705",
+    "subjectName": "Dynamic Webpage With Scripting Language",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3360705-Dynamic-Webpage-With-Scripting-Language",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3360705-Dynamic-Webpage-With-Scripting-Language"
+      }
+    ]
+  },
+  {
+    "id": "Diploma-3360706",
+    "degree": "Diploma",
+    "department": "Computer Engineering",
+    "semester": 6,
+    "semLabel": "Semester 6",
+    "subjectCode": "3360706",
+    "subjectName": "Advance Web Technology",
+    "darshanUrl": "https://www.darshan.ac.in/gtu-study-material/3360706-Advance-Web-Technology",
+    "resourceTypes": [
+      "e-Notes"
+    ],
+    "resourceLinks": [
+      {
+        "type": "e-Notes",
+        "url": "https://www.darshan.ac.in/gtu-study-material/3360706-Advance-Web-Technology"
+      }
+    ]
+  }
+]

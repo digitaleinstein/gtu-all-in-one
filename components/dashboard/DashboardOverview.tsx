@@ -66,12 +66,21 @@ export function DashboardOverview() {
   const coreModules = [
     {
       title: "Papers Hub (PYQs)",
-      description: "Search, filter & preview 100+ GTU question papers from Summer 2020 to Summer 2024 with direct PDF downloads.",
+      description: "Search, filter & preview 390+ GTU question papers from Summer 2022 to Summer 2026 with direct PDF downloads.",
       icon: FileText,
       href: "/papers",
       color: "from-blue-600 to-cyan-600",
-      badge: "Summer 2024 Live",
+      badge: "Summer 2026 Live",
       badgeColor: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
+    },
+    {
+      title: "Study Material & Notes",
+      description: "Chapter-wise e-Notes, PPT presentations, lab practical manuals & GTU paper solutions from Darshan University.",
+      icon: BookOpen,
+      href: "/materials",
+      color: "from-violet-600 to-purple-600",
+      badge: "Darshan GTU Portal",
+      badgeColor: "bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300",
     },
     {
       title: "Result Alerts & Watcher",

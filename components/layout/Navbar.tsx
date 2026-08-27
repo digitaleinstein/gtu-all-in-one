@@ -17,6 +17,7 @@ import {
   X,
   ChevronDown,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { NotificationDropdown } from "./NotificationDropdown";
@@ -29,6 +30,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/papers", label: "Papers Hub", icon: FileText },
+    { href: "/materials", label: "Study Material", icon: BookOpen },
     { href: "/results", label: "Result Alerts", icon: Bell },
     { href: "/circulars", label: "Circulars", icon: Newspaper },
     { href: "/pmms", label: "PMMS Portal", icon: FolderGit2 },
