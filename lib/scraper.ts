@@ -21,8 +21,28 @@ export interface ScrapedResult {
   resultUrl: string;
 }
 
+function parseGTUDate(dateStr: string): Date {
+  if (!dateStr) return new Date();
+  const cleaned = dateStr.trim();
+  // Format like "25-Aug-2026" or "25/08/2026" or "25-08-2026"
+  const d = new Date(cleaned);
+  if (!isNaN(d.getTime())) {
+    return d;
+  }
+  // Try DD-MM-YYYY
+  const parts = cleaned.split(/[-/.]/);
+  if (parts.length === 3) {
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    const parsed = new Date(year, month, day);
+    if (!isNaN(parsed.getTime())) return parsed;
+  }
+  return new Date();
+}
+
 /**
- * Real-time scraper for official GTU Circulars from https://www.gtu.ac.in/Circular.aspx
+ * Real-time scraper for official GTU Circulars with authentic upload dates from https://www.gtu.ac.in/Circular.aspx
  */
 export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
   try {
@@ -41,18 +61,19 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
     const $ = cheerio.load(html);
     const circulars: ScrapedCircular[] = [];
 
-    // Parse all circular links matching S3 uploads
-    $("a[href*='gtusitecirculars'], a[id*='lvCircular'] a, a[id*='lblContentHeading']").each((_, el) => {
-      const $el = $(el);
-      const title = $el.text().trim().replace(/\s+/g, " ");
-      let href = $el.attr("href") || "";
+    // 1. Parse structured .post-content cards with explicit upload dates
+    $(".post-content").each((_, container) => {
+      const $c = $(container);
+      const $link = $c.find("h3 a[href], a[href*='gtusitecirculars']").last();
+      const title = $link.text().trim().replace(/\s+/g, " ");
+      let href = $link.attr("href") || "";
+      const dateText = $c.find("p[id*='UploadDate'], p[id*='lblUploadDate'], p.date").text().trim();
 
       if (title.length > 5 && (href.includes(".pdf") || href.includes("uploads") || href.includes("gtusitecirculars"))) {
         if (!href.startsWith("http")) {
           href = `https://www.gtu.ac.in/${href.replace(/^\//, "")}`;
         }
 
-        // Categorize based on keywords
         let category = "General";
         const tLower = title.toLowerCase();
         if (tLower.includes("exam") || tLower.includes("result") || tLower.includes("recheck") || tLower.includes("reassessment")) {
@@ -67,9 +88,7 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
           category = "PMMS & Research";
         }
 
-        // Extract date if present in title
-        const dateMatch = title.match(/(\d{2}[-/.]\d{2}[-/.]\d{4})/);
-        const publishedDate = dateMatch ? new Date(dateMatch[1].replace(/[-.]/g, "/")) : new Date();
+        const publishedDate = parseGTUDate(dateText);
 
         if (!circulars.some((c) => c.title === title || c.pdfUrl === href)) {
           circulars.push({
@@ -84,7 +103,40 @@ export async function scrapeLiveCirculars(): Promise<ScrapedCircular[]> {
       }
     });
 
-    return circulars.slice(0, 30);
+    // 2. Parse any additional AWS S3 links
+    $("a[href*='gtusitecirculars'], a[id*='lvCircular'] a").each((_, el) => {
+      const $el = $(el);
+      const title = $el.text().trim().replace(/\s+/g, " ");
+      let href = $el.attr("href") || "";
+
+      if (title.length > 5 && (href.includes(".pdf") || href.includes("uploads") || href.includes("gtusitecirculars"))) {
+        if (!href.startsWith("http")) {
+          href = `https://www.gtu.ac.in/${href.replace(/^\//, "")}`;
+        }
+
+        let category = "General";
+        const tLower = title.toLowerCase();
+        if (tLower.includes("exam") || tLower.includes("result")) category = "Examinations";
+        else if (tLower.includes("timetable")) category = "Timetables";
+        else if (tLower.includes("academic")) category = "Academic";
+
+        if (!circulars.some((c) => c.title === title || c.pdfUrl === href)) {
+          circulars.push({
+            title,
+            category,
+            publishedDate: new Date(),
+            pdfUrl: href,
+            isPinned: false,
+            description: `Official circular published on Gujarat Technological University portal (${category}).`,
+          });
+        }
+      }
+    });
+
+    // Sort by publication date descending
+    circulars.sort((a, b) => b.publishedDate.getTime() - a.publishedDate.getTime());
+
+    return circulars.slice(0, 50);
   } catch (error) {
     console.error("Live GTU circular scraper failed:", error);
     return [];
@@ -118,13 +170,11 @@ export async function scrapeLiveResults(): Promise<ScrapedResult[]> {
       const rawText = $opt.text().replace(/\.+/g, "").trim();
 
       if (val && val !== "0" && rawText.length > 5) {
-        // Value format: 5523$S2026$2026-08-24$current$0
         const parts = val.split("$");
         const examCode = parts[0] || `EXAM_${results.length}`;
         const sessionCode = parts[1] || "Summer 2024";
         const dateStr = parts[2] || new Date().toISOString();
 
-        // Extract Course & Sem
         let course = "BE";
         if (rawText.startsWith("BE")) course = "BE";
         else if (rawText.startsWith("ME")) course = "ME";
@@ -149,7 +199,7 @@ export async function scrapeLiveResults(): Promise<ScrapedResult[]> {
       }
     });
 
-    return results.slice(0, 40);
+    return results.slice(0, 50);
   } catch (error) {
     console.error("Live GTU results scraper failed:", error);
     return [];
@@ -173,6 +223,11 @@ export async function syncGTUDataToDatabase() {
     if (!existing) {
       await prisma.circular.create({ data: c });
       circularsCount++;
+    } else {
+      await prisma.circular.update({
+        where: { id: existing.id },
+        data: { publishedDate: c.publishedDate },
+      });
     }
   }
 

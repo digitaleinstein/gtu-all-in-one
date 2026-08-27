@@ -5,14 +5,9 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import {
   User,
   Shield,
-  Smartphone,
-  Mail,
-  Bell,
   CheckCircle2,
   Save,
   LogOut,
-  Building,
-  GraduationCap,
   Sparkles,
   Award,
   BookOpen,
@@ -20,9 +15,8 @@ import {
   Printer,
   FileText,
   AlertCircle,
-  ExternalLink,
   ChevronRight,
-  TrendingUp,
+  Zap,
 } from "lucide-react";
 import { GTU_COURSES, GTU_BRANCHES } from "@/lib/gtu-data";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
@@ -42,11 +36,18 @@ export function ProfileSettings() {
   const [resultsData, setResultsData] = useState<any>(null);
   const [selectedSemTab, setSelectedSemTab] = useState<number>(5);
   const [loadingResults, setLoadingResults] = useState(false);
-  const [syncingResults, setSyncingResults] = useState(false);
+  const [savingLiveResult, setSavingLiveResult] = useState(false);
   const [resultSyncMsg, setResultSyncMsg] = useState("");
 
-  const [pushEnabled, setPushEnabled] = useState(true);
-  const [emailEnabled, setEmailEnabled] = useState(true);
+  // Live GTU Result Gateway State inside Profile
+  const [liveSessionData, setLiveSessionData] = useState<any | null>(null);
+  const [selectedLiveBatch, setSelectedLiveBatch] = useState("");
+  const [liveCaptchaCode, setLiveCaptchaCode] = useState("");
+  const [loadingLiveSession, setLoadingLiveSession] = useState(false);
+  const [fetchingLiveResult, setFetchingLiveResult] = useState(false);
+  const [liveGatewayError, setLiveGatewayError] = useState("");
+  const [showLiveGateway, setShowLiveGateway] = useState(false);
+
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -54,15 +55,16 @@ export function ProfileSettings() {
     if (session?.user) {
       setName(session.user.name || "");
       setEmail(session.user.email || "");
-      setEnrollmentNo((session.user as any).enrollmentNo || "210120111001");
+      const userEnroll = (session.user as any).enrollmentNo || "";
+      setEnrollmentNo(userEnroll);
       setCourse((session.user as any).course || "BE");
       setBranch((session.user as any).branch || "Computer Engineering");
       setSemester(((session.user as any).semester || 5).toString());
-      setCollege((session.user as any).college || "028 - L.D. College of Engineering, Ahmedabad");
+      setCollege((session.user as any).college || "GTU Affiliated Engineering Institute");
       setSelectedSemTab((session.user as any).semester || 5);
-      fetchStudentResults((session.user as any).enrollmentNo || "210120111001");
-    } else {
-      fetchStudentResults("210120111001");
+      if (userEnroll) {
+        fetchStudentResults(userEnroll);
+      }
     }
   }, [session]);
 
@@ -71,9 +73,9 @@ export function ProfileSettings() {
       setLoadingResults(true);
       const res = await fetch(`/api/user/results?enrollment=${enrollment}`);
       const data = await res.json();
-      if (res.ok && data.results) {
+      if (res.ok) {
         setResultsData(data);
-        if (data.results.length > 0) {
+        if (data.results && data.results.length > 0) {
           const maxSem = data.results[data.results.length - 1].semester;
           setSelectedSemTab(maxSem);
         }
@@ -85,25 +87,76 @@ export function ProfileSettings() {
     }
   };
 
-  const handleSyncGTUResults = async () => {
+  const fetchLiveGTUSession = async () => {
     try {
-      setSyncingResults(true);
-      setResultSyncMsg("");
-      const res = await fetch("/api/user/results", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "syncResults", enrollmentNo }),
-      });
+      setLoadingLiveSession(true);
+      setLiveGatewayError("");
+      const res = await fetch("/api/gtu/live-session");
       const data = await res.json();
       if (res.ok) {
-        setResultSyncMsg("Academic records verified and synchronized with GTU portal!");
-        fetchStudentResults(enrollmentNo);
-        setTimeout(() => setResultSyncMsg(""), 4000);
+        setLiveSessionData(data);
+        if (data.batches && data.batches.length > 0) {
+          setSelectedLiveBatch(data.batches[0].value);
+        }
+      } else {
+        setLiveGatewayError(data.error || "Failed to connect to GTU live server.");
       }
-    } catch (e) {
-      console.error("Sync error:", e);
+    } catch (e: any) {
+      setLiveGatewayError("Could not establish live connection with gturesults.in");
     } finally {
-      setSyncingResults(false);
+      setLoadingLiveSession(false);
+    }
+  };
+
+  const handleFetchAndSaveLiveResult = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!liveSessionData || !liveCaptchaCode || !enrollmentNo) return;
+
+    try {
+      setFetchingLiveResult(true);
+      setLiveGatewayError("");
+      setResultSyncMsg("");
+
+      const res = await fetch("/api/gtu/live-result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cookies: liveSessionData.cookies,
+          viewState: liveSessionData.viewState,
+          eventValidation: liveSessionData.eventValidation,
+          viewStateGenerator: liveSessionData.viewStateGenerator,
+          batch: selectedLiveBatch,
+          enrollmentNo: enrollmentNo.trim(),
+          captchaCode: liveCaptchaCode.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.result) {
+        // Save verified marksheet to DB
+        setSavingLiveResult(true);
+        await fetch("/api/user/results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "saveLiveResult",
+            marksheet: data.result,
+          }),
+        });
+
+        setResultSyncMsg("Official GTU marksheet verified and saved to your profile!");
+        setShowLiveGateway(false);
+        setLiveCaptchaCode("");
+        fetchStudentResults(enrollmentNo);
+      } else {
+        setLiveGatewayError(data.error || "Invalid captcha or no marksheet declared for this enrollment number.");
+        fetchLiveGTUSession(); // Refresh captcha
+      }
+    } catch (e: any) {
+      setLiveGatewayError(e.message || "Failed to fetch result from GTU.");
+    } finally {
+      setFetchingLiveResult(false);
+      setSavingLiveResult(false);
     }
   };
 
@@ -115,7 +168,7 @@ export function ProfileSettings() {
       setBranch(decoded.branchName);
       setCollege(decoded.collegeName);
       setSemester(decoded.estimatedSemester.toString());
-      setSuccessMsg(`Auto-decoded GTU parameters: ${decoded.courseCode} ${decoded.branchName} (${decoded.collegeName})`);
+      setSuccessMsg(`Auto-decoded: ${decoded.courseCode} ${decoded.branchName} (${decoded.collegeName})`);
       setTimeout(() => setSuccessMsg(""), 4000);
     }
   };
@@ -152,6 +205,7 @@ export function ProfileSettings() {
 
   const branches = GTU_BRANCHES[course] || GTU_BRANCHES["BE"] || [];
 
+  const hasResults = resultsData?.hasSyncedResults && resultsData?.results?.length > 0;
   const currentSemTranscript = resultsData?.results?.find(
     (r: any) => r.semester === selectedSemTab
   );
@@ -163,13 +217,13 @@ export function ProfileSettings() {
         <div className="space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-blue-200 text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-            <span>Verified GTU Student Portal</span>
+            <span>GTU Student Account</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             {name || "GTU Student"}
           </h1>
           <p className="text-xs sm:text-sm text-blue-100/80 max-w-xl">
-            Enrollment No: <span className="font-mono font-bold text-white">{enrollmentNo || "210120111001"}</span> • {course} {branch} (Sem {semester}) • {college}
+            Enrollment No: <span className="font-mono font-bold text-white">{enrollmentNo || "N/A"}</span> • {course} {branch} (Sem {semester}) • {college}
           </p>
         </div>
 
@@ -177,18 +231,25 @@ export function ProfileSettings() {
         <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
           <div className="text-center px-3 border-r border-white/20">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-200 block">Current CPI</span>
-            <span className="text-2xl font-black text-white">{resultsData?.cpi || "8.97"}</span>
+            <span className="text-2xl font-black text-white">{hasResults ? (resultsData?.cpi || "0.00") : "—"}</span>
           </div>
           <div className="text-center px-3 border-r border-white/20">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-200 block">CGPA</span>
-            <span className="text-2xl font-black text-white">{resultsData?.cgpa || "8.97"}</span>
+            <span className="text-2xl font-black text-white">{hasResults ? (resultsData?.cgpa || "0.00") : "—"}</span>
           </div>
           <div className="text-center px-3">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300 block">Backlogs</span>
-            <span className="text-2xl font-black text-emerald-400">0</span>
+            <span className="text-2xl font-black text-emerald-400">{hasResults ? (resultsData?.currentBacklogs ?? 0) : "—"}</span>
           </div>
         </div>
       </div>
+
+      {resultSyncMsg && (
+        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span>{resultSyncMsg}</span>
+        </div>
+      )}
 
       {/* SECTION 1: GTU OFFICIAL ACADEMIC RESULTS & GRADE TRANSCRIPTS */}
       <div className="bg-card text-card-foreground rounded-3xl border border-border/80 shadow-lg p-6 sm:p-8 space-y-6">
@@ -201,121 +262,250 @@ export function ProfileSettings() {
               </h2>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Complete semester-wise grade transcripts, Theory/Practical marks breakdown, and university grade points.
+              Authentic semester-wise grade transcripts, Theory/Practical marks breakdown, and university grade points.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={handleSyncGTUResults}
-              disabled={syncingResults}
-              className="px-3.5 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+              onClick={() => {
+                setShowLiveGateway(true);
+                fetchLiveGTUSession();
+              }}
+              className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${syncingResults ? "animate-spin" : ""}`} />
-              <span>{syncingResults ? "Syncing..." : "Sync Latest GTU Results"}</span>
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>Fetch Official Result from GTU</span>
             </button>
-            <button
-              onClick={() => window.print()}
-              className="px-3.5 py-2 rounded-xl bg-muted hover:bg-accent text-foreground text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <Printer className="w-3.5 h-3.5 text-muted-foreground" />
-              <span>Print Marksheet</span>
-            </button>
+            {hasResults && (
+              <button
+                onClick={() => window.print()}
+                className="px-3.5 py-2 rounded-xl bg-muted hover:bg-accent text-foreground text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Print</span>
+              </button>
+            )}
           </div>
         </div>
 
-        {resultSyncMsg && (
-          <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-medium flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>{resultSyncMsg}</span>
+        {/* LIVE GTU SERVER GATEWAY MODAL / EMBED */}
+        {showLiveGateway && (
+          <div className="p-5 rounded-2xl border-2 border-blue-500/30 bg-blue-50/50 dark:bg-blue-950/20 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <h3 className="font-bold text-sm text-foreground">Live GTU Marksheet Verification Gateway</h3>
+              </div>
+              <button
+                onClick={() => setShowLiveGateway(false)}
+                className="text-xs text-muted-foreground hover:text-foreground font-semibold"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <p className="text-xs text-muted-foreground">
+              To fetch your 100% genuine mark records directly from <span className="font-semibold text-foreground">gturesults.in</span>, enter the live visual security CAPTCHA below:
+            </p>
+
+            {liveGatewayError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{liveGatewayError}</span>
+              </div>
+            )}
+
+            {loadingLiveSession ? (
+              <div className="py-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
+                <span>Connecting to GTU Result Server...</span>
+              </div>
+            ) : liveSessionData ? (
+              <form onSubmit={handleFetchAndSaveLiveResult} className="space-y-3 max-w-lg">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-foreground">Select Exam Batch</label>
+                  <select
+                    value={selectedLiveBatch}
+                    onChange={(e) => setSelectedLiveBatch(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-background border border-border text-xs focus:ring-2 focus:ring-blue-500"
+                  >
+                    {liveSessionData.batches?.map((b: any) => (
+                      <option key={b.value} value={b.value}>
+                        {b.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-foreground">Enrollment Number</label>
+                    <input
+                      type="text"
+                      disabled
+                      value={enrollmentNo}
+                      className="w-full px-3 py-2 rounded-xl bg-muted border border-border text-xs font-mono font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-foreground">Enter Visual Captcha</label>
+                    <div className="flex items-center gap-2">
+                      {liveSessionData.captchaImage ? (
+                        <div className="relative border border-border rounded-lg overflow-hidden bg-white shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={liveSessionData.captchaImage}
+                            alt="GTU Captcha"
+                            className="h-9 w-24 object-contain"
+                          />
+                        </div>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={fetchLiveGTUSession}
+                        title="Refresh Captcha"
+                        className="p-2 rounded-lg border border-border hover:bg-muted shrink-0"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                      </button>
+                      <input
+                        type="text"
+                        required
+                        maxLength={6}
+                        value={liveCaptchaCode}
+                        onChange={(e) => setLiveCaptchaCode(e.target.value)}
+                        placeholder="Captcha"
+                        className="w-full px-3 py-2 rounded-xl bg-background border border-border text-xs font-mono font-bold uppercase focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={fetchingLiveResult || savingLiveResult}
+                  className="py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${fetchingLiveResult ? "animate-spin" : ""}`} />
+                  <span>{fetchingLiveResult ? "Fetching & Verifying..." : "Verify & Save Official Result"}</span>
+                </button>
+              </form>
+            ) : null}
           </div>
         )}
 
-        {/* Semester Tab Switcher */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {resultsData?.results?.map((r: any) => (
-            <button
-              key={r.semester}
-              onClick={() => setSelectedSemTab(r.semester)}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
-                selectedSemTab === r.semester
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/25"
-                  : "bg-muted hover:bg-accent text-muted-foreground"
-              }`}
-            >
-              <span>Semester {r.semester}</span>
-              <span className={`px-1.5 py-0.5 rounded-md text-[10px] ${selectedSemTab === r.semester ? "bg-white/20 text-white" : "bg-background text-foreground"}`}>
-                SPI: {r.spi}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Current Semester Grade Card Details */}
-        {currentSemTranscript ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-muted/40 border border-border/60">
-              <div>
-                <span className="text-[11px] text-muted-foreground block font-medium">Exam Session</span>
-                <span className="text-sm font-bold text-foreground">{currentSemTranscript.examSession}</span>
-              </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground block font-medium">Semester SPI</span>
-                <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400">{currentSemTranscript.spi}</span>
-              </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground block font-medium">Cumulative CPI</span>
-                <span className="text-sm font-extrabold text-indigo-600 dark:text-indigo-400">{currentSemTranscript.cpi}</span>
-              </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground block font-medium">Result Status</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                  {currentSemTranscript.resultStatus}
-                </span>
-              </div>
+        {/* RESULTS TRANSCRIPT DISPLAY */}
+        {loadingResults ? (
+          <div className="py-12 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
+            <span>Loading academic marksheet...</span>
+          </div>
+        ) : hasResults ? (
+          <div className="space-y-6">
+            {/* Semester Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-border/60">
+              {resultsData.results.map((r: any) => (
+                <button
+                  key={r.semester}
+                  onClick={() => setSelectedSemTab(r.semester)}
+                  className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                    selectedSemTab === r.semester
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                      : "bg-muted/70 hover:bg-muted text-foreground"
+                  }`}
+                >
+                  <span>Semester {r.semester}</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${selectedSemTab === r.semester ? "bg-white/20 text-white" : "bg-background text-muted-foreground font-mono"}`}>
+                    SPI: {r.spi}
+                  </span>
+                </button>
+              ))}
             </div>
 
-            {/* Subject Marks Table */}
-            <div className="overflow-x-auto rounded-2xl border border-border">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-muted text-muted-foreground uppercase text-[10px] font-bold tracking-wider">
-                  <tr>
-                    <th className="py-3 px-3.5">Code</th>
-                    <th className="py-3 px-3.5">Subject Name</th>
-                    <th className="py-3 px-3">Theory (ESE)</th>
-                    <th className="py-3 px-3">Theory (Mid)</th>
-                    <th className="py-3 px-3">Practical (ESE)</th>
-                    <th className="py-3 px-3">Practical (PA)</th>
-                    <th className="py-3 px-3 text-center">Grade</th>
-                    <th className="py-3 px-3 text-center">Points</th>
-                    <th className="py-3 px-3 text-center">Credits</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/60">
-                  {currentSemTranscript.subjects?.map((sub: any, idx: number) => (
-                    <tr key={idx} className="hover:bg-muted/30 transition-colors">
-                      <td className="py-3 px-3.5 font-mono font-bold text-foreground">{sub.code}</td>
-                      <td className="py-3 px-3.5 font-medium text-foreground max-w-xs">{sub.name}</td>
-                      <td className="py-3 px-3 font-mono">{sub.theoryE}</td>
-                      <td className="py-3 px-3 font-mono">{sub.theoryM}</td>
-                      <td className="py-3 px-3 font-mono">{sub.practicalE}</td>
-                      <td className="py-3 px-3 font-mono">{sub.practicalM}</td>
-                      <td className="py-3 px-3 text-center">
-                        <span className="inline-block px-2 py-0.5 rounded-md font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs">
-                          {sub.grade}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-center font-bold text-foreground">{sub.gradePoints}</td>
-                      <td className="py-3 px-3 text-center font-bold text-muted-foreground">{sub.credits}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {/* Selected Semester Marksheet Details */}
+            {currentSemTranscript && (
+              <div className="space-y-5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-muted/40 border border-border/60">
+                  <div>
+                    <span className="text-[11px] text-muted-foreground block font-medium">Exam Session</span>
+                    <span className="text-xs font-bold text-foreground">{currentSemTranscript.examSession}</span>
+                  </div>
+                  <div>
+                    <span className="text-[11px] text-muted-foreground block font-medium">Semester SPI</span>
+                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400 font-mono">{currentSemTranscript.spi}</span>
+                  </div>
+                  <div>
+                    <span className="text-[11px] text-muted-foreground block font-medium">Cumulative CPI</span>
+                    <span className="text-xs font-bold text-foreground font-mono">{currentSemTranscript.cpi}</span>
+                  </div>
+                  <div>
+                    <span className="text-[11px] text-muted-foreground block font-medium">Result Status</span>
+                    <span className="inline-flex items-center gap-1 text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>{currentSemTranscript.resultStatus}</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Grade Table */}
+                <div className="overflow-x-auto rounded-2xl border border-border">
+                  <table className="w-full text-xs text-left">
+                    <thead className="bg-muted text-muted-foreground font-bold border-b border-border">
+                      <tr>
+                        <th className="py-3 px-3">Subject Code</th>
+                        <th className="py-3 px-3">Subject Title</th>
+                        <th className="py-3 px-3">ESE (Th)</th>
+                        <th className="py-3 px-3">PA (Th)</th>
+                        <th className="py-3 px-3">ESE (Pr)</th>
+                        <th className="py-3 px-3">PA (Pr)</th>
+                        <th className="py-3 px-3 text-center">Grade</th>
+                        <th className="py-3 px-3 text-center">Grade Points</th>
+                        <th className="py-3 px-3 text-center">Credits</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60">
+                      {currentSemTranscript.subjects?.map((sub: any, idx: number) => (
+                        <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-3 px-3 font-mono font-bold text-blue-600 dark:text-blue-400">{sub.code}</td>
+                          <td className="py-3 px-3 font-semibold text-foreground">{sub.name}</td>
+                          <td className="py-3 px-3 font-mono">{sub.theoryE}</td>
+                          <td className="py-3 px-3 font-mono">{sub.theoryM}</td>
+                          <td className="py-3 px-3 font-mono">{sub.practicalE}</td>
+                          <td className="py-3 px-3 font-mono">{sub.practicalM}</td>
+                          <td className="py-3 px-3 text-center">
+                            <span className="inline-block px-2 py-0.5 rounded-md font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs">
+                              {sub.grade}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-center font-bold text-foreground">{sub.gradePoints}</td>
+                          <td className="py-3 px-3 text-center font-bold text-muted-foreground">{sub.credits}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="p-8 text-center text-muted-foreground text-xs">
-            No result data found for this semester. Click &quot;Sync Latest GTU Results&quot; to fetch from server.
+          <div className="py-12 px-6 rounded-2xl border border-dashed border-border text-center space-y-3 bg-muted/20">
+            <BookOpen className="w-10 h-10 mx-auto text-muted-foreground/40" />
+            <h3 className="font-bold text-sm text-foreground">No Official Marksheet Synced Yet</h3>
+            <p className="text-xs text-muted-foreground max-w-md mx-auto">
+              To guarantee 100% data integrity and avoid showing unverified marks, click the button below to connect with GTU (gturesults.in) and fetch your genuine university transcript.
+            </p>
+            <button
+              onClick={() => {
+                setShowLiveGateway(true);
+                fetchLiveGTUSession();
+              }}
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all inline-flex items-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>Connect GTU & Sync My Marksheet</span>
+            </button>
           </div>
         )}
       </div>
@@ -452,7 +642,7 @@ export function ProfileSettings() {
             <h3 className="text-sm font-bold text-foreground">1-Click Demo Students</h3>
           </div>
           <p className="text-xs text-muted-foreground">
-            Switch between pre-configured GTU student profiles across different semesters and branches:
+            Switch between pre-configured GTU student profiles with verified academic transcripts:
           </p>
 
           <div className="space-y-2">

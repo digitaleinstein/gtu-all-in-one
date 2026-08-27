@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { generateGTUStudentResults, syncAndStoreStudentResults } from "@/lib/gtu-results-engine";
+import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const queryEnrollment = searchParams.get("enrollment");
 
-    let userId = (session?.user as any)?.id;
+    const userId = (session?.user as any)?.id;
     let enrollmentNo = queryEnrollment || (session?.user as any)?.enrollmentNo;
 
     if (userId) {
@@ -24,59 +24,74 @@ export async function GET(req: Request) {
         },
       });
 
-      if (user && user.studentResults.length > 0) {
-        const formattedResults = user.studentResults.map((r) => ({
-          ...r,
-          subjects: JSON.parse(r.subjectsJson || "[]"),
-        }));
-
-        const latestResult = formattedResults[formattedResults.length - 1];
-
-        return NextResponse.json({
-          success: true,
-          enrollmentNo: user.enrollmentNo,
-          studentName: user.name,
-          college: user.college,
-          branch: user.branch,
-          course: user.course,
-          cpi: latestResult?.cpi || 8.95,
-          cgpa: latestResult?.cgpa || 8.95,
-          currentBacklogs: 0,
-          totalBacklogs: 0,
-          results: formattedResults,
-        });
-      }
-
-      if (user?.enrollmentNo) {
+      if (user) {
         enrollmentNo = user.enrollmentNo;
+        if (user.studentResults && user.studentResults.length > 0) {
+          const formattedResults = user.studentResults.map((r) => ({
+            ...r,
+            subjects: JSON.parse(r.subjectsJson || "[]"),
+          }));
+
+          const latestResult = formattedResults[formattedResults.length - 1];
+
+          return NextResponse.json({
+            success: true,
+            hasSyncedResults: true,
+            enrollmentNo: user.enrollmentNo,
+            studentName: user.name,
+            college: user.college,
+            branch: user.branch,
+            course: user.course,
+            cpi: latestResult?.cpi || 0,
+            cgpa: latestResult?.cgpa || 0,
+            currentBacklogs: latestResult?.currentBacklogs ?? 0,
+            totalBacklogs: latestResult?.totalBacklogs ?? 0,
+            results: formattedResults,
+          });
+        } else {
+          // No results fetched yet for this real user
+          const decoded = decodeGTUEnrollment(user.enrollmentNo || "");
+          return NextResponse.json({
+            success: true,
+            hasSyncedResults: false,
+            enrollmentNo: user.enrollmentNo,
+            studentName: user.name,
+            college: user.college || decoded.collegeName,
+            branch: user.branch || decoded.branchName,
+            course: user.course || decoded.courseCode,
+            cpi: 0,
+            cgpa: 0,
+            currentBacklogs: 0,
+            totalBacklogs: 0,
+            results: [],
+          });
+        }
       }
     }
 
-    if (!enrollmentNo) {
-      enrollmentNo = "210120111001"; // Default demo student
+    if (enrollmentNo) {
+      const decoded = decodeGTUEnrollment(enrollmentNo);
+      return NextResponse.json({
+        success: true,
+        hasSyncedResults: false,
+        enrollmentNo,
+        studentName: session?.user?.name || "GTU Student",
+        college: (session?.user as any)?.college || decoded.collegeName,
+        branch: (session?.user as any)?.branch || decoded.branchName,
+        course: (session?.user as any)?.course || decoded.courseCode,
+        cpi: 0,
+        cgpa: 0,
+        currentBacklogs: 0,
+        totalBacklogs: 0,
+        results: [],
+      });
     }
-
-    // Generate accurate results
-    const generated = generateGTUStudentResults(enrollmentNo, 5);
-
-    if (userId) {
-      await syncAndStoreStudentResults(userId, enrollmentNo, 5);
-    }
-
-    const latest = generated[generated.length - 1];
 
     return NextResponse.json({
       success: true,
-      enrollmentNo,
-      studentName: session?.user?.name || "GTU Student",
-      college: (session?.user as any)?.college || "028 - L.D. College of Engineering, Ahmedabad",
-      branch: (session?.user as any)?.branch || "Computer Engineering",
-      course: (session?.user as any)?.course || "BE",
-      cpi: latest?.cpi || 8.95,
-      cgpa: latest?.cgpa || 8.95,
-      currentBacklogs: 0,
-      totalBacklogs: 0,
-      results: generated,
+      hasSyncedResults: false,
+      enrollmentNo: "",
+      results: [],
     });
   } catch (error: any) {
     console.error("Failed to fetch student results:", error);
@@ -87,32 +102,74 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const body = await req.json();
-    const { action, enrollmentNo } = body;
-
-    const targetEnrollment = enrollmentNo || (session?.user as any)?.enrollmentNo;
-    if (!targetEnrollment) {
-      return NextResponse.json({ error: "Enrollment number is required" }, { status: 400 });
+    const userId = (session?.user as any)?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized. Please log in." }, { status: 401 });
     }
 
-    const userId = (session?.user as any)?.id;
-    if (userId) {
-      const results = await syncAndStoreStudentResults(userId, targetEnrollment, 6);
+    const body = await req.json();
+    const { action, marksheet } = body;
+
+    if (action === "saveLiveResult" && marksheet) {
+      const semester = parseInt(marksheet.semester, 10) || 5;
+      const examSession = marksheet.examSession || "Summer 2026";
+      const spi = parseFloat(marksheet.spi) || 0;
+      const cpi = parseFloat(marksheet.cpi) || 0;
+      const cgpa = parseFloat(marksheet.cgpa) || 0;
+      const currentBacklogs = parseInt(marksheet.currentBacklog, 10) || 0;
+      const totalBacklogs = parseInt(marksheet.totalBacklog, 10) || 0;
+      const resultStatus = marksheet.resultStatus || "PASS";
+      const subjectsJson = JSON.stringify(marksheet.subjects || []);
+
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      const enrollmentNo = user?.enrollmentNo || "210120111001";
+
+      const existing = await prisma.studentResult.findFirst({
+        where: { userId, semester, examSession },
+      });
+
+      if (existing) {
+        await prisma.studentResult.update({
+          where: { id: existing.id },
+          data: {
+            spi,
+            cpi,
+            cgpa,
+            currentBacklogs,
+            totalBacklogs,
+            resultStatus,
+            subjectsJson,
+            declaredDate: new Date(),
+          },
+        });
+      } else {
+        await prisma.studentResult.create({
+          data: {
+            userId,
+            enrollmentNo,
+            semester,
+            examSession,
+            spi,
+            cpi,
+            cgpa,
+            currentBacklogs,
+            totalBacklogs,
+            resultStatus,
+            subjectsJson,
+            declaredDate: new Date(),
+          },
+        });
+      }
+
       return NextResponse.json({
         success: true,
-        message: `Successfully synchronized GTU academic records for ${targetEnrollment}`,
-        results,
+        message: "Official GTU Marksheet successfully synced and saved to your profile!",
       });
     }
 
-    const generated = generateGTUStudentResults(targetEnrollment, 6);
-    return NextResponse.json({
-      success: true,
-      message: `Generated GTU verified grade cards for ${targetEnrollment}`,
-      results: generated,
-    });
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error: any) {
-    console.error("Failed to sync student results:", error);
-    return NextResponse.json({ error: error.message || "Failed to process results" }, { status: 500 });
+    console.error("Failed to save student result:", error);
+    return NextResponse.json({ error: "Failed to save marksheet" }, { status: 500 });
   }
 }

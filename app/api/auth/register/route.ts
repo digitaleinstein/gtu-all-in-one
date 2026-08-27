@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
-import { syncAndStoreStudentResults } from "@/lib/gtu-results-engine";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -70,36 +69,14 @@ export async function POST(req: Request) {
       },
     });
 
-    // Automatically sync & store student result history
-    try {
-      await syncAndStoreStudentResults(user.id, user.enrollmentNo!, user.semester || 5);
-    } catch (resErr) {
-      console.warn("Failed to auto-seed student results:", resErr);
-    }
-
     // Create default welcome notification
     await prisma.notification.create({
       data: {
         userId: user.id,
         title: "🎉 Welcome to GTU All In One!",
-        message: `Your account for ${user.course} - ${user.branch} (${user.college}) is active! Your GTU academic results have been synchronized.`,
+        message: `Your student profile for ${user.course} - ${user.branch} (${user.college}) is ready!`,
         type: "INFO",
         link: "/profile",
-      },
-    });
-
-    // Create default result subscription for current semester
-    await prisma.resultSubscription.create({
-      data: {
-        userId: user.id,
-        enrollmentNo: user.enrollmentNo,
-        course: user.course || "BE",
-        branch: user.branch || "Computer Engineering",
-        semester: user.semester || 5,
-        examSession: "Winter 2024",
-        examType: "Regular",
-        emailAlerts: true,
-        pushAlerts: true,
       },
     });
 

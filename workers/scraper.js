@@ -4,6 +4,24 @@ const cheerio = require("cheerio");
 
 const prisma = new PrismaClient();
 
+function parseGTUDate(dateStr) {
+  if (!dateStr) return new Date();
+  const cleaned = dateStr.trim();
+  const d = new Date(cleaned);
+  if (!isNaN(d.getTime())) {
+    return d;
+  }
+  const parts = cleaned.split(/[-/.]/);
+  if (parts.length === 3) {
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    const parsed = new Date(year, month, day);
+    if (!isNaN(parsed.getTime())) return parsed;
+  }
+  return new Date();
+}
+
 async function runWorker() {
   console.log("=========================================");
   console.log(`[GTU Worker] Scraping live data from gtu.ac.in & gturesults.in...`);
@@ -24,10 +42,12 @@ async function runWorker() {
       const $ = cheerio.load(html);
 
       const scrapedLinks = [];
-      $("a[href*='gtusitecirculars'], a[id*='lvCircular'] a, a[id*='lblContentHeading']").each((_, el) => {
-        const $el = $(el);
-        const title = $el.text().trim().replace(/\s+/g, " ");
-        let href = $el.attr("href") || "";
+      $(".post-content").each((_, container) => {
+        const $c = $(container);
+        const $link = $c.find("h3 a[href], a[href*='gtusitecirculars']").last();
+        const title = $link.text().trim().replace(/\s+/g, " ");
+        let href = $link.attr("href") || "";
+        const dateText = $c.find("p[id*='UploadDate'], p[id*='lblUploadDate'], p.date").text().trim();
 
         if (title.length > 5 && (href.includes(".pdf") || href.includes("uploads") || href.includes("gtusitecirculars"))) {
           if (!href.startsWith("http")) {
@@ -48,31 +68,41 @@ async function runWorker() {
             category = "PMMS & Research";
           }
 
-          scrapedLinks.push({
-            title,
-            category,
-            publishedDate: new Date(),
-            pdfUrl: href,
-            isPinned: tLower.includes("important") || tLower.includes("instruction"),
-            description: `Official GTU Circular parsed live from gtu.ac.in server.`,
-          });
+          const publishedDate = parseGTUDate(dateText);
+
+          if (!scrapedLinks.some((c) => c.title === title || c.pdfUrl === href)) {
+            scrapedLinks.push({
+              title,
+              category,
+              publishedDate,
+              pdfUrl: href,
+              isPinned: tLower.includes("important") || tLower.includes("instruction"),
+              description: `Official GTU Circular parsed live from gtu.ac.in server.`,
+            });
+          }
         }
       });
 
-      for (const c of scrapedLinks.slice(0, 30)) {
+      for (const item of scrapedLinks) {
         const existing = await prisma.circular.findFirst({
-          where: { OR: [{ title: c.title }, { pdfUrl: c.pdfUrl }] },
+          where: { OR: [{ title: item.title }, { pdfUrl: item.pdfUrl }] },
         });
+
         if (!existing) {
-          await prisma.circular.create({ data: c });
+          await prisma.circular.create({ data: item });
           circularsCount++;
+        } else {
+          await prisma.circular.update({
+            where: { id: existing.id },
+            data: { publishedDate: item.publishedDate },
+          });
         }
       }
-      console.log(`[GTU Worker] ✅ Scraped & stored ${scrapedLinks.length} live circulars (${circularsCount} new added).`);
+      console.log(`[GTU Worker] Synced ${scrapedLinks.length} live circulars (${circularsCount} new added).`);
     }
 
-    // 2. Fetch live Declared Results from gturesults.in
-    console.log("[GTU Worker] Scraping live declared exams from https://www.gturesults.in...");
+    // 2. Fetch live declared results
+    console.log("[GTU Worker] Scraping declared results from https://www.gturesults.in...");
     const resultsRes = await fetch("https://www.gturesults.in", {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -84,7 +114,7 @@ async function runWorker() {
       const html = await resultsRes.text();
       const $ = cheerio.load(html);
 
-      const scrapedExams = [];
+      const scrapedResults = [];
       $("select#ddlbatch option, select[name*='batch'] option").each((_, el) => {
         const $opt = $(el);
         const val = $opt.attr("value") || "";
@@ -92,7 +122,7 @@ async function runWorker() {
 
         if (val && val !== "0" && rawText.length > 5) {
           const parts = val.split("$");
-          const examCode = parts[0] || `EXAM_${scrapedExams.length}`;
+          const examCode = parts[0] || `EXAM_${scrapedResults.length}`;
           const sessionCode = parts[1] || "Summer 2024";
           const dateStr = parts[2] || new Date().toISOString();
 
@@ -101,14 +131,13 @@ async function runWorker() {
           else if (rawText.startsWith("ME")) course = "ME";
           else if (rawText.startsWith("MBA")) course = "MBA";
           else if (rawText.startsWith("MCA")) course = "MCA";
-          else if (rawText.startsWith("BCA")) course = "BCA";
           else if (rawText.startsWith("Diploma") || rawText.startsWith("DI")) course = "Diploma";
           else if (rawText.startsWith("BPH") || rawText.startsWith("B.Pharm")) course = "B.Pharm";
 
           const semMatch = rawText.match(/SEM\s*(\d+)/i);
           const semester = semMatch ? parseInt(semMatch[1], 10) : 5;
 
-          scrapedExams.push({
+          scrapedResults.push({
             examTitle: rawText,
             examCode,
             declaredDate: new Date(dateStr),
@@ -120,28 +149,27 @@ async function runWorker() {
         }
       });
 
-      for (const r of scrapedExams.slice(0, 40)) {
+      for (const item of scrapedResults) {
         const existing = await prisma.liveResult.findFirst({
-          where: { examTitle: r.examTitle },
+          where: { examTitle: item.examTitle },
         });
+
         if (!existing) {
-          await prisma.liveResult.create({ data: r });
+          await prisma.liveResult.create({ data: item });
           resultsCount++;
         }
       }
-      console.log(`[GTU Worker] ✅ Scraped & stored ${scrapedExams.length} live declared exam entries (${resultsCount} new added).`);
+      console.log(`[GTU Worker] Synced ${scrapedResults.length} declared exam batches (${resultsCount} new added).`);
     }
 
-    console.log("[GTU Worker] Complete live data synchronization finished!");
-  } catch (error) {
-    console.error("[GTU Worker] Scraper failed:", error);
+    console.log("=========================================");
+    console.log(`[GTU Worker] Real-time sync cycle completed successfully!`);
+    console.log("=========================================");
+  } catch (err) {
+    console.error("[GTU Worker] Error during background synchronization:", err);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-if (require.main === module) {
-  runWorker();
-}
-
-module.exports = { runWorker };
+runWorker();
