@@ -7,12 +7,10 @@ import {
   Printer,
   ZoomIn,
   ZoomOut,
-  Maximize2,
   Bookmark,
-  FileText,
   CheckCircle,
-  HelpCircle,
 } from "lucide-react";
+import { getGTUSubjectQuestions } from "@/lib/gtu-paper-questions";
 
 interface PaperData {
   id: string;
@@ -47,6 +45,13 @@ export function PDFViewerModal({
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   if (!isOpen) return null;
+
+  const questions = getGTUSubjectQuestions(
+    paper.subjectCode,
+    paper.subjectName,
+    paper.course,
+    paper.semester
+  );
 
   const handleDownload = async () => {
     try {
@@ -102,7 +107,7 @@ export function PDFViewerModal({
             <div className="hidden sm:flex items-center gap-1 bg-muted/60 p-1 rounded-xl border border-border">
               <button
                 onClick={() => setZoomLevel((z) => Math.max(70, z - 10))}
-                className="p-1 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground"
+                className="p-1 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground cursor-pointer"
                 title="Zoom Out"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
@@ -112,7 +117,7 @@ export function PDFViewerModal({
               </span>
               <button
                 onClick={() => setZoomLevel((z) => Math.min(140, z + 10))}
-                className="p-1 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground"
+                className="p-1 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground cursor-pointer"
                 title="Zoom In"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
@@ -122,7 +127,7 @@ export function PDFViewerModal({
             {onBookmarkToggle && (
               <button
                 onClick={() => onBookmarkToggle(paper.id)}
-                className={`p-2 rounded-xl border transition-colors ${
+                className={`p-2 rounded-xl border transition-colors cursor-pointer ${
                   paper.isSaved
                     ? "bg-amber-100 border-amber-300 text-amber-600 dark:bg-amber-950/60 dark:border-amber-700"
                     : "border-border bg-muted/40 text-muted-foreground hover:text-foreground"
@@ -135,7 +140,7 @@ export function PDFViewerModal({
 
             <button
               onClick={handlePrint}
-              className="p-2 rounded-xl border border-border bg-muted/40 text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
+              className="p-2 rounded-xl border border-border bg-muted/40 text-muted-foreground hover:text-foreground transition-colors hidden sm:block cursor-pointer"
               title="Print Question Paper"
             >
               <Printer className="w-4 h-4" />
@@ -144,7 +149,7 @@ export function PDFViewerModal({
             <button
               onClick={handleDownload}
               disabled={downloading}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-primary text-primary-foreground font-semibold text-xs rounded-xl shadow-sm hover:bg-primary/90 transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-primary text-primary-foreground font-semibold text-xs rounded-xl shadow-sm hover:bg-primary/90 transition-colors cursor-pointer disabled:opacity-60"
             >
               {downloadSuccess ? (
                 <>
@@ -161,7 +166,7 @@ export function PDFViewerModal({
 
             <button
               onClick={onClose}
-              className="p-2 rounded-xl border border-border bg-muted/40 text-muted-foreground hover:text-foreground transition-colors ml-1"
+              className="p-2 rounded-xl border border-border bg-muted/40 text-muted-foreground hover:text-foreground transition-colors ml-1 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -205,72 +210,39 @@ export function PDFViewerModal({
               </ol>
             </div>
 
-            {/* Sample Question Items formatted strictly as GTU Paper */}
+            {/* Dynamic Subject-Specific Question Units */}
             <div className="space-y-6 text-xs font-sans text-neutral-900 mt-6">
-              {/* Question 1 */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-start font-bold border-b border-neutral-200 pb-1">
-                  <span>Q.1</span>
-                  <span>Marks</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(a) Define asymptotic notations (Big-O, Omega, Theta) with mathematical formulations.</span>
-                  <span className="font-bold shrink-0">[03]</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(b) Explain Divide and Conquer design paradigm with suitable example.</span>
-                  <span className="font-bold shrink-0">[04]</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(c) Solve the recurrence relation T(n) = 2T(n/2) + n using Master Theorem.</span>
-                  <span className="font-bold shrink-0">[07]</span>
-                </div>
-              </div>
+              {questions.map((q, qIdx) => (
+                <div key={qIdx} className="space-y-3 pt-2">
+                  <div className="flex justify-between items-start font-bold border-b border-neutral-200 pb-1">
+                    <span>{q.qNum}</span>
+                    <span>Marks</span>
+                  </div>
 
-              {/* Question 2 */}
-              <div className="space-y-3 pt-2">
-                <div className="flex justify-between items-start font-bold border-b border-neutral-200 pb-1">
-                  <span>Q.2</span>
-                  <span>Marks</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(a) What is greedy algorithm? State its core properties.</span>
-                  <span className="font-bold shrink-0">[03]</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(b) Construct optimal Huffman Coding tree for given character frequencies.</span>
-                  <span className="font-bold shrink-0">[04]</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(c) Explain Dijkstra&apos;s Single Source Shortest Path algorithm with step-by-step trace.</span>
-                  <span className="font-bold shrink-0">[07]</span>
-                </div>
-                <div className="text-center font-bold text-neutral-600 py-1 text-[11px]">— OR —</div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(c) Explain Kruskal&apos;s algorithm for finding Minimum Spanning Tree with complexity analysis.</span>
-                  <span className="font-bold shrink-0">[07]</span>
-                </div>
-              </div>
+                  {q.parts.map((part, pIdx) => (
+                    <div key={pIdx} className="flex justify-between items-baseline gap-4 pl-4">
+                      <span>
+                        <strong className="mr-2">{part.label}</strong>
+                        {part.text}
+                      </span>
+                      <span className="font-bold shrink-0">{part.marks}</span>
+                    </div>
+                  ))}
 
-              {/* Question 3 */}
-              <div className="space-y-3 pt-2">
-                <div className="flex justify-between items-start font-bold border-b border-neutral-200 pb-1">
-                  <span>Q.3</span>
-                  <span>Marks</span>
+                  {q.orOption && (
+                    <>
+                      <div className="text-center font-bold text-neutral-600 py-1 text-[11px]">— OR —</div>
+                      <div className="flex justify-between items-baseline gap-4 pl-4">
+                        <span>
+                          <strong className="mr-2">{q.orOption.label}</strong>
+                          {q.orOption.text}
+                        </span>
+                        <span className="font-bold shrink-0">{q.orOption.marks}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(a) Differentiate between Dynamic Programming and Divide & Conquer.</span>
-                  <span className="font-bold shrink-0">[03]</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(b) Solve 0/1 Knapsack Problem using Dynamic Programming approach.</span>
-                  <span className="font-bold shrink-0">[04]</span>
-                </div>
-                <div className="flex justify-between items-baseline gap-4 pl-4">
-                  <span>(c) Find Longest Common Subsequence (LCS) for sequences X = &quot;ABCBDAB&quot; and Y = &quot;BDCABA&quot;.</span>
-                  <span className="font-bold shrink-0">[07]</span>
-                </div>
-              </div>
+              ))}
 
               <div className="text-center pt-6 text-[11px] text-neutral-500 font-semibold">
                 ************* END OF PAPER *************
@@ -282,12 +254,12 @@ export function PDFViewerModal({
         {/* Modal Footer Info */}
         <div className="px-5 py-3 border-t border-border bg-card flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span>Direct GTU Paper Archive</span>
+            <span>Verified GTU Examination Paper</span>
             <span>•</span>
-            <span>{paper.downloadsCount} total downloads</span>
+            <span>{paper.downloadsCount} downloads</span>
           </div>
           <p className="text-[11px]">
-            Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border text-foreground font-mono">Ctrl + P</kbd> to print.
+            Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border text-foreground font-mono">Ctrl + P</kbd> to print directly.
           </p>
         </div>
       </div>

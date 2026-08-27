@@ -65,78 +65,108 @@ async function main() {
 
   console.log(`✅ Created 3 GTU student accounts (Password for all: gtu12345)`);
 
-  // 2. Comprehensive GTU Question Papers (PYQs)
-  const papersData = [
+  // 2. Comprehensive GTU Question Papers (PYQs) spanning 2026 to 2022
+  const popularSubjects = [
     // Sem 1 & 2
-    { subjectCode: "3110005", subjectName: "Basic Electrical Engineering (BEE)", course: "BE", branch: "Computer Engineering", semester: 1, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3110005&year=2024&season=Summer", fileSize: "1.4 MB", downloadsCount: 512 },
-    { subjectCode: "3110005", subjectName: "Basic Electrical Engineering (BEE)", course: "BE", branch: "Computer Engineering", semester: 1, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3110005&year=2023&season=Winter", fileSize: "1.2 MB", downloadsCount: 420 },
-    { subjectCode: "3110014", subjectName: "Mathematics - 1 (Calculus)", course: "BE", branch: "Computer Engineering", semester: 1, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3110014&year=2024&season=Summer", fileSize: "1.6 MB", downloadsCount: 890 },
-    { subjectCode: "3110014", subjectName: "Mathematics - 1 (Calculus)", course: "BE", branch: "Computer Engineering", semester: 1, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3110014&year=2023&season=Winter", fileSize: "1.5 MB", downloadsCount: 760 },
-    { subjectCode: "3110002", subjectName: "English", course: "BE", branch: "Computer Engineering", semester: 1, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3110002&year=2024&season=Summer", fileSize: "1.1 MB", downloadsCount: 310 },
-    { subjectCode: "3110006", subjectName: "Basic Mechanical Engineering (BME)", course: "BE", branch: "Mechanical Engineering", semester: 1, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3110006&year=2023&season=Winter", fileSize: "1.3 MB", downloadsCount: 450 },
-    { subjectCode: "3110003", subjectName: "Programming for Problem Solving (PPS)", course: "BE", branch: "Computer Engineering", semester: 2, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3110003&year=2024&season=Summer", fileSize: "1.7 MB", downloadsCount: 940 },
-    { subjectCode: "3110015", subjectName: "Mathematics - 2 (Vector Calculus & Linear Algebra)", course: "BE", branch: "Computer Engineering", semester: 2, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3110015&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 810 },
+    { code: "3110005", name: "Basic Electrical Engineering (BEE)", course: "BE", branch: "Computer Engineering", semester: 1 },
+    { code: "3110006", name: "Basic Mechanical Engineering (BME)", course: "BE", branch: "Mechanical Engineering", semester: 1 },
+    { code: "3110014", name: "Mathematics - 1 (Calculus)", course: "BE", branch: "Computer Engineering", semester: 1 },
+    { code: "3110015", name: "Mathematics - 2 (Vector Calculus & Linear Algebra)", course: "BE", branch: "Computer Engineering", semester: 2 },
+    { code: "3110002", name: "English", course: "BE", branch: "Computer Engineering", semester: 1 },
+    { code: "3110003", name: "Programming for Problem Solving (PPS)", course: "BE", branch: "Computer Engineering", semester: 2 },
+    { code: "3110013", name: "Engineering Graphics & Design (EGD)", course: "BE", branch: "Civil Engineering", semester: 2 },
+    { code: "3110016", name: "Basic Electronics", course: "BE", branch: "Electronics & Communication Engineering", semester: 2 },
 
     // Sem 3
-    { subjectCode: "3130702", subjectName: "Data Structures (DS)", course: "BE", branch: "Computer Engineering", semester: 3, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3130702&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 1120 },
-    { subjectCode: "3130702", subjectName: "Data Structures (DS)", course: "BE", branch: "Computer Engineering", semester: 3, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3130702&year=2023&season=Winter", fileSize: "1.4 MB", downloadsCount: 980 },
-    { subjectCode: "3130703", subjectName: "Database Management Systems (DBMS)", course: "BE", branch: "Computer Engineering", semester: 3, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3130703&year=2024&season=Summer", fileSize: "1.6 MB", downloadsCount: 890 },
-    { subjectCode: "3130704", subjectName: "Digital Fundamentals (DF)", course: "BE", branch: "Computer Engineering", semester: 3, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3130704&year=2023&season=Winter", fileSize: "1.2 MB", downloadsCount: 560 },
-    { subjectCode: "3130006", subjectName: "Probability and Statistics (P&S)", course: "BE", branch: "Computer Engineering", semester: 3, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3130006&year=2024&season=Summer", fileSize: "1.3 MB", downloadsCount: 470 },
-    { subjectCode: "3131904", subjectName: "Material Science and Metallurgy", course: "BE", branch: "Mechanical Engineering", semester: 3, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3131904&year=2024&season=Summer", fileSize: "1.4 MB", downloadsCount: 380 },
-    { subjectCode: "3130606", subjectName: "Geotechnical Engineering", course: "BE", branch: "Civil Engineering", semester: 3, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3130606&year=2023&season=Winter", fileSize: "1.3 MB", downloadsCount: 340 },
+    { code: "3130702", name: "Data Structures (DS)", course: "BE", branch: "Computer Engineering", semester: 3 },
+    { code: "3130703", name: "Database Management Systems (DBMS)", course: "BE", branch: "Computer Engineering", semester: 3 },
+    { code: "3130704", name: "Digital Fundamentals (DF)", course: "BE", branch: "Computer Engineering", semester: 3 },
+    { code: "3130006", name: "Probability and Statistics (P&S)", course: "BE", branch: "Computer Engineering", semester: 3 },
+    { code: "3130008", name: "Design Engineering - I A", course: "BE", branch: "Computer Engineering", semester: 3 },
+    { code: "3131904", name: "Material Science and Metallurgy", course: "BE", branch: "Mechanical Engineering", semester: 3 },
+    { code: "3130606", name: "Geotechnical Engineering", course: "BE", branch: "Civil Engineering", semester: 3 },
 
     // Sem 4
-    { subjectCode: "3140702", subjectName: "Operating System (OS)", course: "BE", branch: "Computer Engineering", semester: 4, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3140702&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 780 },
-    { subjectCode: "3140705", subjectName: "Object Oriented Programming - I (Java)", course: "BE", branch: "Computer Engineering", semester: 4, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3140705&year=2024&season=Summer", fileSize: "1.8 MB", downloadsCount: 1250 },
-    { subjectCode: "3140707", subjectName: "Computer Organization & Architecture (COA)", course: "BE", branch: "Computer Engineering", semester: 4, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3140707&year=2023&season=Winter", fileSize: "1.3 MB", downloadsCount: 620 },
-    { subjectCode: "3140708", subjectName: "Discrete Mathematics (DM)", course: "BE", branch: "Computer Engineering", semester: 4, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3140708&year=2024&season=Summer", fileSize: "1.4 MB", downloadsCount: 690 },
-    { subjectCode: "3141901", subjectName: "Fluid Mechanics and Hydraulics", course: "BE", branch: "Mechanical Engineering", semester: 4, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3141901&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 410 },
-    { subjectCode: "3140603", subjectName: "Structural Analysis", course: "BE", branch: "Civil Engineering", semester: 4, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3140603&year=2024&season=Summer", fileSize: "1.7 MB", downloadsCount: 490 },
+    { code: "3140702", name: "Operating System (OS)", course: "BE", branch: "Computer Engineering", semester: 4 },
+    { code: "3140705", name: "Object Oriented Programming - I (Java)", course: "BE", branch: "Computer Engineering", semester: 4 },
+    { code: "3140707", name: "Computer Organization & Architecture (COA)", course: "BE", branch: "Computer Engineering", semester: 4 },
+    { code: "3140708", name: "Discrete Mathematics (DM)", course: "BE", branch: "Computer Engineering", semester: 4 },
+    { code: "3140709", name: "Principles of Economics and Management (PEM)", course: "BE", branch: "Computer Engineering", semester: 4 },
+    { code: "3141901", name: "Fluid Mechanics and Hydraulics", course: "BE", branch: "Mechanical Engineering", semester: 4 },
+    { code: "3140603", name: "Structural Analysis", course: "BE", branch: "Civil Engineering", semester: 4 },
 
     // Sem 5
-    { subjectCode: "3150703", subjectName: "Analysis and Design of Algorithms (ADA)", course: "BE", branch: "Computer Engineering", semester: 5, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3150703&year=2024&season=Summer", fileSize: "1.6 MB", downloadsCount: 1450 },
-    { subjectCode: "3150703", subjectName: "Analysis and Design of Algorithms (ADA)", course: "BE", branch: "Computer Engineering", semester: 5, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3150703&year=2023&season=Winter", fileSize: "1.5 MB", downloadsCount: 1200 },
-    { subjectCode: "3150710", subjectName: "Computer Networks (CN)", course: "BE", branch: "Computer Engineering", semester: 5, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3150710&year=2024&season=Summer", fileSize: "1.4 MB", downloadsCount: 890 },
-    { subjectCode: "3150711", subjectName: "Software Engineering (SE)", course: "BE", branch: "Computer Engineering", semester: 5, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3150711&year=2024&season=Summer", fileSize: "1.3 MB", downloadsCount: 710 },
-    { subjectCode: "3150713", subjectName: "Python for Data Science", course: "BE", branch: "Computer Engineering", semester: 5, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3150713&year=2024&season=Summer", fileSize: "1.7 MB", downloadsCount: 960 },
-    { subjectCode: "3150709", subjectName: "Professional Ethics", course: "BE", branch: "Computer Engineering", semester: 5, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3150709&year=2023&season=Winter", fileSize: "1.0 MB", downloadsCount: 390 },
-    { subjectCode: "3151908", subjectName: "Heat Transfer", course: "BE", branch: "Mechanical Engineering", semester: 5, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3151908&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 460 },
-    { subjectCode: "3150611", subjectName: "Transportation Engineering", course: "BE", branch: "Civil Engineering", semester: 5, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3150611&year=2023&season=Winter", fileSize: "1.3 MB", downloadsCount: 370 },
+    { code: "3150703", name: "Analysis and Design of Algorithms (ADA)", course: "BE", branch: "Computer Engineering", semester: 5 },
+    { code: "3150710", name: "Computer Networks (CN)", course: "BE", branch: "Computer Engineering", semester: 5 },
+    { code: "3150711", name: "Software Engineering (SE)", course: "BE", branch: "Computer Engineering", semester: 5 },
+    { code: "3150713", name: "Python for Data Science", course: "BE", branch: "Computer Engineering", semester: 5 },
+    { code: "3150709", name: "Professional Ethics", course: "BE", branch: "Computer Engineering", semester: 5 },
+    { code: "3151908", name: "Heat Transfer", course: "BE", branch: "Mechanical Engineering", semester: 5 },
+    { code: "3150611", name: "Transportation Engineering", course: "BE", branch: "Civil Engineering", semester: 5 },
 
     // Sem 6
-    { subjectCode: "3160704", subjectName: "Theory of Computation (TOC)", course: "BE", branch: "Computer Engineering", semester: 6, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3160704&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 840 },
-    { subjectCode: "3160707", subjectName: "Advanced Java Technology (AJT)", course: "BE", branch: "Computer Engineering", semester: 6, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3160707&year=2024&season=Summer", fileSize: "1.8 MB", downloadsCount: 1100 },
-    { subjectCode: "3160714", subjectName: "Data Mining and Business Intelligence", course: "BE", branch: "Computer Engineering", semester: 6, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3160714&year=2023&season=Winter", fileSize: "1.3 MB", downloadsCount: 520 },
-    { subjectCode: "3160712", subjectName: "Microprocessor and Interfacing (MPI)", course: "BE", branch: "Computer Engineering", semester: 6, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3160712&year=2024&season=Summer", fileSize: "1.4 MB", downloadsCount: 670 },
-    { subjectCode: "3161902", subjectName: "Internal Combustion Engines", course: "BE", branch: "Mechanical Engineering", semester: 6, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3161902&year=2023&season=Winter", fileSize: "1.4 MB", downloadsCount: 420 },
+    { code: "3160704", name: "Theory of Computation (TOC)", course: "BE", branch: "Computer Engineering", semester: 6 },
+    { code: "3160707", name: "Advanced Java Technology (AJT)", course: "BE", branch: "Computer Engineering", semester: 6 },
+    { code: "3160714", name: "Data Mining and Business Intelligence", course: "BE", branch: "Computer Engineering", semester: 6 },
+    { code: "3160712", name: "Microprocessor and Interfacing (MPI)", course: "BE", branch: "Computer Engineering", semester: 6 },
+    { code: "3161902", name: "Internal Combustion Engines", course: "BE", branch: "Mechanical Engineering", semester: 6 },
 
     // Sem 7
-    { subjectCode: "3170701", subjectName: "Information and Network Security (INS)", course: "BE", branch: "Computer Engineering", semester: 7, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3170701&year=2024&season=Summer", fileSize: "1.6 MB", downloadsCount: 750 },
-    { subjectCode: "3170710", subjectName: "Mobile Application Development (MAD)", course: "BE", branch: "Computer Engineering", semester: 7, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3170710&year=2024&season=Summer", fileSize: "1.7 MB", downloadsCount: 980 },
-    { subjectCode: "3170716", subjectName: "Artificial Intelligence (AI)", course: "BE", branch: "Computer Engineering", semester: 7, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3170716&year=2023&season=Winter", fileSize: "1.5 MB", downloadsCount: 890 },
-    { subjectCode: "3170724", subjectName: "Machine Learning (ML)", course: "BE", branch: "Computer Engineering", semester: 7, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3170724&year=2024&season=Summer", fileSize: "1.8 MB", downloadsCount: 1120 },
+    { code: "3170701", name: "Information and Network Security (INS)", course: "BE", branch: "Computer Engineering", semester: 7 },
+    { code: "3170710", name: "Mobile Application Development (MAD)", course: "BE", branch: "Computer Engineering", semester: 7 },
+    { code: "3170716", name: "Artificial Intelligence (AI)", course: "BE", branch: "Computer Engineering", semester: 7 },
+    { code: "3170724", name: "Machine Learning (ML)", course: "BE", branch: "Computer Engineering", semester: 7 },
 
     // Sem 8
-    { subjectCode: "3180701", subjectName: "Cloud Computing (CC)", course: "BE", branch: "Computer Engineering", semester: 8, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3180701&year=2024&season=Summer", fileSize: "1.6 MB", downloadsCount: 820 },
-    { subjectCode: "3180703", subjectName: "Big Data Analytics (BDA)", course: "BE", branch: "Computer Engineering", semester: 8, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3180703&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 650 },
-    { subjectCode: "3180710", subjectName: "Internet of Things (IoT)", course: "BE", branch: "Computer Engineering", semester: 8, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=3180710&year=2023&season=Winter", fileSize: "1.4 MB", downloadsCount: 590 },
+    { code: "3180701", name: "Cloud Computing (CC)", course: "BE", branch: "Computer Engineering", semester: 8 },
+    { code: "3180703", name: "Big Data Analytics (BDA)", course: "BE", branch: "Computer Engineering", semester: 8 },
+    { code: "3180710", name: "Internet of Things (IoT)", course: "BE", branch: "Computer Engineering", semester: 8 },
 
     // Diploma
-    { subjectCode: "4330701", subjectName: "Data Structures Using C", course: "Diploma", branch: "Computer Engineering", semester: 3, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=4330701&year=2024&season=Summer", fileSize: "1.3 MB", downloadsCount: 460 },
-    { subjectCode: "4340702", subjectName: "Object Oriented Programming Using C++", course: "Diploma", branch: "Computer Engineering", semester: 4, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=4340702&year=2024&season=Summer", fileSize: "1.4 MB", downloadsCount: 520 },
-    { subjectCode: "4350703", subjectName: "Database Management", course: "Diploma", branch: "Computer Engineering", semester: 5, examSeason: "Winter", year: 2023, pdfUrl: "/api/papers/download?subjectCode=4350703&year=2023&season=Winter", fileSize: "1.3 MB", downloadsCount: 480 },
+    { code: "4330701", name: "Data Structures Using C", course: "Diploma", branch: "Computer Engineering", semester: 3 },
+    { code: "4340702", name: "Object Oriented Programming Using C++", course: "Diploma", branch: "Computer Engineering", semester: 4 },
+    { code: "4350703", name: "Database Management", course: "Diploma", branch: "Computer Engineering", semester: 5 },
+    { code: "4360701", name: "Web Development Using PHP & MySQL", course: "Diploma", branch: "Computer Engineering", semester: 6 },
 
     // MBA & MCA
-    { code: "4519201", subjectCode: "4519201", subjectName: "Management Information Systems", course: "MBA", branch: "Information Technology & Systems", semester: 1, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=4519201&year=2024&season=Summer", fileSize: "1.2 MB", downloadsCount: 320 },
-    { code: "3610001", subjectCode: "3610001", subjectName: "Object Oriented Concepts with Java", course: "MCA", branch: "Computer Applications", semester: 1, examSeason: "Summer", year: 2024, pdfUrl: "/api/papers/download?subjectCode=3610001&year=2024&season=Summer", fileSize: "1.5 MB", downloadsCount: 410 },
+    { code: "4519201", name: "Management Information Systems", course: "MBA", branch: "Information Technology & Systems", semester: 1 },
+    { code: "4529202", name: "Financial Management", course: "MBA", branch: "Finance", semester: 2 },
+    { code: "3610001", name: "Object Oriented Concepts with Java", course: "MCA", branch: "Computer Applications", semester: 1 },
+    { code: "3620002", name: "Full Stack Web Development", course: "MCA", branch: "Computer Applications", semester: 2 },
   ];
 
-  for (const paper of papersData) {
-    const { code, ...validPaper } = paper;
-    await prisma.paper.create({ data: validPaper });
+  const examCycles = [
+    { year: 2026, season: "Summer" },
+    { year: 2025, season: "Winter" },
+    { year: 2025, season: "Summer" },
+    { year: 2024, season: "Winter" },
+    { year: 2024, season: "Summer" },
+    { year: 2023, season: "Winter" },
+    { year: 2023, season: "Summer" },
+    { year: 2022, season: "Winter" },
+  ];
+
+  let papersCount = 0;
+  for (const sub of popularSubjects) {
+    for (const cycle of examCycles) {
+      await prisma.paper.create({
+        data: {
+          subjectCode: sub.code,
+          subjectName: sub.name,
+          course: sub.course,
+          branch: sub.branch,
+          semester: sub.semester,
+          examSeason: cycle.season,
+          year: cycle.year,
+          pdfUrl: `/api/papers/download?subjectCode=${sub.code}&year=${cycle.year}&season=${cycle.season}&course=${sub.course}&sem=${sub.semester}`,
+          fileSize: "1.5 MB",
+          downloadsCount: Math.floor(250 + Math.random() * 900),
+        },
+      });
+      papersCount++;
+    }
   }
-  console.log(`✅ Seeded ${papersData.length} GTU Previous Question Papers with dynamic downloadable links`);
+  console.log(`✅ Seeded ${papersCount} GTU Previous Question Papers across 2026, 2025, 2024, 2023, 2022`);
 
   // 3. Seed GTU Circulars
   const circulars = [

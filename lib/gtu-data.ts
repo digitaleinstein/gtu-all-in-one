@@ -69,14 +69,16 @@ export const GTU_BRANCHES: Record<string, string[]> = {
 };
 
 export const GTU_EXAM_SESSIONS = [
+  "Summer 2026",
+  "Winter 2025",
+  "Summer 2025",
+  "Winter 2024",
   "Summer 2024",
   "Winter 2023",
   "Summer 2023",
   "Winter 2022",
   "Summer 2022",
   "Winter 2021",
-  "Summer 2021",
-  "Winter 2020",
 ];
 
 export interface GTUSubject {
@@ -119,200 +121,212 @@ export const GTU_POPULAR_SUBJECTS: GTUSubject[] = [
 
   // Sem 5
   { code: "3150703", name: "Analysis and Design of Algorithms (ADA)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 5 },
-  { code: "3150709", name: "Professional Ethics", course: "BE", branch: "Computer Engineering", semester: 5, credits: 3 },
-  { code: "3150710", name: "Computer Networks (CN)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 5 },
+  { code: "3150710", name: "Computer Networks (CN)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 4 },
   { code: "3150711", name: "Software Engineering (SE)", course: "BE", branch: "Computer Engineering", semester: 5, credits: 4 },
   { code: "3150713", name: "Python for Data Science", course: "BE", branch: "Computer Engineering", semester: 5, credits: 4 },
-  { code: "3151908", name: "Heat Transfer", course: "BE", branch: "Mechanical Engineering", semester: 5, credits: 5 },
+  { code: "3150709", name: "Professional Ethics", course: "BE", branch: "Computer Engineering", semester: 5, credits: 3 },
+  { code: "3151908", name: "Heat Transfer", course: "BE", branch: "Mechanical Engineering", semester: 5, credits: 4 },
   { code: "3150611", name: "Transportation Engineering", course: "BE", branch: "Civil Engineering", semester: 5, credits: 4 },
 
   // Sem 6
   { code: "3160704", name: "Theory of Computation (TOC)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
   { code: "3160707", name: "Advanced Java Technology (AJT)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 5 },
+  { code: "3160714", name: "Data Mining and Business Intelligence", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
   { code: "3160712", name: "Microprocessor and Interfacing (MPI)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
-  { code: "3160714", name: "Data Mining and Business Intelligence (DMBI)", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
-  { code: "3160716", name: "Web Technology", course: "BE", branch: "Computer Engineering", semester: 6, credits: 4 },
   { code: "3161902", name: "Internal Combustion Engines", course: "BE", branch: "Mechanical Engineering", semester: 6, credits: 4 },
 
   // Sem 7
   { code: "3170701", name: "Information and Network Security (INS)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 4 },
-  { code: "3170710", name: "Mobile Application Development (MAD)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 4 },
+  { code: "3170710", name: "Mobile Application Development (MAD)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 5 },
   { code: "3170716", name: "Artificial Intelligence (AI)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 4 },
-  { code: "3170724", name: "Machine Learning (ML)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 4 },
-  { code: "3170001", name: "Project - I (PMMS Phase 1)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 6 },
+  { code: "3170724", name: "Machine Learning (ML)", course: "BE", branch: "Computer Engineering", semester: 7, credits: 5 },
 
   // Sem 8
   { code: "3180701", name: "Cloud Computing (CC)", course: "BE", branch: "Computer Engineering", semester: 8, credits: 4 },
   { code: "3180703", name: "Big Data Analytics (BDA)", course: "BE", branch: "Computer Engineering", semester: 8, credits: 4 },
-  { code: "3180709", name: "Project - II (PMMS Final Project)", course: "BE", branch: "Computer Engineering", semester: 8, credits: 8 },
   { code: "3180710", name: "Internet of Things (IoT)", course: "BE", branch: "Computer Engineering", semester: 8, credits: 4 },
 
   // Diploma Engineering
   { code: "4330701", name: "Data Structures Using C", course: "Diploma", branch: "Computer Engineering", semester: 3, credits: 4 },
   { code: "4340702", name: "Object Oriented Programming Using C++", course: "Diploma", branch: "Computer Engineering", semester: 4, credits: 4 },
-  { code: "4350703", name: "Database Management", course: "Diploma", branch: "Computer Engineering", semester: 5, credits: 5 },
-  { code: "4360701", name: "Network Security & Ethical Hacking", course: "Diploma", branch: "Computer Engineering", semester: 6, credits: 5 },
+  { code: "4350703", name: "Database Management", course: "Diploma", branch: "Computer Engineering", semester: 5, credits: 4 },
+  { code: "4360701", name: "Web Development Using PHP & MySQL", course: "Diploma", branch: "Computer Engineering", semester: 6, credits: 4 },
 
   // MBA & MCA
   { code: "4519201", name: "Management Information Systems", course: "MBA", branch: "Information Technology & Systems", semester: 1, credits: 3 },
   { code: "4529202", name: "Financial Management", course: "MBA", branch: "Finance", semester: 2, credits: 3 },
   { code: "3610001", name: "Object Oriented Concepts with Java", course: "MCA", branch: "Computer Applications", semester: 1, credits: 4 },
-  { code: "3630002", name: "Cloud Infrastructure and Services", course: "MCA", branch: "Computer Applications", semester: 3, credits: 4 },
+  { code: "3620002", name: "Full Stack Web Development", course: "MCA", branch: "Computer Applications", semester: 2, credits: 4 },
 ];
 
-export interface PMMSMilestoneGuide {
+export const GTU_CIRCULAR_CATEGORIES = [
+  "ALL",
+  "Examinations",
+  "Academic",
+  "Timetables",
+  "Scholarships",
+  "PMMS & Research",
+  "General",
+];
+
+export const PMMS_ACTIVITY_TYPES = [
+  "Team Formation & Guide Selection",
+  "Project Title & Domain Approval",
+  "Periodic Progress Report 1 (PPR-1)",
+  "Periodic Progress Report 2 (PPR-2)",
+  "Periodic Progress Report 3 (PPR-3)",
+  "Periodic Progress Report 4 (PPR-4)",
+  "Business Model Canvas (BMC)",
+  "Design Engineering Canvas (DEC)",
+  "Patent Search & Analysis Report (PSAR)",
+  "Plagiarism Search Report",
+  "Final Project Report Submission",
+  "Completion Certificate Generation",
+];
+
+export interface PMMSMilestoneDef {
   key: string;
   title: string;
+  semester: number;
   phase: string;
-  deadlineDays: number;
+  deadlineDescription: string;
   description: string;
-  requirements: string[];
-  templatesUrl?: string;
-  gtuGuidelines: string;
+  instructions: string[];
+  templateUrl?: string;
 }
 
-export const PMMS_DEFAULT_MILESTONES: PMMSMilestoneGuide[] = [
+export const PMMS_DEFAULT_MILESTONES: PMMSMilestoneDef[] = [
   {
-    key: "team_reg",
-    title: "1. Team Formation & Project Title Registration",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 15,
-    description: "Create project team of 2 to 4 students, propose IDP (Industry Defined Project) or UDP (User Defined Project) title and problem statement.",
-    requirements: [
-      "Select Team Leader & Team Members (Max 4 students).",
-      "Draft concise Problem Statement & Expected Outcomes.",
-      "Submit Industry Mentor details if IDP.",
+    key: "TEAM_FORMATION",
+    title: "Team Formation & Internal Guide Selection",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "Within 2 weeks of term commencement",
+    description: "Create project team (1-4 students), nominate team leader, and select internal faculty guide.",
+    instructions: [
+      "Login to PMMS portal (pmms.gtu.ac.in).",
+      "Team Leader registers team members with 12-digit enrollment numbers.",
+      "Select internal faculty guide from departmental dropdown.",
+      "Internal Guide must approve team request on PMMS dashboard.",
     ],
-    gtuGuidelines: "All members must register on pmms.gtu.ac.in using enrollment number and institutional email.",
   },
   {
-    key: "guide_allocation",
-    title: "2. Internal Guide Mapping & Approval",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 25,
-    description: "Assign faculty internal supervisor/mentor from department and obtain digital approval on PMMS portal.",
-    requirements: [
-      "Select Internal Guide from department roster.",
-      "Submit synopsis draft to guide for initial sign-off.",
-      "Guide verifies and approves title on PMMS dashboard.",
+    key: "PROJECT_TITLE",
+    title: "Project Title, Domain & Abstract Approval",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "Month 1 of Semester 7",
+    description: "Submit UDP (User Defined Project) or IDP (Industry Defined Project) problem definition.",
+    instructions: [
+      "Enter exact project title, industrial domain, and problem statement.",
+      "Attach industry mentor company letter if working on IDP.",
+      "Obtain guide digital sign-off on PMMS.",
     ],
-    gtuGuidelines: "A faculty member cannot guide more than 5 teams concurrently per GTU norms.",
   },
   {
-    key: "ppr_1",
-    title: "3. Periodic Progress Report 1 (PPR-1)",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 45,
-    description: "First bi-weekly progress review detailing literature survey, problem definition, and initial architecture.",
-    requirements: [
-      "Minimum 10 research papers / industrial case studies reviewed.",
-      "Summary of discussions with guide and industry mentor.",
-      "Log activities performed during the first 4 weeks.",
+    key: "PPR_1",
+    title: "Periodic Progress Report 1 (PPR-1)",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "End of Month 1",
+    description: "Document literature survey, feasibility study, and requirements gathering.",
+    instructions: [
+      "Fill 4 mandatory question responses regarding work done in previous month.",
+      "Submit for guide comments and grading.",
     ],
-    gtuGuidelines: "PPR must be submitted online and approved by Internal Guide with comments.",
   },
   {
-    key: "canvas_aeiou",
-    title: "4. Design Engineering: AEIOU Canvas Submission",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 60,
-    description: "Activities, Environments, Interactions, Objects, and Users canvas mapping the problem domain.",
-    requirements: [
-      "Physical observation of user environment or industrial setup.",
-      "Upload high-resolution scanned sheet or digital canvas PDF.",
-      "Guide verification and score entry.",
+    key: "PPR_2",
+    title: "Periodic Progress Report 2 (PPR-2)",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "End of Month 2",
+    description: "Document architectural design, component selection, and DFD/UML diagrams.",
+    instructions: [
+      "Document hardware/software stack choices.",
+      "Upload module specifications and get guide approval.",
     ],
-    gtuGuidelines: "Crucial component of GTU Design Engineering (DE) framework.",
   },
   {
-    key: "canvas_empathy",
-    title: "5. Design Engineering: Empathy & Ideation Canvases",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 75,
-    description: "Empathy mapping (User feelings, pain points, desires) and Ideation Canvas (brainstorming solutions).",
-    requirements: [
-      "Map user personas, user conflicts, and extreme users.",
-      "Ideate at least 15+ potential solution features.",
-      "Prioritize using Feasibility-Impact matrix.",
+    key: "PPR_3",
+    title: "Periodic Progress Report 3 (PPR-3)",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "End of Month 3",
+    description: "Implementation of prototype modules and preliminary testing.",
+    instructions: [
+      "Submit progress log and module integration snapshot.",
     ],
-    gtuGuidelines: "Both canvas sheets must be uploaded together with summary notes.",
   },
   {
-    key: "canvas_pdc",
-    title: "6. Product Development Canvas (PDC)",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 90,
-    description: "Detailed system architecture, components, customer revalidation, and technology stack roadmap.",
-    requirements: [
-      "Define Purpose, Product Experience, and Features.",
-      "Specify Hardware/Software requirements and components.",
-      "Create MVP (Minimum Viable Product) timeline.",
+    key: "PPR_4",
+    title: "Periodic Progress Report 4 (PPR-4)",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "End of Month 4",
+    description: "Semester 7 Phase 1 completion and presentation preparation.",
+    instructions: [
+      "Submit final PPR-4 for Sem 7 review.",
     ],
-    gtuGuidelines: "Complete PDC canvas signed by guide.",
   },
   {
-    key: "psar_report",
-    title: "7. Patent Search and Analysis Report (PSAR)",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 105,
-    description: "Search and study minimum 5 related patents from Indian Patent Office (IPO), USPTO, or Google Patents.",
-    requirements: [
-      "Study minimum 5 published/granted patents related to your domain.",
-      "Fill PSAR sheet with Patent Number, Applicant, Claims, and Relevance.",
-      "Analyze non-infringement and novelty aspects.",
+    key: "BMC_CANVAS",
+    title: "Business Model Canvas (BMC) & Report",
+    semester: 7,
+    phase: "Phase 1 - Sem 7",
+    deadlineDescription: "Before Sem 7 Internal Viva",
+    description: "Upload 9-part Business Model Canvas sheet and executive summary report.",
+    instructions: [
+      "Fill Customer Segments, Value Propositions, Revenue Streams, Key Activities.",
+      "Upload high-res PDF image of BMC canvas.",
     ],
-    gtuGuidelines: "Mandatory GTU innovation benchmark for all final year engineering students.",
   },
   {
-    key: "ppr_4_and_midterm",
-    title: "8. PPR-4 & Midterm Progress Report Submission",
-    phase: "Phase 1 (Sem 7)",
-    deadlineDays: 120,
-    description: "Finalize Phase 1 documentation, working prototype demonstration, and generate PMMS completion card.",
-    requirements: [
-      "Submit PPR-2, PPR-3, and PPR-4 logs.",
-      "Upload compiled Phase 1 Project Report in GTU prescribed format.",
-      "Internal viva assessment score recorded by department committee.",
+    key: "PDE_CANVAS",
+    title: "Patent Drafting Exercise (PDE) / Canvas",
+    semester: 8,
+    phase: "Phase 2 - Sem 8",
+    deadlineDescription: "Month 2 of Semester 8",
+    description: "Prepare patent search reports and draft provisional patent specification.",
+    instructions: [
+      "Search IPO, USPTO, and Google Patents databases for prior art.",
+      "Draft claims and novel patentable aspects.",
     ],
-    gtuGuidelines: "Generate Phase 1 completion certificate for 7th Sem university viva.",
   },
   {
-    key: "sem8_phase2_kickoff",
-    title: "9. Phase 2 (Sem 8) Continuation & Module Implementation",
-    phase: "Phase 2 (Sem 8)",
-    deadlineDays: 140,
-    description: "Re-confirm project progress on PMMS, implement core functional modules, and begin live testing.",
-    requirements: [
-      "Update project status on PMMS Phase 2 tab.",
-      "Complete core software/hardware testing with real metrics.",
-      "Submit Sem 8 PPR-1 and PPR-2.",
+    key: "PSAR_REPORTS",
+    title: "Patent Search & Analysis Report (PSAR)",
+    semester: 8,
+    phase: "Phase 2 - Sem 8",
+    deadlineDescription: "Month 3 of Semester 8",
+    description: "Each team member must review and analyze 5 published patents related to project domain.",
+    instructions: [
+      "Analyze patent abstract, claims, and relevance to student project.",
+      "Submit 5 individual PSAR forms on PMMS.",
     ],
-    gtuGuidelines: "Guide approves progress regularly before final submission window opens.",
   },
   {
-    key: "plagiarism_final",
-    title: "10. Anti-Plagiarism Check (Turnitin / Urkund)",
-    phase: "Phase 2 (Sem 8)",
-    deadlineDays: 165,
-    description: "Submit final report draft for plagiarism check. Must be under GTU threshold (Max 30% similarity).",
-    requirements: [
-      "Similarity index must be <= 30% excluding references.",
-      "Attach Plagiarism Certificate signed by Institute Librarian / Guide.",
-      "Upload similarity report PDF on PMMS.",
+    key: "PLAGIARISM_REPORT",
+    title: "Plagiarism Search Report (URKUND / Turnitin)",
+    semester: 8,
+    phase: "Phase 2 - Sem 8",
+    deadlineDescription: "2 Weeks before Final University Exam",
+    description: "Generate official plagiarism report with similarity index strictly below 15%.",
+    instructions: [
+      "Run final dissertation through institute plagiarism software.",
+      "Attach verified certificate signed by Guide & HOD.",
     ],
-    gtuGuidelines: "Reports exceeding 30% similarity will be rejected by GTU external examiners.",
   },
   {
-    key: "final_pmms_completion",
-    title: "11. Final Project Report & GTU PMMS Certificate",
-    phase: "Phase 2 (Sem 8)",
-    deadlineDays: 180,
-    description: "Upload final bound report PDF, code repository/schematic links, and generate GTU Final Completion Certificate.",
-    requirements: [
-      "Complete report following GTU standard book format (Bond paper, hard bound).",
-      "Obtain guide and Head of Department digital signature.",
-      "Download official GTU Project Completion Certificate.",
+    key: "FINAL_REPORT",
+    title: "Final Project Report Submission & Certificate",
+    semester: 8,
+    phase: "Phase 2 - Sem 8",
+    deadlineDescription: "Before End-Semester University Viva",
+    description: "Upload final bound report PDF and download GTU PMMS Completion Certificate.",
+    instructions: [
+      "Upload complete project report with all chapters, results, and references.",
+      "Download GTU generated official completion certificate for external viva.",
     ],
-    gtuGuidelines: "Certificate must be bound inside the physical thesis copy for GTU External Viva.",
   },
 ];

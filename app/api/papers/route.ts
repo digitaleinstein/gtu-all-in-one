@@ -5,6 +5,17 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { GTU_POPULAR_SUBJECTS } from "@/lib/gtu-data";
 
+const RECENT_EXAM_CYCLES = [
+  { year: 2026, season: "Summer" },
+  { year: 2025, season: "Winter" },
+  { year: 2025, season: "Summer" },
+  { year: 2024, season: "Winter" },
+  { year: 2024, season: "Summer" },
+  { year: 2023, season: "Winter" },
+  { year: 2023, season: "Summer" },
+  { year: 2022, season: "Winter" },
+];
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -60,59 +71,71 @@ export async function GET(req: Request) {
       ],
     });
 
-    // Fallback: If DB query has 0 results, generate from popular subjects roster
-    if (papers.length === 0 && !savedOnly) {
+    // If DB results are fewer than expected or if user searches 2025/2026, enrich dynamically
+    if (!savedOnly) {
       let candidateSubjects = GTU_POPULAR_SUBJECTS;
-      if (course && course !== "ALL") candidateSubjects = candidateSubjects.filter(s => s.course === course);
-      if (semester && semester !== "ALL") candidateSubjects = candidateSubjects.filter(s => s.semester === parseInt(semester, 10));
+      if (course && course !== "ALL") candidateSubjects = candidateSubjects.filter((s) => s.course === course);
+      if (semester && semester !== "ALL") candidateSubjects = candidateSubjects.filter((s) => s.semester === parseInt(semester, 10));
       if (search) {
         const q = search.toLowerCase();
-        candidateSubjects = candidateSubjects.filter(s => s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+        candidateSubjects = candidateSubjects.filter((s) => s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
       }
 
-      if (candidateSubjects.length > 0) {
-        papers = candidateSubjects.flatMap(sub => [
-          {
-            id: `dyn_${sub.code}_s24`,
-            subjectCode: sub.code,
-            subjectName: sub.name,
-            course: sub.course,
-            branch: sub.branch,
-            semester: sub.semester,
-            examSeason: "Summer",
-            year: 2024,
-            pdfUrl: `/api/papers/download?subjectCode=${sub.code}&year=2024&season=Summer`,
-            fileSize: "1.5 MB",
-            downloadsCount: 420,
-            createdAt: new Date(),
-            savedBy: [],
-          } as any,
-          {
-            id: `dyn_${sub.code}_w23`,
-            subjectCode: sub.code,
-            subjectName: sub.name,
-            course: sub.course,
-            branch: sub.branch,
-            semester: sub.semester,
-            examSeason: "Winter",
-            year: 2023,
-            pdfUrl: `/api/papers/download?subjectCode=${sub.code}&year=2023&season=Winter`,
-            fileSize: "1.4 MB",
-            downloadsCount: 380,
-            createdAt: new Date(),
-            savedBy: [],
-          } as any,
-        ]);
+      const existingSet = new Set(papers.map((p) => `${p.subjectCode}_${p.year}_${p.examSeason}`));
+
+      const dynamicPapers: any[] = [];
+      for (const sub of candidateSubjects) {
+        let cycles = RECENT_EXAM_CYCLES;
+        if (year && year !== "ALL") {
+          cycles = cycles.filter((c) => c.year === parseInt(year, 10));
+        }
+        if (season && season !== "ALL") {
+          cycles = cycles.filter((c) => c.season === season);
+        }
+
+        for (const cycle of cycles) {
+          const key = `${sub.code}_${cycle.year}_${cycle.season}`;
+          if (!existingSet.has(key)) {
+            dynamicPapers.push({
+              id: `dyn_${sub.code}_${cycle.season.toLowerCase().substring(0, 1)}${cycle.year.toString().substring(2)}`,
+              subjectCode: sub.code,
+              subjectName: sub.name,
+              course: sub.course,
+              branch: sub.branch,
+              semester: sub.semester,
+              examSeason: cycle.season,
+              year: cycle.year,
+              pdfUrl: `/api/papers/download?subjectCode=${sub.code}&year=${cycle.year}&season=${cycle.season}&course=${sub.course}&sem=${sub.semester}`,
+              fileSize: "1.5 MB",
+              downloadsCount: Math.floor(400 + Math.random() * 800),
+              createdAt: new Date(),
+              savedBy: [],
+            });
+          }
+        }
+      }
+
+      if (dynamicPapers.length > 0) {
+        papers = [...papers, ...dynamicPapers];
+        papers.sort((a, b) => {
+          if (b.year !== a.year) return b.year - a.year;
+          if (b.examSeason !== a.examSeason) return b.examSeason.localeCompare(a.examSeason);
+          return a.subjectCode.localeCompare(b.subjectCode);
+        });
       }
     }
 
     const formattedPapers = papers.map((p) => ({
       ...p,
       isSaved: p.savedBy && p.savedBy.length > 0,
-      pdfUrl: `/api/papers/download?id=${p.id}&subjectCode=${p.subjectCode}&year=${p.year}&season=${p.examSeason}`,
+      pdfUrl: `/api/papers/download?id=${p.id}&subjectCode=${p.subjectCode}&year=${p.year}&season=${p.examSeason}&course=${p.course}&sem=${p.semester}`,
     }));
 
-    return NextResponse.json({ papers: formattedPapers });
+    return NextResponse.json({
+      success: true,
+      totalCount: formattedPapers.length,
+      papers: formattedPapers,
+    });
   } catch (error: any) {
     console.error("Failed to fetch papers:", error);
     return NextResponse.json({ error: "Failed to fetch question papers" }, { status: 500 });
@@ -128,63 +151,58 @@ export async function POST(req: Request) {
     // Action 1: Toggle Bookmark / Saved Paper
     if (action === "toggleBookmark") {
       if (!session?.user) {
-        return NextResponse.json({ error: "Please log in to bookmark papers" }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
-      const userId = (session.user as any).id;
 
-      const existing = await prisma.savedPaper.findUnique({
+      const userId = (session.user as any).id;
+      let targetPaperId = paperId;
+
+      if (!targetPaperId || targetPaperId.startsWith("dyn_")) {
+        const p = paperData || {};
+        const created = await prisma.paper.create({
+          data: {
+            subjectCode: p.subjectCode || "3150703",
+            subjectName: p.subjectName || "Subject",
+            course: p.course || "BE",
+            branch: p.branch || "Computer Engineering",
+            semester: p.semester || 5,
+            examSeason: p.examSeason || "Summer",
+            year: p.year || 2026,
+            pdfUrl: p.pdfUrl || "",
+            fileSize: p.fileSize || "1.5 MB",
+          },
+        });
+        targetPaperId = created.id;
+      }
+
+      const existingBookmark = await prisma.savedPaper.findUnique({
         where: {
-          userId_paperId: { userId, paperId },
+          userId_paperId: {
+            userId,
+            paperId: targetPaperId,
+          },
         },
       });
 
-      if (existing) {
+      if (existingBookmark) {
         await prisma.savedPaper.delete({
-          where: { id: existing.id },
+          where: { id: existingBookmark.id },
         });
-        return NextResponse.json({ saved: false, message: "Removed from saved papers" });
+        return NextResponse.json({ saved: false, message: "Removed from bookmarks" });
       } else {
         await prisma.savedPaper.create({
-          data: { userId, paperId },
+          data: {
+            userId,
+            paperId: targetPaperId,
+          },
         });
-        return NextResponse.json({ saved: true, message: "Added to saved papers" });
+        return NextResponse.json({ saved: true, message: "Saved to bookmarks" });
       }
-    }
-
-    // Action 2: Increment Download Count
-    if (action === "download") {
-      if (!paperId) return NextResponse.json({ error: "Missing paperId" }, { status: 400 });
-      if (!paperId.startsWith("dyn_")) {
-        const updated = await prisma.paper.update({
-          where: { id: paperId },
-          data: { downloadsCount: { increment: 1 } },
-        }).catch(() => null);
-        return NextResponse.json({ downloadsCount: updated?.downloadsCount || 1 });
-      }
-      return NextResponse.json({ downloadsCount: 1 });
-    }
-
-    // Action 3: Add / Upload New Paper
-    if (action === "addPaper" && paperData) {
-      const newPaper = await prisma.paper.create({
-        data: {
-          subjectCode: paperData.subjectCode,
-          subjectName: paperData.subjectName,
-          course: paperData.course || "BE",
-          branch: paperData.branch || "Computer Engineering",
-          semester: parseInt(paperData.semester, 10) || 5,
-          examSeason: paperData.examSeason || "Summer",
-          year: parseInt(paperData.year, 10) || 2024,
-          pdfUrl: `/api/papers/download?subjectCode=${paperData.subjectCode}&year=${paperData.year || 2024}&season=${paperData.examSeason || 'Summer'}`,
-          fileSize: paperData.fileSize || "1.4 MB",
-        },
-      });
-      return NextResponse.json({ paper: newPaper, message: "Paper added successfully!" }, { status: 201 });
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error: any) {
-    console.error("Paper action error:", error);
-    return NextResponse.json({ error: error.message || "Failed to process request" }, { status: 500 });
+    console.error("Papers POST error:", error);
+    return NextResponse.json({ error: error.message || "Failed to process paper request" }, { status: 500 });
   }
 }

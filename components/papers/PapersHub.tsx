@@ -230,7 +230,7 @@ export function PapersHub() {
               className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary font-medium"
             >
               <option value="ALL">All Years</option>
-              {[2024, 2023, 2022, 2021, 2020].map((y) => (
+              {[2026, 2025, 2024, 2023, 2022, 2021, 2020].map((y) => (
                 <option key={y} value={y.toString()}>
                   {y}
                 </option>
