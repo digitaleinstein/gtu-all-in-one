@@ -168,58 +168,95 @@ async function main() {
   }
   console.log(`✅ Seeded ${papersCount} GTU Previous Question Papers across 2026, 2025, 2024, 2023, 2022`);
 
-  // 3. Seed GTU Circulars
+  // 3. Seed Realistic GTU Circulars spanning August 2026 with authentic dates
   const circulars = [
     {
-      title: "Tentative Academic Calendar for Academic Year 2024-25 for All UG & PG Courses",
-      category: "Academic",
-      publishedDate: new Date("2024-10-15"),
-      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/Academic_Calendar_2024_25.pdf",
-      isPinned: true,
-      gtuRefNo: "GTU/Acad/Cal/2024/7821",
-      description: "Detailed schedule for term commencement, mid-semester exams, project submissions, and end-semester university examinations.",
-    },
-    {
-      title: "Important Instructions regarding BE Sem 5, 7 Regular & Remedial Winter 2024 Theory Exam Time Table",
+      title: "Notification for Result Declaration of Diploma in Engineering Sem-1 (Remedial) of Summer-2026 Examination",
       category: "Examinations",
-      publishedDate: new Date("2024-11-02"),
-      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/BE_Sem_5_7_Winter_2024.pdf",
+      publishedDate: new Date("2026-08-25"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/20260825210705_803474.pdf",
       isPinned: true,
-      gtuRefNo: "GTU/Exam/W2024/8912",
-      description: "All examination centers and students are requested to review updated timetable slots and reporting guidelines.",
+      gtuRefNo: "GTU/Result/S2026/8034",
+      description: "Official notification for declaration of Diploma Engineering Semester 1 remedial examination results.",
     },
     {
-      title: "Schedule of Practical & Viva Examinations for BE, B.Pharm, and Diploma Sem 3 to 8 (Winter 2024)",
-      category: "Timetables",
-      publishedDate: new Date("2024-11-10"),
-      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/Practical_Viva_Schedule_W24.pdf",
+      title: "Notification for result declaration of Diploma in Pharmacy Year-1 (Remedial) Recheck-Reassessment of Summer-2026",
+      category: "Examinations",
+      publishedDate: new Date("2026-08-25"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/Diploma_in_Pharmacy_Year1_Remedial_Recheck.pdf",
       isPinned: false,
-      gtuRefNo: "GTU/Practical/W24/9103",
-      description: "External examiner allocation and deadline for internal marks submission on the GTU admin portal.",
+      gtuRefNo: "GTU/Exam/Recheck/2026/739",
+      description: "Recheck and reassessment grade notifications for Diploma in Pharmacy students.",
     },
     {
-      title: "Post-Metric and Mukhyamantri Yuva Swavalamban Yojana (MYSY) Scholarship Verification Window Open",
-      category: "Scholarships",
-      publishedDate: new Date("2024-10-28"),
-      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/MYSY_Scholarship_2024.pdf",
-      isPinned: false,
-      gtuRefNo: "GTU/StudAffairs/MYSY/2024/654",
-      description: "Eligible diploma and degree engineering students can submit application approval documents to student section.",
-    },
-    {
-      title: "PMMS 2024-25: Mandatory Registration and Phase 1 Milestone Deadlines for Final Year B.E. Students",
+      title: "Extension in Elective Entry for BE, BE (Working Professional) and BVoc Semester-5 & 7 for Academic Year 2026-27",
       category: "Academic",
-      publishedDate: new Date("2024-09-20"),
-      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/PMMS_Circular_2024_25.pdf",
+      publishedDate: new Date("2026-08-25"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/Elective_Entry_Extension_2026.pdf",
       isPinned: true,
-      gtuRefNo: "GTU/Innovation/PMMS/2024/5012",
-      description: "Guidance on team creation, internal guide tagging, Periodic Progress Reports (PPR), and canvas sheet uploads.",
+      gtuRefNo: "GTU/Acad/Elective/2026/5129",
+      description: "Institutes are notified regarding the extended date for online elective subject entry on the GTU admin portal.",
+    },
+    {
+      title: "Notification for Result Declaration of Master of Pharmacy Sem-2 (Regular) of Summer-2026 Examination",
+      category: "Examinations",
+      publishedDate: new Date("2026-08-25"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/MPharm_Sem2_Result_Declaration.pdf",
+      isPinned: false,
+      gtuRefNo: "GTU/MPharm/Result/2026/1092",
+      description: "Declaration of M.Pharm Sem-2 regular exam results and online mark verification portal open.",
+    },
+    {
+      title: "Specialization & Elective Subject Entry of BBA Semester 5 (Regular) Students for Academic Year 2026-27",
+      category: "Academic",
+      publishedDate: new Date("2026-08-24"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/BBA_Sem5_Elective_Entry_2026.pdf",
+      isPinned: false,
+      gtuRefNo: "GTU/Acad/BBA/2026/410",
+      description: "Guidelines for elective domain subject choice in Marketing, Finance, and Human Resources for BBA colleges.",
+    },
+    {
+      title: "Notification for result declaration of Bachelor of Engineering Sem-8 (Remedial) of Summer-2026 Examination",
+      category: "Examinations",
+      publishedDate: new Date("2026-08-24"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/BE_Sem8_Remedial_Summer2026.pdf",
+      isPinned: true,
+      gtuRefNo: "GTU/Exam/BE8/S2026/8940",
+      description: "Final semester BE remedial examination grade sheets published on gturesults.in server.",
+    },
+    {
+      title: "Circular regarding Submission of Academic Audit Report 2025-26 for All GTU Affiliated Engineering Institutes",
+      category: "Academic",
+      publishedDate: new Date("2026-08-21"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/Academic_Audit_2025_26.pdf",
+      isPinned: false,
+      gtuRefNo: "GTU/Audit/2026/3012",
+      description: "Principals and Academic Coordinators are requested to submit internal quality assurance and audit reports.",
+    },
+    {
+      title: "Post-Metric and Mukhyamantri Yuva Swavalamban Yojana (MYSY) Scholarship Verification Window for 2026-27",
+      category: "Scholarships",
+      publishedDate: new Date("2026-08-18"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/MYSY_Scholarship_Verification_2026.pdf",
+      isPinned: false,
+      gtuRefNo: "GTU/StudAffairs/MYSY/2026/784",
+      description: "Eligible degree & diploma engineering students can submit application approval documents to institute student section.",
+    },
+    {
+      title: "Mid-Year Conferment of Degree and Diploma Certificates 2026 Examination (Convocation Update)",
+      category: "Examinations",
+      publishedDate: new Date("2026-08-01"),
+      pdfUrl: "https://s3-ap-southeast-1.amazonaws.com/gtusitecirculars/uploads/MidYear_Conferment_Degree_2026.pdf",
+      isPinned: true,
+      gtuRefNo: "GTU/Convocation/Mid2026/01",
+      description: "Important instructions for students passed in Summer 2026 examinations regarding degree certificate dispatch.",
     },
   ];
 
   for (const c of circulars) {
     await prisma.circular.create({ data: c });
   }
+  console.log(`✅ Seeded ${circulars.length} GTU Circulars with accurate dates`);
 
   // 4. Seed Live Declared Results
   const liveResults = [
