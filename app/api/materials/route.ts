@@ -27,9 +27,15 @@ export async function GET(req: Request) {
 
     // Department Filter
     if (department && department !== "All Departments" && department !== "All") {
-      filtered = filtered.filter((s) =>
-        s.department.toLowerCase().includes(department.toLowerCase())
-      );
+      if (department.toLowerCase().includes("diploma")) {
+        filtered = filtered.filter(
+          (s) => s.degree.toLowerCase() === "diploma" || s.department.toLowerCase().includes("diploma")
+        );
+      } else {
+        filtered = filtered.filter((s) =>
+          s.department.toLowerCase().includes(department.toLowerCase())
+        );
+      }
     }
 
     // Semester Filter

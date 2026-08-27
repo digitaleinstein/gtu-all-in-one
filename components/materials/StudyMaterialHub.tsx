@@ -41,6 +41,7 @@ export function StudyMaterialHub() {
   useEffect(() => {
     async function loadMaterials() {
       try {
+        setLoading(true);
         const res = await fetch("/api/materials");
         if (res.ok) {
           const data = await res.json();
@@ -77,8 +78,17 @@ export function StudyMaterialHub() {
     });
   };
 
-  // Filtered materials
-  const filteredMaterials = useMemo(() => {
+  const departmentPills = [
+    { label: "All Departments", icon: Layers },
+    { label: "Computer Engineering", icon: GraduationCap },
+    { label: "Civil Engineering", icon: GraduationCap },
+    { label: "Mechanical Engineering", icon: GraduationCap },
+    { label: "Electrical Engineering", icon: GraduationCap },
+    { label: "Diploma Engineering", icon: GraduationCap },
+  ];
+
+  // Base materials filtered by department, saved state, search, and type (to calculate semester distribution counts)
+  const baseDeptFiltered = useMemo(() => {
     return materials.filter((item) => {
       // Saved filter
       if (onlySaved && !savedIds.includes(item.id)) return false;
@@ -86,15 +96,10 @@ export function StudyMaterialHub() {
       // Department filter
       if (selectedDept !== "All Departments") {
         if (selectedDept === "Diploma Engineering") {
-          if (item.degree !== "Diploma") return false;
+          if (item.degree !== "Diploma" && !item.department.toLowerCase().includes("diploma")) return false;
         } else {
           if (!item.department.toLowerCase().includes(selectedDept.toLowerCase())) return false;
         }
-      }
-
-      // Semester filter
-      if (selectedSem !== "All") {
-        if (item.semester !== selectedSem) return false;
       }
 
       // Resource type filter
@@ -116,26 +121,33 @@ export function StudyMaterialHub() {
 
       return true;
     });
-  }, [materials, selectedDept, selectedSem, selectedType, searchQuery, onlySaved, savedIds]);
+  }, [materials, selectedDept, selectedType, searchQuery, onlySaved, savedIds]);
 
-  const departmentPills = [
-    { label: "All Departments", icon: Layers },
-    { label: "Computer Engineering", icon: GraduationCap },
-    { label: "Civil Engineering", icon: GraduationCap },
-    { label: "Mechanical Engineering", icon: GraduationCap },
-    { label: "Electrical Engineering", icon: GraduationCap },
-    { label: "Diploma Engineering", icon: GraduationCap },
-  ];
+  // Semester Counts Map
+  const semesterCounts = useMemo(() => {
+    const counts: Record<string, number> = { All: baseDeptFiltered.length };
+    [1, 2, 3, 4, 5, 6, 7, 8].forEach((s) => {
+      counts[s] = baseDeptFiltered.filter((m) => m.semester === s).length;
+    });
+    return counts;
+  }, [baseDeptFiltered]);
 
-  const semesterTabs = ["All", 1, 2, 3, 4, 5, 6, 7, 8];
+  // Available semester tabs (Diploma only up to Sem 6, Degree up to Sem 8)
+  const semesterTabs = useMemo(() => {
+    if (selectedDept === "Diploma Engineering") {
+      return ["All", 1, 2, 3, 4, 5, 6];
+    }
+    return ["All", 1, 2, 3, 4, 5, 6, 7, 8];
+  }, [selectedDept]);
 
-  const getDeptColor = (dept: string) => {
-    if (dept.includes("Computer")) return "from-blue-600 to-indigo-600 border-blue-500/30 text-blue-600 dark:text-blue-400";
-    if (dept.includes("Civil")) return "from-amber-600 to-orange-600 border-amber-500/30 text-amber-600 dark:text-amber-400";
-    if (dept.includes("Mechanical")) return "from-red-600 to-rose-600 border-red-500/30 text-rose-600 dark:text-rose-400";
-    if (dept.includes("Electrical")) return "from-emerald-600 to-teal-600 border-emerald-500/30 text-emerald-600 dark:text-emerald-400";
-    return "from-purple-600 to-violet-600 border-purple-500/30 text-purple-600 dark:text-purple-400";
-  };
+  // Filtered materials by current semester selection
+  const filteredMaterials = useMemo(() => {
+    if (selectedSem === "All") {
+      return baseDeptFiltered;
+    }
+    const semNum = Number(selectedSem);
+    return baseDeptFiltered.filter((item) => item.semester === semNum);
+  }, [baseDeptFiltered, selectedSem]);
 
   const resetFilters = () => {
     setSelectedDept("All Departments");
@@ -160,19 +172,19 @@ export function StudyMaterialHub() {
                 GTU Study Material Hub
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                Access 160+ curated GTU subjects with chapter-wise <strong>e-Notes (PDFs)</strong>, <strong>PowerPoint Presentations</strong>, <strong>Solved GTU Paper Solutions</strong>, and <strong>Laboratory Practical Manuals</strong>.
+                Access 160+ curated GTU subjects with chapter-wise <strong>e-Notes (PDFs)</strong>, <strong>PowerPoint Presentations</strong>, <strong>Solved GTU Paper Solutions</strong>, and <strong>Laboratory Practical Manuals</strong> organized semester by semester.
               </p>
             </div>
 
             {/* Quick Stats Banner */}
             <div className="grid grid-cols-3 gap-3 self-start md:self-center shrink-0">
               <div className="p-3.5 rounded-2xl bg-card border border-border/80 shadow-sm text-center">
-                <span className="text-xl sm:text-2xl font-extrabold text-primary">160+</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-primary">{materials.length}+</span>
                 <p className="text-[11px] font-medium text-muted-foreground mt-0.5">GTU Subjects</p>
               </div>
               <div className="p-3.5 rounded-2xl bg-card border border-border/80 shadow-sm text-center">
-                <span className="text-xl sm:text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">500+</span>
-                <p className="text-[11px] font-medium text-muted-foreground mt-0.5">Unit PDFs & Notes</p>
+                <span className="text-xl sm:text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">8</span>
+                <p className="text-[11px] font-medium text-muted-foreground mt-0.5">All Semesters</p>
               </div>
               <div className="p-3.5 rounded-2xl bg-card border border-border/80 shadow-sm text-center">
                 <span className="text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">100%</span>
@@ -209,7 +221,7 @@ export function StudyMaterialHub() {
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Select Department / Discipline
+              1. Select Department / Discipline
             </span>
             {savedIds.length > 0 && (
               <button
@@ -233,14 +245,20 @@ export function StudyMaterialHub() {
               return (
                 <button
                   key={dept.label}
-                  onClick={() => setSelectedDept(dept.label)}
-                  className={`flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-xl whitespace-nowrap transition-all ${
+                  onClick={() => {
+                    setSelectedDept(dept.label);
+                    // If diploma selected and sem > 6, reset sem to All
+                    if (dept.label === "Diploma Engineering" && typeof selectedSem === "number" && selectedSem > 6) {
+                      setSelectedSem("All");
+                    }
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl whitespace-nowrap transition-all ${
                     isSelected
-                      ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 scale-[1.02]"
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]"
                       : "bg-card border border-border/80 text-muted-foreground hover:text-foreground hover:bg-accent/60"
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-4 h-4" />
                   <span>{dept.label}</span>
                 </button>
               );
@@ -248,34 +266,52 @@ export function StudyMaterialHub() {
           </div>
         </div>
 
-        {/* Secondary Filter Row (Semesters & Resource Types) */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 rounded-2xl bg-card border border-border/80 shadow-sm">
-          {/* Semester Selector */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0">
-            <span className="text-xs font-bold text-muted-foreground whitespace-nowrap mr-1">
-              Semester:
+        {/* Semester Pills Bar */}
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              2. Select Semester
             </span>
+            <span className="text-xs font-medium text-muted-foreground">
+              {selectedSem === "All" ? "Showing all semesters" : `Filtering for Semester ${selectedSem}`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
             {semesterTabs.map((sem) => {
               const isSelected = selectedSem === sem;
+              const count = semesterCounts[sem] ?? 0;
               return (
                 <button
                   key={sem}
                   onClick={() => setSelectedSem(sem as any)}
-                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all shrink-0 ${
                     isSelected
-                      ? "bg-secondary text-secondary-foreground shadow-sm font-extrabold"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-[1.03]"
+                      : "bg-card border border-border/80 text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   }`}
                 >
-                  {sem === "All" ? "All Semesters" : `Sem ${sem}`}
+                  <span>{sem === "All" ? "All Semesters" : `Semester ${sem}`}</span>
+                  <span
+                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                      isSelected
+                        ? "bg-white/20 text-white"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {count}
+                  </span>
                 </button>
               );
             })}
           </div>
+        </div>
 
-          {/* Resource Type Dropdown/Selector */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Filter className="w-3.5 h-3.5 text-muted-foreground" />
+        {/* Secondary Filter Row (Resource Types & Reset) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-card border border-border/80 shadow-sm">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs font-semibold text-muted-foreground">Resource Type:</span>
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
@@ -287,6 +323,12 @@ export function StudyMaterialHub() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold text-muted-foreground">
+              Found <strong className="text-foreground">{filteredMaterials.length}</strong> subjects
+            </span>
 
             {(selectedDept !== "All Departments" ||
               selectedSem !== "All" ||
@@ -295,40 +337,23 @@ export function StudyMaterialHub() {
               onlySaved) && (
               <button
                 onClick={resetFilters}
-                className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-muted hover:bg-muted/80 text-foreground transition-all"
                 title="Reset all filters"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Reset</span>
+                <span>Reset Filters</span>
               </button>
             )}
           </div>
         </div>
 
-        {/* Results Header Count */}
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold text-muted-foreground">
-            Showing <span className="font-bold text-foreground">{filteredMaterials.length}</span>{" "}
-            GTU subjects with verified study materials
-          </p>
-          <a
-            href="https://www.darshan.ac.in/gtu-study-material"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
-          >
-            <span>Visit Darshan University GTU Portal</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
-
         {/* Subject Cards Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-52 rounded-2xl bg-card border border-border/60 animate-pulse"
+                className="h-56 rounded-2xl bg-card border border-border/60 animate-pulse"
               />
             ))}
           </div>
@@ -338,9 +363,9 @@ export function StudyMaterialHub() {
               <BookOpen className="w-6 h-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-foreground">No Study Materials Found</h3>
+              <h3 className="text-base font-bold text-foreground">No Study Materials Found for Semester {selectedSem}</h3>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">
-                No subjects matched your selected department, semester, or search term &quot;{searchQuery}&quot;.
+                No subjects matched your selected department &quot;{selectedDept}&quot;, semester &quot;{selectedSem}&quot;, or search query &quot;{searchQuery}&quot;.
               </p>
             </div>
             <button
@@ -366,8 +391,8 @@ export function StudyMaterialHub() {
                         <span className="px-2.5 py-0.5 text-xs font-mono font-bold bg-primary/10 text-primary rounded-lg">
                           {sub.subjectCode}
                         </span>
-                        <span className="px-2 py-0.5 text-[11px] font-semibold bg-accent text-accent-foreground rounded-lg">
-                          Sem {sub.semester}
+                        <span className="px-2.5 py-0.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg">
+                          Semester {sub.semester}
                         </span>
                         <span className="px-2 py-0.5 text-[11px] font-semibold bg-secondary text-secondary-foreground rounded-lg">
                           {sub.degree}
