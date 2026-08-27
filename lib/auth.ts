@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
           semester: user.semester,
           college: user.college,
           role: user.role,
+          isEmailVerified: user.isEmailVerified,
         };
       },
     }),
@@ -71,6 +72,7 @@ export const authOptions: NextAuthOptions = {
         token.semester = (user as any).semester;
         token.college = (user as any).college;
         token.role = (user as any).role;
+        token.isEmailVerified = (user as any).isEmailVerified;
       }
       if (trigger === "update" && session) {
         return { ...token, ...session.user };
@@ -86,6 +88,7 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).semester = token.semester;
         (session.user as any).college = token.college;
         (session.user as any).role = token.role;
+        (session.user as any).isEmailVerified = token.isEmailVerified;
       }
       return session;
     },

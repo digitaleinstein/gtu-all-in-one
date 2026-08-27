@@ -305,167 +305,15 @@ async function main() {
     await prisma.liveResult.create({ data: r });
   }
 
-  // 5. Seed Complete Semester-by-Semester GTU Results History for User 1 (Sem 1 to Sem 5)
-  const user1Results = [
-    {
-      semester: 1,
-      examSession: "Winter 2021",
-      spi: 9.15,
-      cpi: 9.15,
-      cgpa: 9.15,
-      totalCredits: 22,
-      earnedCredits: 22,
-      resultStatus: "PASS",
-      subjectsJson: JSON.stringify([
-        { code: "3110005", name: "Basic Electrical Engineering", theoryE: "58/70", theoryM: "27/30", practicalE: "45/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 4 },
-        { code: "3110014", name: "Mathematics - 1 (Calculus)", theoryE: "54/70", theoryM: "26/30", practicalE: "--", practicalM: "--", grade: "AB", gradePoints: 9, credits: 4 },
-        { code: "3110002", name: "English", theoryE: "56/70", theoryM: "27/30", practicalE: "42/50", practicalM: "18/20", grade: "AA", gradePoints: 10, credits: 2 },
-        { code: "3110006", name: "Basic Mechanical Engineering", theoryE: "50/70", theoryM: "23/30", practicalE: "40/50", practicalM: "17/20", grade: "AB", gradePoints: 9, credits: 4 },
-        { code: "3110003", name: "Programming for Problem Solving", theoryE: "62/70", theoryM: "28/30", practicalE: "48/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 5 },
-        { code: "3110018", name: "Physics", theoryE: "52/70", theoryM: "24/30", practicalE: "44/50", practicalM: "18/20", grade: "AB", gradePoints: 9, credits: 3 },
-      ]),
-    },
-    {
-      semester: 2,
-      examSession: "Summer 2022",
-      spi: 8.86,
-      cpi: 9.00,
-      cgpa: 9.00,
-      totalCredits: 22,
-      earnedCredits: 22,
-      resultStatus: "PASS",
-      subjectsJson: JSON.stringify([
-        { code: "3110015", name: "Mathematics - 2", theoryE: "52/70", theoryM: "24/30", practicalE: "--", practicalM: "--", grade: "AB", gradePoints: 9, credits: 4 },
-        { code: "3110007", name: "Environmental Sciences", theoryE: "46/70", theoryM: "22/30", practicalE: "--", practicalM: "--", grade: "BB", gradePoints: 8, credits: 2 },
-        { code: "3110016", name: "Basic Electronics", theoryE: "56/70", theoryM: "26/30", practicalE: "44/50", practicalM: "18/20", grade: "AA", gradePoints: 10, credits: 4 },
-        { code: "3110013", name: "Engineering Graphics & Design", theoryE: "58/70", theoryM: "27/30", practicalE: "46/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 4 },
-        { code: "3110001", name: "Chemistry", theoryE: "48/70", theoryM: "23/30", practicalE: "42/50", practicalM: "17/20", grade: "AB", gradePoints: 9, credits: 4 },
-      ]),
-    },
-    {
-      semester: 3,
-      examSession: "Winter 2022",
-      spi: 8.95,
-      cpi: 8.98,
-      cgpa: 8.98,
-      totalCredits: 21,
-      earnedCredits: 21,
-      resultStatus: "PASS",
-      subjectsJson: JSON.stringify([
-        { code: "3130702", name: "Data Structures", theoryE: "59/70", theoryM: "28/30", practicalE: "46/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 5 },
-        { code: "3130703", name: "Database Management Systems", theoryE: "53/70", theoryM: "25/30", practicalE: "44/50", practicalM: "18/20", grade: "AB", gradePoints: 9, credits: 5 },
-        { code: "3130704", name: "Digital Fundamentals", theoryE: "50/70", theoryM: "24/30", practicalE: "42/50", practicalM: "17/20", grade: "AB", gradePoints: 9, credits: 4 },
-        { code: "3130006", name: "Probability and Statistics", theoryE: "48/70", theoryM: "22/30", practicalE: "--", practicalM: "--", grade: "BB", gradePoints: 8, credits: 4 },
-        { code: "3130008", name: "Design Engineering - I A", theoryE: "--", theoryM: "--", practicalE: "46/50", practicalM: "45/50", grade: "AA", gradePoints: 10, credits: 3 },
-      ]),
-    },
-    {
-      semester: 4,
-      examSession: "Summer 2023",
-      spi: 8.81,
-      cpi: 8.94,
-      cgpa: 8.94,
-      totalCredits: 23,
-      earnedCredits: 23,
-      resultStatus: "PASS",
-      subjectsJson: JSON.stringify([
-        { code: "3140702", name: "Operating System", theoryE: "55/70", theoryM: "26/30", practicalE: "44/50", practicalM: "18/20", grade: "AA", gradePoints: 10, credits: 4 },
-        { code: "3140705", name: "Object Oriented Programming - I (Java)", theoryE: "60/70", theoryM: "28/30", practicalE: "47/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 5 },
-        { code: "3140707", name: "Computer Organization & Architecture", theoryE: "50/70", theoryM: "23/30", practicalE: "42/50", practicalM: "17/20", grade: "AB", gradePoints: 9, credits: 4 },
-        { code: "3140708", name: "Discrete Mathematics", theoryE: "52/70", theoryM: "25/30", practicalE: "--", practicalM: "--", grade: "AB", gradePoints: 9, credits: 4 },
-        { code: "3140709", name: "Principles of Economics and Management", theoryE: "45/70", theoryM: "21/30", practicalE: "--", practicalM: "--", grade: "BB", gradePoints: 8, credits: 3 },
-        { code: "3140005", name: "Design Engineering - I B", theoryE: "--", theoryM: "--", practicalE: "45/50", practicalM: "44/50", grade: "AA", gradePoints: 10, credits: 3 },
-      ]),
-    },
-    {
-      semester: 5,
-      examSession: "Winter 2023",
-      spi: 9.09,
-      cpi: 8.97,
-      cgpa: 8.97,
-      totalCredits: 22,
-      earnedCredits: 22,
-      resultStatus: "PASS",
-      subjectsJson: JSON.stringify([
-        { code: "3150703", name: "Analysis and Design of Algorithms", theoryE: "61/70", theoryM: "28/30", practicalE: "47/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 5 },
-        { code: "3150710", name: "Computer Networks", theoryE: "53/70", theoryM: "25/30", practicalE: "43/50", practicalM: "18/20", grade: "AB", gradePoints: 9, credits: 5 },
-        { code: "3150711", name: "Software Engineering", theoryE: "57/70", theoryM: "27/30", practicalE: "46/50", practicalM: "19/20", grade: "AA", gradePoints: 10, credits: 4 },
-        { code: "3150713", name: "Python for Data Science", theoryE: "62/70", theoryM: "29/30", practicalE: "48/50", practicalM: "20/20", grade: "AA", gradePoints: 10, credits: 4 },
-        { code: "3150709", name: "Professional Ethics", theoryE: "50/70", theoryM: "24/30", practicalE: "--", practicalM: "--", grade: "AB", gradePoints: 9, credits: 3 },
-        { code: "3150005", name: "Integrated Personality Development Course", theoryE: "--", theoryM: "--", practicalE: "46/50", practicalM: "45/50", grade: "AA", gradePoints: 10, credits: 1 },
-      ]),
-    },
-  ];
-
-  for (const res of user1Results) {
-    await prisma.studentResult.create({
-      data: {
-        userId: user1.id,
-        enrollmentNo: user1.enrollmentNo,
-        ...res,
-      },
-    });
-  }
-  console.log(`✅ Seeded 5 Semesters of GTU Result Transcripts for student`);
-
-  // 6. Seed In-app Notifications
-  await prisma.notification.createMany({
-    data: [
-      {
-        userId: user1.id,
-        title: "🎉 GTU Result Transcript Synced",
-        message: "Your official semester transcripts (Sem 1 to Sem 5) have been verified and saved to your profile.",
-        type: "RESULT",
-        link: "/profile",
-        isRead: false,
-      },
-      {
-        userId: user1.id,
-        title: "⚡ Winter 2024 Exam Timetable Released",
-        message: "GTU has announced the final exam timetable for BE Sem 5. Check Papers Hub & Circulars.",
-        type: "EXAM",
-        link: "/circulars",
-        isRead: false,
-      },
-      {
-        userId: user1.id,
-        title: "📌 PMMS Phase 1 Milestone Alert",
-        message: "Reminder: Periodic Progress Report 1 (PPR-1) deadline is approaching. Update your submission status.",
-        type: "ACADEMIC",
-        link: "/pmms",
-        isRead: false,
-      },
-    ],
-  });
-
-  // 7. Seed Midsem Marks for User 1
-  const midsemSubjects = [
-    { subjectCode: "3150703", subjectName: "Analysis and Design of Algorithms (ADA)", credits: 5, midsemMarks: 27, totalMidsemMarks: 30, internalMarks: 18, totalInternalMarks: 20, practicalMarks: 45, totalPracticalMarks: 50, targetGrade: "AA" },
-    { subjectCode: "3150710", subjectName: "Computer Networks (CN)", credits: 5, midsemMarks: 24, totalMidsemMarks: 30, internalMarks: 17, totalInternalMarks: 20, practicalMarks: 42, totalPracticalMarks: 50, targetGrade: "AB" },
-    { subjectCode: "3150711", subjectName: "Software Engineering (SE)", credits: 4, midsemMarks: 26, totalMidsemMarks: 30, internalMarks: 19, totalInternalMarks: 20, practicalMarks: 46, totalPracticalMarks: 50, targetGrade: "AA" },
-    { subjectCode: "3150713", subjectName: "Python for Data Science", credits: 4, midsemMarks: 28, totalMidsemMarks: 30, internalMarks: 19, totalInternalMarks: 20, practicalMarks: 48, totalPracticalMarks: 50, targetGrade: "AA" },
-    { subjectCode: "3150709", subjectName: "Professional Ethics", credits: 3, midsemMarks: 23, totalMidsemMarks: 30, internalMarks: 16, totalInternalMarks: 20, practicalMarks: 0, totalPracticalMarks: 0, targetGrade: "AB" },
-  ];
-
-  for (const s of midsemSubjects) {
-    await prisma.midsemRecord.create({
-      data: {
-        userId: user1.id,
-        semester: 5,
-        ...s,
-      },
-    });
-  }
-
-  // 8. Seed PMMS Milestones
+  // 5. Seed PMMS Milestones
   const pmmsMilestones = [
-    { milestoneKey: "team_reg", title: "Team Formation & Project Title Registration", phase: "Phase 1 (Sem 7)", isCompleted: true, notes: "Formed 4-member team 'NeuralCraft', submitted IoT & AI smart campus project title.", completedAt: new Date("2024-09-10") },
-    { milestoneKey: "guide_allocation", title: "Internal Guide Mapping & Approval", phase: "Phase 1 (Sem 7)", isCompleted: true, notes: "Mapped to Prof. K. R. Sharma (HOD CE Dept). Guide approved synopsis.", completedAt: new Date("2024-09-18") },
-    { milestoneKey: "ppr_1", title: "Periodic Progress Report 1 (PPR-1)", phase: "Phase 1 (Sem 7)", isCompleted: true, notes: "Reviewed 12 research papers on Edge AI & MQTT protocols.", completedAt: new Date("2024-10-02") },
-    { milestoneKey: "canvas_aeiou", title: "Design Engineering: AEIOU Canvas", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Drafting user interactions and campus parking zone environment mappings." },
-    { milestoneKey: "canvas_empathy", title: "Design Engineering: Empathy & Ideation", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Scheduled student user interviews." },
-    { milestoneKey: "psar_report", title: "Patent Search and Analysis Report (PSAR)", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Need to search 5 IPO patent claims." },
-    { milestoneKey: "final_report", title: "Final Project Report & PMMS Certificate", phase: "Phase 2 (Sem 8)", isCompleted: false, notes: "Pending Semester 8 implementation." },
+    { milestoneKey: "team_reg", title: "Team Formation & Project Title Registration", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Submit team and guide registration on PMMS." },
+    { milestoneKey: "guide_allocation", title: "Internal Guide Mapping & Approval", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Map internal guide on pmms.gtu.ac.in." },
+    { milestoneKey: "ppr_1", title: "Periodic Progress Report 1 (PPR-1)", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Periodic progress review 1." },
+    { milestoneKey: "canvas_aeiou", title: "Design Engineering: AEIOU Canvas", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Draft AEIOU canvas summary." },
+    { milestoneKey: "canvas_empathy", title: "Design Engineering: Empathy & Ideation", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Customer & user empathy mapping." },
+    { milestoneKey: "psar_report", title: "Patent Search and Analysis Report (PSAR)", phase: "Phase 1 (Sem 7)", isCompleted: false, notes: "Patent search & analysis report." },
+    { milestoneKey: "final_report", title: "Final Project Report & PMMS Certificate", phase: "Phase 2 (Sem 8)", isCompleted: false, notes: "Final project report and completion certificate." },
   ];
 
   for (const m of pmmsMilestones) {
@@ -477,7 +325,7 @@ async function main() {
     });
   }
 
-  console.log("🎉 GTU All In One complete database seed completed successfully!");
+  console.log("🎉 GTU All In One clean database seed completed successfully!");
 }
 
 main()

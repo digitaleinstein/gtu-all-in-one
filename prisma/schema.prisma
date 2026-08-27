@@ -17,6 +17,8 @@ model User {
   branch          String?              @default("Computer Engineering")
   semester        Int?                 @default(5)
   college         String?              @default("028 - L.D. College of Engineering, Ahmedabad")
+  phone           String?
+  isEmailVerified Boolean              @default(false)
   role            String               @default("STUDENT")
   avatar          String?
   createdAt       DateTime             @default(now())
@@ -193,3 +195,16 @@ model StudentResult {
   @@unique([userId, semester, examSession])
   @@index([enrollmentNo])
 }
+
+model OtpVerification {
+  id        String   @id @default(cuid())
+  email     String
+  otp       String
+  purpose   String   @default("REGISTER") // REGISTER, LOGIN, FORGOT_PASSWORD, VERIFY_EMAIL
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, otp, purpose])
+}
+

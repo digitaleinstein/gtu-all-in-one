@@ -70,21 +70,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Cleared read notifications" });
     }
 
-    // 4. Trigger Test Notification for testing Push/Email
-    if (action === "sendTest") {
-      const created = await prisma.notification.create({
-        data: {
-          userId,
-          title: testNotification?.title || "🚀 Test Result Alert",
-          message: testNotification?.message || "This is a simulated GTU Result / Circular alert sent to your account.",
-          type: testNotification?.type || "RESULT",
-          link: testNotification?.link || "/results",
-          isRead: false,
-        },
-      });
-      return NextResponse.json({ notification: created, message: "Test alert dispatched!" }, { status: 201 });
-    }
-
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error: any) {
     console.error("Notifications POST error:", error);
