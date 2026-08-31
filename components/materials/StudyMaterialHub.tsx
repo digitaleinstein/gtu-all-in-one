@@ -30,22 +30,8 @@ import { MaterialModal } from "./MaterialModal";
 
 // Rich Acronym & Alias Mapping for GTU Engineering Subjects
 const SUBJECT_ACRONYMS: Record<string, string[]> = {
-  "ada": ["3150703"],
-  "pps": ["3110003"],
-  "os": ["3140702"],
-  "dbms": ["3130703", "4330702"],
-  "ds": ["3130702", "4330701"],
-  "coa": ["3140707"],
-  "cn": ["3150710", "4340702"],
-  "se": ["3150711"],
-  "wt": ["2160708", "3160713", "3360706"],
-  "toc": ["2160704", "3160704"],
-  "ai": ["2180703", "3170716"],
-  "ml": ["3170716", "3170722"],
-  "cd": ["2170701", "3170701"],
-  "egd": ["3110013"],
-  "bee": ["3110005"],
-  "bme": ["3110006"],
+  "math": ["3110014", "3110015", "4310001", "4320002"],
+  "maths": ["3110014", "3110015", "4310001", "4320002"],
   "maths 1": ["3110014", "4310001"],
   "maths 2": ["3110015", "4320002"],
   "maths-1": ["3110014", "4310001"],
@@ -54,6 +40,56 @@ const SUBJECT_ACRONYMS: Record<string, string[]> = {
   "math 2": ["3110015", "4320002"],
   "m1": ["3110014", "4310001"],
   "m2": ["3110015", "4320002"],
+  "calculus": ["3110014", "4310001"],
+  "linear algebra": ["3110015", "4320002"],
+  "ada": ["3150703"],
+  "algo": ["3150703"],
+  "algorithms": ["3150703"],
+  "os": ["3140702", "4340703"],
+  "operating system": ["3140702", "4340703"],
+  "operating systems": ["3140702", "4340703"],
+  "dbms": ["3130703", "4330702"],
+  "database": ["3130703", "4330702"],
+  "ds": ["3130702", "4330701"],
+  "dsa": ["3130702", "4330701"],
+  "data structure": ["3130702", "4330701"],
+  "data structures": ["3130702", "4330701"],
+  "cn": ["3150710", "4340702"],
+  "network": ["3150710", "4340702"],
+  "networks": ["3150710", "4340702"],
+  "computer network": ["3150710", "4340702"],
+  "computer networks": ["3150710", "4340702"],
+  "se": ["3150711", "4350703"],
+  "software": ["3150711", "4350703"],
+  "software engineering": ["3150711", "4350703"],
+  "wt": ["3160713", "2160708", "4350702"],
+  "web": ["3160713", "2160708", "4350702"],
+  "web tech": ["3160713", "2160708", "4350702"],
+  "web technology": ["3160713", "2160708", "4350702"],
+  "toc": ["3160704", "2160704"],
+  "theory of computation": ["3160704", "2160704"],
+  "coa": ["3140707", "4330704"],
+  "computer organization": ["3140707", "4330704"],
+  "pps": ["3110003", "4300018"],
+  "c programming": ["3110003", "4300018"],
+  "egd": ["3110013", "4300007"],
+  "graphics": ["3110013", "4300007"],
+  "bee": ["3110005", "4300017"],
+  "bme": ["3110006", "4300016"],
+  "python": ["3150713", "4350701"],
+  "java": ["3160707", "2160707", "3350703", "4340701"],
+  "ai": ["3170716", "2180703"],
+  "artificial intelligence": ["3170716", "2180703"],
+  "ml": ["3170716", "2180703"],
+  "machine learning": ["3170716", "2180703"],
+  "cloud": ["2180712"],
+  "iot": ["3160716", "4360702"],
+  "compiler": ["3170701", "2170701"],
+  "cd": ["3170701", "2170701"],
+  "compiler design": ["3170701", "2170701"],
+  "physics": ["3110011", "3110018", "4300005"],
+  "evs": ["3110007", "4300003"],
+  "environmental": ["3110007", "4300003"],
   "etc": ["3130004"],
   "ic": ["3130007"],
   "df": ["3130704"],
@@ -83,11 +119,8 @@ const SUBJECT_ACRONYMS: Record<string, string[]> = {
   "eca": ["3130906"],
   "ade": ["3130907"],
   "pe": ["3140915", "2170906"],
-  "python": ["3150713", "4350701"],
-  "java": ["3140705", "3160707", "3350703", "4340701", "2160707"],
   "android": ["2180715", "3170726", "4360701"],
   "php": ["4350702"],
-  "iot": ["3160716"],
 };
 
 export function StudyMaterialHub() {
@@ -198,37 +231,16 @@ export function StudyMaterialHub() {
     const q = query.toLowerCase().trim();
     const qClean = q.replace(/[\s\-_]/g, "");
 
-    // 1. Subject code match (exact or partial, e.g. 3150703)
+    // 1. Alias lookup (e.g. ADA, DBMS, OS, TOC, PPS, Maths 1, Data Structures, Python, etc.)
+    if (SUBJECT_ACRONYMS[q] && SUBJECT_ACRONYMS[q].includes(item.subjectCode)) return true;
+    if (SUBJECT_ACRONYMS[qClean] && SUBJECT_ACRONYMS[qClean].includes(item.subjectCode)) return true;
+
+    // 2. Direct Subject code match (exact or partial, e.g. 3150703)
     if (item.subjectCode.toLowerCase().includes(q) || item.subjectCode.includes(qClean)) {
       return true;
     }
 
-    // 2. Direct Subject Name match
-    const nameLower = item.subjectName.toLowerCase();
-    const nameClean = nameLower.replace(/[\s\-_]/g, "");
-    if (nameLower.includes(q) || nameClean.includes(qClean)) {
-      return true;
-    }
-
-    // 3. Multi-word tokens match (e.g. "data struct", "maths 1", "operating system", "python programming")
-    const words = q.split(/\s+/).filter(Boolean);
-    if (words.length > 1) {
-      const allWordsMatch = words.every(
-        (word) =>
-          nameLower.includes(word) ||
-          item.subjectCode.includes(word) ||
-          item.department.toLowerCase().includes(word) ||
-          item.units.some((u) => u.title.toLowerCase().includes(word))
-      );
-      if (allWordsMatch) return true;
-    }
-
-    // 4. Acronym dictionary match (e.g. ADA, PPS, DBMS, OS, TOC, WT, SE, CN, etc.)
-    if (SUBJECT_ACRONYMS[q] && SUBJECT_ACRONYMS[q].includes(item.subjectCode)) {
-      return true;
-    }
-
-    // 5. Dynamic initials acronym (e.g., ADA, DBMS, PPS, TOC)
+    // 3. Dynamic initials acronym (e.g., ADA, DBMS, PPS, TOC, SE, CN, OS, AI, ML, WT, CD)
     const initials = item.subjectName
       .split(/[\s\-()&,]+/)
       .filter((w) => w.length > 0 && !["and", "for", "of", "in", "the", "to", "with", "a", "an", "i", "ii", "iii"].includes(w.toLowerCase()))
@@ -236,27 +248,39 @@ export function StudyMaterialHub() {
       .join("")
       .toLowerCase();
 
-    if (initials === q || initials.includes(q)) {
-      return true;
+    if (initials === q || initials === qClean) return true;
+
+    // 4. Normalized Subject Name match
+    const nameNorm = item.subjectName.toLowerCase().replace(/[^a-z0-9]/g, " ");
+    const qNorm = q.replace(/[^a-z0-9]/g, " ");
+    if (nameNorm.includes(qNorm) || item.subjectName.toLowerCase().includes(q)) return true;
+
+    // 5. Multi-word & tokenized search
+    const words = qNorm.split(/\s+/).filter(Boolean);
+    if (words.length > 0) {
+      const allWordsMatch = words.every((w) => {
+        if (w.length < 2) return false;
+        if (w === "math" || w === "maths") return nameNorm.includes("mathematics") || nameNorm.includes("math");
+        if (w === "1" || w === "i") return nameNorm.includes(" 1") || nameNorm.includes(" i") || nameNorm.endsWith(" 1") || nameNorm.endsWith(" i");
+        if (w === "2" || w === "ii") return nameNorm.includes(" 2") || nameNorm.includes(" ii") || nameNorm.endsWith(" 2") || nameNorm.endsWith(" ii");
+
+        // Exact word boundary check for short 2-3 letter words
+        if (w.length <= 3) {
+          const regex = new RegExp("\\b" + w + "\\b", "i");
+          return regex.test(item.subjectName) || regex.test(item.subjectCode) || item.units.some((u) => regex.test(u.title));
+        }
+
+        return (
+          nameNorm.includes(w) ||
+          item.subjectCode.includes(w) ||
+          item.department.toLowerCase().includes(w) ||
+          item.units.some((u) => u.title.toLowerCase().includes(w))
+        );
+      });
+      if (allWordsMatch) return true;
     }
 
-    // 6. Department match
-    if (item.department.toLowerCase().includes(q)) {
-      return true;
-    }
-
-    // 7. Unit titles and topics match
-    if (
-      item.units.some(
-        (u) =>
-          u.title.toLowerCase().includes(q) ||
-          u.title.toLowerCase().replace(/[\s\-_]/g, "").includes(qClean)
-      )
-    ) {
-      return true;
-    }
-
-    // 8. Degree or Semester query (e.g., "sem 5", "semester 3")
+    // 6. Degree or Semester query (e.g., "sem 5", "semester 3")
     if (q.includes("sem") || q.includes("semester")) {
       const match = q.match(/\d+/);
       if (match && Number(match[0]) === item.semester) return true;
