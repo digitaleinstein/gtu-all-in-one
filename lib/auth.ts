@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
@@ -12,6 +13,14 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
   },
   providers: [
+    // 1. Google OAuth Provider
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      allowDangerousEmailAccountLinking: true,
+    }),
+
+    // 2. GTU Student Credentials Provider
     CredentialsProvider({
       name: "GTU Student Credentials",
       credentials: {
@@ -41,9 +50,8 @@ export const authOptions: NextAuthOptions = {
 
         const isValidPassword = await bcrypt.compare(credentials.password, user.password);
         if (!isValidPassword) {
-          // Allow fallback for demo accounts with plain text in seed if needed, but we hash in seed
           if (credentials.password !== user.password) {
-            throw new Error("Invalid password. Try 'gtu12345'");
+            throw new Error("Invalid password. Default demo password is 'gtu12345'");
           }
         }
 
@@ -63,22 +71,102 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
-        token.id = user.id;
-        token.enrollmentNo = (user as any).enrollmentNo;
-        token.course = (user as any).course;
-        token.branch = (user as any).branch;
-        token.semester = (user as any).semester;
-        token.college = (user as any).college;
-        token.role = (user as any).role;
-        token.isEmailVerified = (user as any).isEmailVerified;
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        if (!user.email) return false;
+        try {
+          const emailLower = user.email.toLowerCase().trim();
+          const existingUser = await prisma.user.findUnique({
+            where: { email: emailLower },
+          });
+
+          if (!existingUser) {
+            const randomPasswordHash = await bcrypt.hash(Math.random().toString(36).substring(2, 12), 10);
+            const newUser = await prisma.user.create({
+              data: {
+                name: user.name || "GTU Student",
+                email: emailLower,
+                password: randomPasswordHash,
+                course: "BE",
+                branch: "Computer Engineering",
+                semester: 5,
+                college: "028 - L.D. College of Engineering, Ahmedabad",
+                role: "STUDENT",
+                isEmailVerified: true,
+              },
+            });
+            (user as any).id = newUser.id;
+            (user as any).enrollmentNo = newUser.enrollmentNo;
+            (user as any).course = newUser.course;
+            (user as any).branch = newUser.branch;
+            (user as any).semester = newUser.semester;
+            (user as any).college = newUser.college;
+            (user as any).role = newUser.role;
+            (user as any).isEmailVerified = true;
+          } else {
+            if (!existingUser.isEmailVerified) {
+              await prisma.user.update({
+                where: { id: existingUser.id },
+                data: { isEmailVerified: true },
+              });
+            }
+            (user as any).id = existingUser.id;
+            (user as any).enrollmentNo = existingUser.enrollmentNo;
+            (user as any).course = existingUser.course;
+            (user as any).branch = existingUser.branch;
+            (user as any).semester = existingUser.semester;
+            (user as any).college = existingUser.college;
+            (user as any).role = existingUser.role;
+            (user as any).isEmailVerified = true;
+          }
+          return true;
+        } catch (err) {
+          console.error("Google sign-in sync error:", err);
+          return true; // Allow NextAuth flow
+        }
       }
+      return true;
+    },
+
+    async jwt({ token, user, trigger, session, account }) {
+      if (user) {
+        token.id = (user as any).id || token.id;
+        token.enrollmentNo = (user as any).enrollmentNo || token.enrollmentNo;
+        token.course = (user as any).course || token.course || "BE";
+        token.branch = (user as any).branch || token.branch || "Computer Engineering";
+        token.semester = (user as any).semester || token.semester || 5;
+        token.college = (user as any).college || token.college || "028 - L.D. College of Engineering, Ahmedabad";
+        token.role = (user as any).role || token.role || "STUDENT";
+        token.isEmailVerified = (user as any).isEmailVerified ?? token.isEmailVerified ?? true;
+      }
+
+      // If signed in via Google and profile fields are missing in token, populate from DB
+      if (token.email && (!token.id || !token.enrollmentNo)) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email.toLowerCase().trim() },
+          });
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.enrollmentNo = dbUser.enrollmentNo;
+            token.course = dbUser.course;
+            token.branch = dbUser.branch;
+            token.semester = dbUser.semester;
+            token.college = dbUser.college;
+            token.role = dbUser.role;
+            token.isEmailVerified = dbUser.isEmailVerified;
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+
       if (trigger === "update" && session) {
         return { ...token, ...session.user };
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
