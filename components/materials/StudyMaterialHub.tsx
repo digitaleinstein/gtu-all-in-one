@@ -97,9 +97,26 @@ export function StudyMaterialHub() {
   const [selectedDept, setSelectedDept] = useState("All Departments");
   const [selectedSem, setSelectedSem] = useState<number | "All">("All");
   const [selectedType, setSelectedType] = useState("All Types");
+  const [selectedSubjectCode, setSelectedSubjectCode] = useState<string>("All");
   const [selectedMaterial, setSelectedMaterial] = useState<GTUStudyMaterial | null>(null);
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [onlySaved, setOnlySaved] = useState(false);
+
+  // Computed list of unique subjects for instant Subject-Wise dropdown selection
+  const uniqueSubjects = useMemo(() => {
+    const map = new Map<string, { code: string; name: string; sem: number; dept: string }>();
+    materials.forEach((m) => {
+      if (!map.has(m.subjectCode)) {
+        map.set(m.subjectCode, {
+          code: m.subjectCode,
+          name: m.subjectName,
+          sem: m.semester,
+          dept: m.department,
+        });
+      }
+    });
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [materials]);
 
   // Load initial materials and saved bookmarks & check URL params
   useEffect(() => {
@@ -266,27 +283,48 @@ export function StudyMaterialHub() {
       // 1. Saved Filter
       if (onlySaved && !savedIds.includes(item.id)) return false;
 
-      // 2. Department Filter
+      // 2. Direct Subject Picker Selection
+      if (selectedSubjectCode !== "All") {
+        return item.subjectCode === selectedSubjectCode || item.id === selectedSubjectCode;
+      }
+
+      // 3. Search Query Matching
+      if (searchQuery.trim()) {
+        const matches = matchesSearch(item, searchQuery);
+        if (!matches) return false;
+        if (selectedDept !== "All Departments" && !matchesDepartment(item, selectedDept)) {
+          return false;
+        }
+        if (selectedSem !== "All" && Number(item.semester) !== Number(selectedSem)) {
+          return false;
+        }
+        return true;
+      }
+
+      // 4. Department Filter
       if (!matchesDepartment(item, selectedDept)) return false;
 
-      // 3. Semester Filter
+      // 5. Semester Filter
       if (selectedSem !== "All") {
         if (Number(item.semester) !== Number(selectedSem)) return false;
       }
 
-      // 4. Resource Type Filter
+      // 6. Resource Type Filter
       if (selectedType !== "All Types") {
         if (!item.resourceTypes.some((r) => r.toLowerCase().includes(selectedType.toLowerCase()))) {
           return false;
         }
       }
 
-      // 5. Intelligent Search Query
-      if (!matchesSearch(item, searchQuery)) return false;
-
       return true;
     });
-  }, [materials, selectedDept, selectedSem, selectedType, searchQuery, onlySaved, savedIds]);
+  }, [materials, selectedDept, selectedSem, selectedType, searchQuery, selectedSubjectCode, onlySaved, savedIds]);
+
+  // Global search count across all departments/semesters
+  const globalSearchMatchesCount = useMemo(() => {
+    if (!searchQuery.trim()) return 0;
+    return materials.filter((m) => matchesSearch(m, searchQuery)).length;
+  }, [materials, searchQuery]);
 
   // Dynamic Semester Counts for the current department & search filter
   const semesterCounts = useMemo(() => {
@@ -294,6 +332,9 @@ export function StudyMaterialHub() {
 
     const baseList = materials.filter((item) => {
       if (onlySaved && !savedIds.includes(item.id)) return false;
+      if (selectedSubjectCode !== "All") {
+        return item.subjectCode === selectedSubjectCode || item.id === selectedSubjectCode;
+      }
       if (!matchesDepartment(item, selectedDept)) return false;
       if (!matchesSearch(item, searchQuery)) return false;
       if (selectedType !== "All Types") {
@@ -309,12 +350,13 @@ export function StudyMaterialHub() {
       counts[s] = baseList.filter((m) => Number(m.semester) === s).length;
     });
     return counts;
-  }, [materials, selectedDept, searchQuery, selectedType, onlySaved, savedIds]);
+  }, [materials, selectedDept, searchQuery, selectedType, selectedSubjectCode, onlySaved, savedIds]);
 
   const resetFilters = () => {
     setSelectedDept("All Departments");
     setSelectedSem("All");
     setSelectedType("All Types");
+    setSelectedSubjectCode("All");
     setSearchQuery("");
     setOnlySaved(false);
   };
@@ -357,25 +399,58 @@ export function StudyMaterialHub() {
             </div>
           </div>
 
-          {/* Search Bar & Quick Tags */}
-          <div className="space-y-3 pt-2 max-w-3xl">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search Subject (e.g. ADA, PPS, DBMS, OS, Maths 1), Subject Code (3150703), or Topic..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-12 py-3.5 text-sm rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground"
+          {/* Search Bar & Subject-Wise Picker */}
+          <div className="space-y-3 pt-2 max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {/* Text Search Input */}
+              <div className="md:col-span-2 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search Subject (e.g. ADA, PPS, DBMS, OS, Maths 1), Code (3150703), or Topic..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (e.target.value) setSelectedSubjectCode("All");
+                  }}
+                  className="w-full pl-12 pr-12 py-3.5 text-sm rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Subject-Wise Direct Selector Dropdown */}
+              <div className="relative">
+                <select
+                  value={selectedSubjectCode}
+                  onChange={(e) => {
+                    const code = e.target.value;
+                    setSelectedSubjectCode(code);
+                    if (code !== "All") {
+                      setSearchQuery("");
+                      const subj = materials.find((m) => m.subjectCode === code);
+                      if (subj) {
+                        setSelectedDept(subj.department);
+                        setSelectedSem(subj.semester);
+                      }
+                    }
+                  }}
+                  className="w-full px-4 py-3.5 text-xs font-bold rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-foreground cursor-pointer truncate"
                 >
-                  Clear
-                </button>
-              )}
+                  <option value="All">📚 Select Subject ({uniqueSubjects.length} GTU Subjects)</option>
+                  {uniqueSubjects.map((s) => (
+                    <option key={s.code} value={s.code}>
+                      {s.code} - {s.name} (Sem {s.sem})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Quick Filter Search Chips */}
@@ -384,8 +459,11 @@ export function StudyMaterialHub() {
               {quickSearchTags.map((tag) => (
                 <button
                   key={tag}
-                  onClick={() => setSearchQuery(tag)}
-                  className={`px-2.5 py-1 rounded-xl font-bold transition-all shrink-0 ${
+                  onClick={() => {
+                    setSearchQuery(tag);
+                    setSelectedSubjectCode("All");
+                  }}
+                  className={`px-2.5 py-1 rounded-xl font-bold transition-all shrink-0 cursor-pointer ${
                     searchQuery.toLowerCase() === tag.toLowerCase()
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "bg-muted/70 hover:bg-muted text-foreground border border-border/60"
@@ -534,11 +612,21 @@ export function StudyMaterialHub() {
               {selectedSem === "All" ? "All Semesters" : `Semester ${selectedSem}`}
             </span>
 
+            {/* Subject chip */}
+            {selectedSubjectCode !== "All" && (
+              <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+                <span>Subject: {selectedSubjectCode}</span>
+                <button onClick={() => setSelectedSubjectCode("All")} className="hover:text-foreground cursor-pointer">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
             {/* Search query chip */}
             {searchQuery && (
               <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center gap-1">
                 <span>Query: &quot;{searchQuery}&quot;</span>
-                <button onClick={() => setSearchQuery("")} className="hover:text-foreground">
+                <button onClick={() => setSearchQuery("")} className="hover:text-foreground cursor-pointer">
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -569,11 +657,12 @@ export function StudyMaterialHub() {
             {(selectedDept !== "All Departments" ||
               selectedSem !== "All" ||
               selectedType !== "All Types" ||
+              selectedSubjectCode !== "All" ||
               searchQuery ||
               onlySaved) && (
               <button
                 onClick={resetFilters}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-card border border-border hover:bg-muted text-foreground transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-card border border-border hover:bg-muted text-foreground transition-all cursor-pointer"
                 title="Reset all filters"
               >
                 <X className="w-3.5 h-3.5 text-rose-500" />
@@ -606,12 +695,31 @@ export function StudyMaterialHub() {
                 No subjects matched your selected department &quot;{selectedDept}&quot; {selectedSem !== "All" ? `and semester "${selectedSem}"` : ""} {searchQuery ? `or query "${searchQuery}"` : ""}.
               </p>
             </div>
-            <button
-              onClick={resetFilters}
-              className="px-4 py-2 text-xs font-bold rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm"
-            >
-              Reset Filters & Show All
-            </button>
+            {globalSearchMatchesCount > 0 ? (
+              <div className="space-y-3 pt-2">
+                <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                  ⚡ Found <strong>{globalSearchMatchesCount}</strong> subjects matching &quot;{searchQuery}&quot; in other semesters or departments.
+                </p>
+                <button
+                  onClick={() => {
+                    setSelectedDept("All Departments");
+                    setSelectedSem("All");
+                    setSelectedType("All Types");
+                    setSelectedSubjectCode("All");
+                  }}
+                  className="px-4 py-2.5 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md cursor-pointer"
+                >
+                  🔍 View All {globalSearchMatchesCount} Matching Subjects
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={resetFilters}
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm cursor-pointer"
+              >
+                Reset Filters &amp; Show All
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

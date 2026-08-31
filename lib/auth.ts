@@ -140,8 +140,8 @@ export const authOptions: NextAuthOptions = {
         token.isEmailVerified = (user as any).isEmailVerified ?? token.isEmailVerified ?? true;
       }
 
-      // If signed in via Google and profile fields are missing in token, populate from DB
-      if (token.email && (!token.id || !token.enrollmentNo)) {
+      // Always ensure token has latest user details from server database
+      if (token.email) {
         try {
           const dbUser = await prisma.user.findUnique({
             where: { email: token.email.toLowerCase().trim() },
@@ -149,11 +149,11 @@ export const authOptions: NextAuthOptions = {
           if (dbUser) {
             token.id = dbUser.id;
             token.enrollmentNo = dbUser.enrollmentNo;
-            token.course = dbUser.course;
-            token.branch = dbUser.branch;
-            token.semester = dbUser.semester;
-            token.college = dbUser.college;
-            token.role = dbUser.role;
+            token.course = dbUser.course || "BE";
+            token.branch = dbUser.branch || "Computer Engineering";
+            token.semester = dbUser.semester || 5;
+            token.college = dbUser.college || "028 - L.D. College of Engineering, Ahmedabad";
+            token.role = dbUser.role || "STUDENT";
             token.isEmailVerified = dbUser.isEmailVerified;
           }
         } catch (e) {

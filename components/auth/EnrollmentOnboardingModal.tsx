@@ -36,15 +36,43 @@ export function EnrollmentOnboardingModal() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // If user is logged in (e.g. via Google) and has no enrollment number linked
     if (session?.user) {
+      const userEmail = session.user.email || "default";
       const currentEnroll = (session.user as any).enrollmentNo;
       setName(session.user.name || "");
-      if (!currentEnroll || currentEnroll.trim() === "" || currentEnroll === "null") {
-        setIsOpen(true);
+
+      // If user already has an enrollment number linked on server, NEVER show
+      if (currentEnroll && currentEnroll.trim() !== "" && currentEnroll !== "null") {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("gtu_enrollment_saved_" + userEmail, "true");
+        }
+        setIsOpen(false);
+        return;
       }
+
+      // Check if user previously saved or dismissed
+      if (typeof window !== "undefined") {
+        const isDismissed = localStorage.getItem("gtu_enrollment_dismissed_" + userEmail);
+        const isSaved = localStorage.getItem("gtu_enrollment_saved_" + userEmail);
+        if (isDismissed === "true" || isSaved === "true") {
+          setIsOpen(false);
+          return;
+        }
+      }
+
+      // First time Google user with no enrollment number
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
     }
   }, [session]);
+
+  const handleDismiss = () => {
+    if (session?.user?.email && typeof window !== "undefined") {
+      localStorage.setItem("gtu_enrollment_dismissed_" + session.user.email, "true");
+    }
+    setIsOpen(false);
+  };
 
   const handleEnrollmentChange = (val: string) => {
     setEnrollmentNo(val);
@@ -94,6 +122,12 @@ export function EnrollmentOnboardingModal() {
       }
 
       setSuccess(true);
+      const userEmail = session?.user?.email || "default";
+      if (typeof window !== "undefined") {
+        localStorage.setItem("gtu_enrollment_saved_" + userEmail, "true");
+        localStorage.setItem("gtu_enrollment_dismissed_" + userEmail, "true");
+      }
+
       if (update) {
         await update({
           user: {
@@ -126,7 +160,7 @@ export function EnrollmentOnboardingModal() {
       <div className="w-full max-w-lg bg-card text-card-foreground border border-border/80 rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 space-y-6 relative">
         {/* Close button (allows skipping for now) */}
         <button
-          onClick={() => setIsOpen(false)}
+          onClick={handleDismiss}
           className="absolute top-5 right-5 p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
           title="Skip for now"
         >
