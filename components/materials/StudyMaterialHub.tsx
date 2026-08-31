@@ -25,7 +25,7 @@ import {
   X,
   Tag,
 } from "lucide-react";
-import { GTUStudyMaterial, STUDY_DEPARTMENTS, RESOURCE_TYPES } from "@/lib/study-materials-data";
+import { GTUStudyMaterial, GTU_STUDY_MATERIALS, STUDY_DEPARTMENTS, RESOURCE_TYPES } from "@/lib/study-materials-data";
 import { MaterialModal } from "./MaterialModal";
 
 // Rich Acronym & Alias Mapping for GTU Engineering Subjects
@@ -124,8 +124,8 @@ const SUBJECT_ACRONYMS: Record<string, string[]> = {
 };
 
 export function StudyMaterialHub() {
-  const [materials, setMaterials] = useState<GTUStudyMaterial[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [materials, setMaterials] = useState<GTUStudyMaterial[]>(GTU_STUDY_MATERIALS);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState("All Departments");
   const [selectedSem, setSelectedSem] = useState<number | "All">("All");
@@ -151,25 +151,8 @@ export function StudyMaterialHub() {
     return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
   }, [materials]);
 
-  // Load initial materials and saved bookmarks & check URL params
+  // Load URL query params and saved bookmarks on mount
   useEffect(() => {
-    async function loadMaterials() {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/materials");
-        if (res.ok) {
-          const data = await res.json();
-          setMaterials(data.materials || []);
-        }
-      } catch (err) {
-        console.error("Failed to load study materials:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadMaterials();
-
-    // Read URL query params
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const semParam = params.get("sem") || params.get("semester");
@@ -187,6 +170,16 @@ export function StudyMaterialHub() {
       const deptParam = params.get("dept") || params.get("department");
       if (deptParam) {
         setSelectedDept(deptParam);
+      }
+
+      const qParam = params.get("q") || params.get("query") || params.get("search");
+      if (qParam) {
+        setSearchQuery(qParam);
+      }
+
+      const codeParam = params.get("code") || params.get("subject");
+      if (codeParam) {
+        setSelectedSubjectCode(codeParam);
       }
 
       // Local storage bookmarks
