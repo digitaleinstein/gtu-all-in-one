@@ -23,6 +23,7 @@ export async function GET(req: Request) {
         semester: true,
         college: true,
         role: true,
+        isEmailVerified: true,
         createdAt: true,
         _count: {
           select: {
@@ -51,15 +52,43 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { name, enrollmentNo, course, branch, semester, college } = body;
 
+    const cleanEnrollment = enrollmentNo ? enrollmentNo.trim() : null;
+
+    // If changing enrollment number, ensure it doesn't conflict with another distinct user
+    if (cleanEnrollment && cleanEnrollment !== dbUser.enrollmentNo) {
+      const conflictingUser = await prisma.user.findFirst({
+        where: {
+          enrollmentNo: cleanEnrollment,
+          NOT: { id: dbUser.id },
+        },
+      });
+
+      if (conflictingUser) {
+        // If the conflicting record is an unverified placeholder/seed, clean up the duplicate enrollment
+        if (conflictingUser.email.includes("dummy") || !conflictingUser.isEmailVerified) {
+          await prisma.user.update({
+            where: { id: conflictingUser.id },
+            data: { enrollmentNo: null },
+          });
+        } else {
+          return NextResponse.json(
+            { error: `Enrollment number ${cleanEnrollment} is already linked to another account (${conflictingUser.email}).` },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const updated = await prisma.user.update({
       where: { id: dbUser.id },
       data: {
-        name: name || undefined,
-        enrollmentNo: enrollmentNo || undefined,
+        name: name ? name.trim() : undefined,
+        enrollmentNo: cleanEnrollment || undefined,
         course: course || undefined,
         branch: branch || undefined,
         semester: semester ? parseInt(semester, 10) : undefined,
-        college: college || undefined,
+        college: college ? college.trim() : undefined,
+        isEmailVerified: true,
       },
       select: {
         id: true,
@@ -70,12 +99,13 @@ export async function PUT(req: Request) {
         branch: true,
         semester: true,
         college: true,
+        isEmailVerified: true,
       },
     });
 
     return NextResponse.json({
       user: updated,
-      message: "Profile updated successfully!",
+      message: "Academic profile updated and saved successfully!",
     });
   } catch (error: any) {
     console.error("Profile PUT error:", error);

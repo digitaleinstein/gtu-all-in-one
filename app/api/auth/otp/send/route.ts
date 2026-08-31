@@ -25,17 +25,18 @@ export async function POST(req: Request) {
     const { email, name, purpose } = parsed.data;
     const normalizedEmail = email.toLowerCase().trim();
 
-    // If registering, verify user doesn't already exist
-    if (purpose === "REGISTER") {
-      const existing = await prisma.user.findUnique({
-        where: { email: normalizedEmail },
-      });
-      if (existing) {
-        return NextResponse.json(
-          { error: "An account with this email address already exists. Please sign in." },
-          { status: 409 }
-        );
-      }
+    // Check existing account
+    const existing = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
+    });
+
+    if (purpose === "REGISTER" && existing && existing.isEmailVerified) {
+      return NextResponse.json(
+        {
+          error: "An account with this email is already verified. Please sign in with your password or use 'Continue with Google'.",
+        },
+        { status: 409 }
+      );
     }
 
     // Invalidate previous unexpired OTPs for this email & purpose
@@ -62,22 +63,20 @@ export async function POST(req: Request) {
       },
     });
 
-    // Send Real Email OTP
+    // Send Email OTP via active mail provider
     const emailResult = await sendOtpEmail({
       to: normalizedEmail,
-      name,
+      name: name || existing?.name,
       otp,
       purpose: purpose === "REGISTER" ? "Student Registration" : "Account Verification",
     });
-
-    const isLiveSmtp = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER);
 
     return NextResponse.json({
       success: true,
       message: `A 6-digit verification code has been dispatched to ${normalizedEmail}.`,
       expiresInMinutes: 10,
-      demoOtp: otp, // Provides seamless instant verification fallback
-      isLiveSmtp,
+      demoOtp: otp, // Pre-fill & instant fallback
+      emailResult,
     });
   } catch (error: any) {
     console.error("OTP send error:", error);

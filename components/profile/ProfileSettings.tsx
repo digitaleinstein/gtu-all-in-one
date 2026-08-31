@@ -132,7 +132,13 @@ export function ProfileSettings() {
 
       const data = await res.json();
 
-      if (res.ok) {
+      if (res.ok && data.user) {
+        setName(data.user.name || name);
+        setEnrollmentNo(data.user.enrollmentNo || enrollmentNo);
+        setCourse(data.user.course || course);
+        setBranch(data.user.branch || branch);
+        if (data.user.semester) setSemester(data.user.semester.toString());
+        setCollege(data.user.college || college);
         setSuccessMsg("Academic profile saved successfully!");
         if (update) update();
         setTimeout(() => setSuccessMsg(""), 3500);
