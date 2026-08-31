@@ -124,8 +124,9 @@ export async function scrapeLiveResults(): Promise<ScrapedResult[]> {
     const res = await fetch("https://www.gturesults.in", {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
-      next: { revalidate: 300 },
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -142,37 +143,52 @@ export async function scrapeLiveResults(): Promise<ScrapedResult[]> {
       const val = $opt.attr("value") || "";
       const rawText = $opt.text().replace(/\.+/g, "").trim();
 
-      if (val && val !== "0" && rawText.length > 5) {
+      if (val && val !== "0" && rawText.length > 3) {
         const parts = val.split("$");
         const examCode = parts[0] || `EXAM_${results.length}`;
-        const sessionCode = parts[1] || "Summer 2024";
+        const sessionCode = parts[1] || "Summer 2026";
         const dateStr = parts[2] || new Date().toISOString();
 
         let course = "BE";
-        if (rawText.startsWith("BE")) course = "BE";
-        else if (rawText.startsWith("ME")) course = "ME";
-        else if (rawText.startsWith("MBA")) course = "MBA";
-        else if (rawText.startsWith("MCA")) course = "MCA";
-        else if (rawText.startsWith("BCA")) course = "BCA";
-        else if (rawText.startsWith("Diploma") || rawText.startsWith("DI")) course = "Diploma";
-        else if (rawText.startsWith("BPH") || rawText.startsWith("B.Pharm")) course = "B.Pharm";
+        const upper = rawText.toUpperCase();
+        if (upper.startsWith("BE")) course = "BE";
+        else if (upper.startsWith("ME")) course = "ME";
+        else if (upper.startsWith("MBA")) course = "MBA";
+        else if (upper.startsWith("MCA")) course = "MCA";
+        else if (upper.startsWith("BCA")) course = "BCA";
+        else if (upper.startsWith("BA") || upper.startsWith("B.ARCH")) course = "B.Arch";
+        else if (upper.startsWith("BB") || upper.startsWith("BBA")) course = "BBA";
+        else if (upper.startsWith("DIPLOMA") || upper.startsWith("DI") || upper.startsWith("DE") || upper.startsWith("DIPL")) course = "Diploma";
+        else if (upper.startsWith("BPH") || upper.startsWith("B.PHARM") || upper.startsWith("BP")) course = "B.Pharm";
+        else if (upper.startsWith("MPH") || upper.startsWith("M.PHARM")) course = "M.Pharm";
+        else if (upper.startsWith("MAM")) course = "BE";
 
         const semMatch = rawText.match(/SEM\s*(\d+)/i);
-        const semester = semMatch ? parseInt(semMatch[1], 10) : 5;
+        const semester = semMatch ? parseInt(semMatch[1], 10) : 1;
+
+        const dateObj = new Date(dateStr);
+        const validDate = !isNaN(dateObj.getTime()) ? dateObj : new Date();
 
         results.push({
           examTitle: rawText,
           examCode,
-          declaredDate: new Date(dateStr),
+          declaredDate: validDate,
           course,
           semester,
-          session: sessionCode.startsWith("S") ? `Summer ${sessionCode.substring(1)}` : `Winter ${sessionCode.substring(1)}`,
+          session: sessionCode.startsWith("S")
+            ? `Summer ${sessionCode.substring(1)}`
+            : sessionCode.startsWith("W")
+            ? `Winter ${sessionCode.substring(1)}`
+            : sessionCode,
           resultUrl: "https://www.gturesults.in",
         });
       }
     });
 
-    return results.slice(0, 50);
+    // Sort strictly by declared date descending (latest declared results first)
+    results.sort((a, b) => b.declaredDate.getTime() - a.declaredDate.getTime());
+
+    return results;
   } catch (error) {
     console.error("Live GTU results scraper failed:", error);
     return [];

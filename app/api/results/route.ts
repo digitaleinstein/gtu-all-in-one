@@ -31,14 +31,26 @@ export async function GET(req: Request) {
       if (liveResults.length > 0) {
         let filtered = liveResults;
         if (course && course !== "ALL") {
-          filtered = filtered.filter((r) => r.course === course);
+          const cLower = course.toLowerCase();
+          filtered = filtered.filter(
+            (r) =>
+              r.course?.toLowerCase() === cLower ||
+              r.examTitle?.toLowerCase().startsWith(cLower) ||
+              r.examTitle?.toLowerCase().includes(cLower)
+          );
         }
         if (semester && semester !== "ALL") {
-          filtered = filtered.filter((r) => r.semester === parseInt(semester, 10));
+          const sNum = parseInt(semester, 10);
+          filtered = filtered.filter((r) => Number(r.semester) === sNum);
         }
         if (search) {
           const q = search.toLowerCase();
-          filtered = filtered.filter((r) => r.examTitle.toLowerCase().includes(q));
+          filtered = filtered.filter(
+            (r) =>
+              r.examTitle?.toLowerCase().includes(q) ||
+              r.session?.toLowerCase().includes(q) ||
+              r.course?.toLowerCase().includes(q)
+          );
         }
         return NextResponse.json({
           liveFromGTU: true,

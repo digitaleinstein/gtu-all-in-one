@@ -19,6 +19,7 @@ import {
   Printer,
   ChevronRight,
   Zap,
+  CheckCircle2,
 } from "lucide-react";
 
 interface EmbeddedResultModalProps {
@@ -36,7 +37,6 @@ export function EmbeddedResultModal({
   userEnrollment = "210120111001",
   userName = "GTU Student",
 }: EmbeddedResultModalProps) {
-  const [activePortalUrl, setActivePortalUrl] = useState("https://result.gtu.ac.in");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [copiedEnroll, setCopiedEnroll] = useState(false);
   const [viewMode, setViewMode] = useState<"embedded_portal" | "direct_api">("embedded_portal");
@@ -60,8 +60,11 @@ export function EmbeddedResultModal({
   }, [userEnrollment]);
 
   useEffect(() => {
-    if (isOpen && viewMode === "direct_api" && !liveSession) {
-      fetchLiveSession();
+    if (isOpen) {
+      setIframeLoading(true);
+      if (viewMode === "direct_api" && !liveSession) {
+        fetchLiveSession();
+      }
     }
   }, [isOpen, viewMode]);
 
@@ -143,6 +146,9 @@ export function EmbeddedResultModal({
     setIframeKey((prev) => prev + 1);
   };
 
+  // Construct secure proxied iframe URL to bypass X-Frame-Options DENY
+  const proxyUrl = `/api/gtu/proxy?enroll=${encodeURIComponent(enrollmentInput || userEnrollment)}`;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div
@@ -164,11 +170,11 @@ export function EmbeddedResultModal({
                   GTU Official Results Gateway
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
-                  ● Live Gateway
+                  ● Live ASP.NET Server
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">
-                {resultItem ? resultItem.examTitle : "Gujarat Technological University Examination Results"}
+                {resultItem ? resultItem.examTitle : "Gujarat Technological University Examination Results Portal (gturesults.in)"}
               </p>
             </div>
           </div>
@@ -178,7 +184,7 @@ export function EmbeddedResultModal({
             {/* 1-Tap Copy Enrollment Number */}
             <button
               onClick={handleCopyEnrollment}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
                 copiedEnroll
                   ? "bg-emerald-500 text-white border-emerald-600 shadow-sm"
                   : "bg-background border-border text-foreground hover:bg-muted"
@@ -193,7 +199,7 @@ export function EmbeddedResultModal({
             <div className="inline-flex rounded-xl bg-background p-1 border border-border">
               <button
                 onClick={() => setViewMode("embedded_portal")}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   viewMode === "embedded_portal"
                     ? "bg-blue-600 text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -203,20 +209,20 @@ export function EmbeddedResultModal({
               </button>
               <button
                 onClick={() => setViewMode("direct_api")}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   viewMode === "direct_api"
                     ? "bg-blue-600 text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                ⚡ In-App Query
+                ⚡ In-App Fast Query
               </button>
             </div>
 
             {/* Fullscreen Toggle */}
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-2 rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+              className="p-2 rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
               title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -225,7 +231,7 @@ export function EmbeddedResultModal({
             {/* Close */}
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+              className="p-2 rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
               title="Close modal"
             >
               <X className="w-4 h-4" />
@@ -234,48 +240,23 @@ export function EmbeddedResultModal({
         </div>
 
         {/* ========================================================================= */}
-        {/* VIEW MODE 1: EMBEDDED OFFICIAL GTU PORTAL FRAME */}
+        {/* VIEW MODE 1: EMBEDDED OFFICIAL GTU PORTAL FRAME (PROXIED TO BYPASS X-FRAME-OPTIONS) */}
         {/* ========================================================================= */}
         {viewMode === "embedded_portal" && (
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Embedded Control Toolbar */}
             <div className="px-5 py-2.5 bg-muted/20 border-b border-border flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground font-semibold">Active Server:</span>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => {
-                      setActivePortalUrl("https://result.gtu.ac.in");
-                      reloadIframe();
-                    }}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                      activePortalUrl.includes("result.gtu.ac.in")
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "bg-background border border-border text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    result.gtu.ac.in (Regular / Remedial)
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActivePortalUrl("https://gturesults.in");
-                      reloadIframe();
-                    }}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                      activePortalUrl.includes("gturesults.in")
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "bg-background border border-border text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    gturesults.in (Archives / Re-assessment)
-                  </button>
-                </div>
+                <span className="text-muted-foreground font-semibold">Live GTU ASP.NET Gateway:</span>
+                <span className="font-mono text-xs px-2.5 py-0.5 rounded-lg bg-background border border-border text-foreground font-bold">
+                  gturesults.in (Official Exam Server)
+                </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={reloadIframe}
-                  className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-background border border-border hover:bg-muted text-foreground transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-background border border-border hover:bg-muted text-foreground transition-all cursor-pointer"
                   title="Reload frame"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${iframeLoading ? "animate-spin text-primary" : ""}`} />
@@ -283,7 +264,7 @@ export function EmbeddedResultModal({
                 </button>
 
                 <a
-                  href={activePortalUrl}
+                  href="https://www.gturesults.in"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all"
@@ -299,38 +280,29 @@ export function EmbeddedResultModal({
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-500 shrink-0" />
                 <span>
-                  <strong>Instructions:</strong> 1. Select Exam Session &rarr; 2. Paste Enrollment No (use <strong>Copy Button</strong> above) &rarr; 3. Enter Visual Captcha &rarr; 4. Click Search!
+                  <strong>Steps:</strong> 1. Select Declared Exam Batch &rarr; 2. Paste Enrollment No (use <strong>Copy Button</strong>) &rarr; 3. Enter Security Captcha &rarr; 4. Click Search!
                 </span>
               </div>
             </div>
 
-            {/* Responsive Iframe Container */}
-            <div className="relative flex-1 w-full bg-slate-100 dark:bg-slate-900">
+            {/* Responsive Proxied Iframe Container */}
+            <div className="relative flex-1 w-full bg-white dark:bg-slate-950">
+              {iframeLoading && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm z-10 space-y-3">
+                  <RefreshCw className="w-7 h-7 animate-spin text-blue-600" />
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    Establishing secure live session with GTU examination portal...
+                  </p>
+                </div>
+              )}
+
               <iframe
                 key={iframeKey}
-                src={activePortalUrl}
+                src={proxyUrl}
                 title="GTU Official Results Portal"
                 className="w-full h-full border-0"
                 onLoad={() => setIframeLoading(false)}
-                sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts allow-downloads"
               />
-
-              {/* Direct fallback overlay if iframe is blocked by university security policy */}
-              <div className="absolute bottom-4 right-4 z-10 p-3 rounded-2xl bg-card/95 backdrop-blur-md border border-border/80 shadow-lg text-xs flex items-center gap-3">
-                <div>
-                  <span className="font-bold text-foreground block">Having trouble in iframe?</span>
-                  <span className="text-[11px] text-muted-foreground">Some GTU servers restrict embedding via X-Frame-Options.</span>
-                </div>
-                <a
-                  href={activePortalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold inline-flex items-center gap-1 shadow-sm shrink-0"
-                >
-                  <span>Launch Portal Directly</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
             </div>
           </div>
         )}
@@ -353,11 +325,11 @@ export function EmbeddedResultModal({
                 <div className="border-b border-border/60 pb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    <h3 className="font-bold text-sm text-foreground">Direct GTU ASP.NET Query</h3>
+                    <h3 className="font-bold text-sm text-foreground">Direct GTU ASP.NET Server Query</h3>
                   </div>
                   <button
                     onClick={fetchLiveSession}
-                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
+                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <RefreshCw className={`w-3 h-3 ${loadingSession ? "animate-spin" : ""}`} />
                     <span>Refresh Session</span>
@@ -366,11 +338,13 @@ export function EmbeddedResultModal({
 
                 <form onSubmit={handleDirectQuery} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground">Exam Batch (Live GTU)</label>
+                    <label className="text-xs font-semibold text-foreground">
+                      Select Declared Examination Batch (Live from GTU) *
+                    </label>
                     {loadingSession ? (
                       <div className="p-2.5 rounded-xl bg-background border border-border text-xs text-muted-foreground flex items-center gap-2">
                         <RefreshCw className="w-3.5 h-3.5 animate-spin text-primary" />
-                        <span>Loading declared examination batches from GTU server...</span>
+                        <span>Loading declared batches from gturesults.in...</span>
                       </div>
                     ) : (
                       <select
@@ -389,7 +363,7 @@ export function EmbeddedResultModal({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-foreground">GTU 12-Digit Enrollment No</label>
+                      <label className="text-xs font-semibold text-foreground">GTU 12-Digit Enrollment No *</label>
                       <input
                         type="text"
                         required
@@ -402,7 +376,7 @@ export function EmbeddedResultModal({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-foreground">Enter Captcha Code</label>
+                      <label className="text-xs font-semibold text-foreground">Visual CAPTCHA *</label>
                       <div className="flex items-center gap-2">
                         {liveSession?.captchaImage ? (
                           <img
@@ -439,7 +413,7 @@ export function EmbeddedResultModal({
                     ) : (
                       <>
                         <Zap className="w-4 h-4" />
-                        <span>Fetch & Parse Official Grade Card</span>
+                        <span>Fetch &amp; Parse Official Grade Card</span>
                       </>
                     )}
                   </button>
