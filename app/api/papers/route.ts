@@ -17,6 +17,68 @@ const RECENT_EXAM_CYCLES = [
   { year: 2022, season: "Winter" },
 ];
 
+const SUBJECT_ACRONYMS: Record<string, string[]> = {
+  "math": ["3110014", "3110015", "4310001", "4320002"],
+  "maths": ["3110014", "3110015", "4310001", "4320002"],
+  "maths 1": ["3110014", "4310001"],
+  "maths 2": ["3110015", "4320002"],
+  "maths-1": ["3110014", "4310001"],
+  "maths-2": ["3110015", "4320002"],
+  "math 1": ["3110014", "4310001"],
+  "math 2": ["3110015", "4320002"],
+  "m1": ["3110014", "4310001"],
+  "m2": ["3110015", "4320002"],
+  "calculus": ["3110014", "4310001"],
+  "linear algebra": ["3110015", "4320002"],
+  "ada": ["3150703"],
+  "algo": ["3150703"],
+  "algorithms": ["3150703"],
+  "os": ["3140702", "4340703"],
+  "operating system": ["3140702", "4340703"],
+  "operating systems": ["3140702", "4340703"],
+  "dbms": ["3130703", "4330702"],
+  "database": ["3130703", "4330702"],
+  "ds": ["3130702", "4330701"],
+  "dsa": ["3130702", "4330701"],
+  "data structure": ["3130702", "4330701"],
+  "data structures": ["3130702", "4330701"],
+  "cn": ["3150710", "4340702"],
+  "network": ["3150710", "4340702"],
+  "networks": ["3150710", "4340702"],
+  "computer network": ["3150710", "4340702"],
+  "computer networks": ["3150710", "4340702"],
+  "se": ["3150711", "4350703"],
+  "software": ["3150711", "4350703"],
+  "software engineering": ["3150711", "4350703"],
+  "wt": ["3160713", "2160708", "4350702"],
+  "web": ["3160713", "2160708", "4350702"],
+  "web tech": ["3160713", "2160708", "4350702"],
+  "web technology": ["3160713", "2160708", "4350702"],
+  "toc": ["3160704", "2160704"],
+  "theory of computation": ["3160704", "2160704"],
+  "coa": ["3140707", "4330704"],
+  "computer organization": ["3140707", "4330704"],
+  "pps": ["3110003", "4300018"],
+  "c programming": ["3110003", "4300018"],
+  "egd": ["3110013", "4300007"],
+  "graphics": ["3110013", "4300007"],
+  "bee": ["3110005", "4300017"],
+  "bme": ["3110006", "4300016"],
+  "python": ["3150713", "4350701"],
+  "java": ["3160707", "2160707", "3350703", "4340701"],
+  "ai": ["3170716", "2180703"],
+  "artificial intelligence": ["3170716", "2180703"],
+  "ml": ["3170716", "2180703"],
+  "machine learning": ["3170716", "2180703"],
+  "cloud": ["2180712"],
+  "iot": ["3160716", "4360702"],
+  "compiler": ["3170701", "2170701"],
+  "compiler design": ["3170701", "2170701"],
+  "physics": ["3110011", "3110018", "4300005"],
+  "evs": ["3110007", "4300003"],
+  "environmental": ["3110007", "4300003"],
+};
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -34,13 +96,13 @@ export async function GET(req: Request) {
 
     const whereClause: any = {};
 
-    if (course && course !== "ALL") {
+    if (course && course !== "ALL" && !search) {
       whereClause.course = course;
     }
-    if (branch && branch !== "ALL") {
+    if (branch && branch !== "ALL" && !search) {
       whereClause.branch = branch;
     }
-    if (semester && semester !== "ALL") {
+    if (semester && semester !== "ALL" && !search) {
       whereClause.semester = parseInt(semester, 10);
     }
     if (year && year !== "ALL") {
@@ -49,11 +111,27 @@ export async function GET(req: Request) {
     if (season && season !== "ALL") {
       whereClause.examSeason = season;
     }
-    if (search) {
-      whereClause.OR = [
+    if (search && search.trim()) {
+      const q = search.toLowerCase().trim();
+      const qClean = q.replace(/[\s\-_]/g, "");
+      const orConditions: any[] = [
         { subjectCode: { contains: search } },
         { subjectName: { contains: search } },
+        { subjectCode: { contains: qClean } },
       ];
+
+      // Alias matches
+      const matchedCodes = SUBJECT_ACRONYMS[q] || SUBJECT_ACRONYMS[qClean] || [];
+      if (matchedCodes.length > 0) {
+        orConditions.push({ subjectCode: { in: matchedCodes } });
+      }
+
+      if (q.includes("math") || q.includes("maths")) {
+        orConditions.push({ subjectName: { contains: "Mathematics" } });
+        orConditions.push({ subjectName: { contains: "Math" } });
+      }
+
+      whereClause.OR = orConditions;
     }
     if (savedOnly && userId) {
       whereClause.savedBy = {
@@ -78,9 +156,17 @@ export async function GET(req: Request) {
       let candidateSubjects = GTU_POPULAR_SUBJECTS;
       if (course && course !== "ALL") candidateSubjects = candidateSubjects.filter((s) => s.course === course);
       if (semester && semester !== "ALL") candidateSubjects = candidateSubjects.filter((s) => s.semester === parseInt(semester, 10));
-      if (search) {
-        const q = search.toLowerCase();
-        candidateSubjects = candidateSubjects.filter((s) => s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+      if (search && search.trim()) {
+        const q = search.toLowerCase().trim();
+        const qClean = q.replace(/[\s\-_]/g, "");
+        const matchedCodes = SUBJECT_ACRONYMS[q] || SUBJECT_ACRONYMS[qClean] || [];
+        candidateSubjects = candidateSubjects.filter(
+          (s) =>
+            s.code.toLowerCase().includes(q) ||
+            s.name.toLowerCase().includes(q) ||
+            matchedCodes.includes(s.code) ||
+            (q.includes("math") && s.name.toLowerCase().includes("math"))
+        );
       }
 
       const existingSet = new Set(papers.map((p) => `${p.subjectCode}_${p.year}_${p.examSeason}`));
