@@ -385,6 +385,12 @@ export function StudyMaterialHub() {
 
   const quickSearchTags = ["ADA", "PPS", "Data Structures", "DBMS", "Operating System", "Maths-1", "Maths-2", "EGD", "Python", "Android"];
 
+  // Quick search autocomplete suggestions
+  const searchSuggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    return materials.filter((m) => matchesSearch(m, searchQuery)).slice(0, 8);
+  }, [materials, searchQuery]);
+
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
       {/* Hero Header */}
@@ -424,7 +430,7 @@ export function StudyMaterialHub() {
           {/* Search Bar & Subject-Wise Picker */}
           <div className="space-y-3 pt-2 max-w-4xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {/* Text Search Input */}
+              {/* Text Search Input with Instant Dropdown */}
               <div className="md:col-span-2 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
@@ -435,7 +441,7 @@ export function StudyMaterialHub() {
                     setSearchQuery(e.target.value);
                     if (e.target.value) setSelectedSubjectCode("All");
                   }}
-                  className="w-full pl-12 pr-12 py-3.5 text-sm rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground"
+                  className="w-full pl-12 pr-12 py-3.5 text-sm rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground font-medium"
                 />
                 {searchQuery && (
                   <button
@@ -444,6 +450,44 @@ export function StudyMaterialHub() {
                   >
                     Clear
                   </button>
+                )}
+
+                {/* Instant Floating Autocomplete Dropdown */}
+                {searchQuery.trim() && searchSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 z-50 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden divide-y divide-border/60">
+                    <div className="px-4 py-2 bg-muted/60 flex items-center justify-between text-xs font-bold text-muted-foreground">
+                      <span>Found {searchSuggestions.length} Matching GTU Subjects</span>
+                      <span className="text-[10px] text-primary">Click to view chapter notes</span>
+                    </div>
+                    {searchSuggestions.map((subj) => (
+                      <button
+                        key={subj.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedMaterial(subj);
+                        }}
+                        className="w-full text-left p-3.5 hover:bg-accent/70 transition-colors flex items-center justify-between gap-3 group cursor-pointer"
+                      >
+                        <div className="space-y-0.5 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
+                              {subj.subjectCode}
+                            </span>
+                            <span className="text-xs font-semibold text-muted-foreground">
+                              Sem {subj.semester} • {subj.department}
+                            </span>
+                          </div>
+                          <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate">
+                            {subj.subjectName}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0 text-xs font-bold text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground px-3 py-1.5 rounded-xl transition-all">
+                          <BookOpen className="w-3.5 h-3.5" />
+                          <span>Open Notes</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
 
