@@ -1,0 +1,28 @@
+{
+  "name": "GTU All In One",
+  "short_name": "GTU Portal",
+  "description": "Gujarat Technological University Student Hub - Live Exam Results, Past Question Papers, Syllabus, and Study Materials.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "categories": [
+    "education",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

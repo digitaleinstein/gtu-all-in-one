@@ -9,8 +9,15 @@ import { EnrollmentOnboardingModal } from "@/components/auth/EnrollmentOnboardin
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "GTU All In One | Question Papers, Results, Circulars & PMMS Portal",
-  description: "All-in-one academic and utility platform for Gujarat Technological University (GTU) students: Previous Question Papers (PYQs), Result Alerts, Live Circulars feed, PMMS Hub, and Midsem SPI/CPI Grade Calculator.",
+  title: "GTU All In One | Question Papers, Results, Circulars & Study Material",
+  description: "All-in-one academic and utility platform for Gujarat Technological University (GTU) students: Previous Question Papers (PYQs), Result Alerts, Live Circulars feed, Study Materials, PMMS Hub, and Midsem SPI/CPI Grade Calculator.",
+  manifest: "/manifest.json",
+  themeColor: "#2563eb",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "GTU All In One",
+  },
 };
 
 export default function RootLayout({
