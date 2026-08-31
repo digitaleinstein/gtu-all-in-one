@@ -97,6 +97,20 @@ export function ProfileSettings() {
     }
   };
 
+  const handleEnrollmentChange = (val: string) => {
+    setEnrollmentNo(val);
+    const digits = val.replace(/\D/g, "");
+    if (digits.length >= 11) {
+      const decoded = decodeGTUEnrollment(digits);
+      if (decoded.isValid) {
+        setCourse(decoded.courseCode);
+        setBranch(decoded.branchName);
+        setCollege(decoded.collegeName);
+        setSemester(decoded.estimatedSemester.toString());
+      }
+    }
+  };
+
   const handleAutoDecode = () => {
     if (!enrollmentNo) return;
     const decoded = decodeGTUEnrollment(enrollmentNo);
@@ -303,7 +317,8 @@ export function ProfileSettings() {
                   required
                   maxLength={12}
                   value={enrollmentNo}
-                  onChange={(e) => setEnrollmentNo(e.target.value)}
+                  onChange={(e) => handleEnrollmentChange(e.target.value)}
+                  placeholder="e.g. 210120111001"
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
