@@ -24,6 +24,7 @@ import {
   Download,
   Eye,
   Maximize2,
+  Copy,
 } from "lucide-react";
 import { formatDate, formatTimeAgo } from "@/lib/utils";
 import { GTU_COURSES } from "@/lib/gtu-data";
@@ -59,6 +60,9 @@ export function ResultsHub() {
   const [fetchingLiveResult, setFetchingLiveResult] = useState(false);
   const [liveResultData, setLiveResultData] = useState<any | null>(null);
   const [liveError, setLiveError] = useState("");
+  const [gatewayMode, setGatewayMode] = useState<"embedded" | "direct_form">("embedded");
+  const [copiedEnroll, setCopiedEnroll] = useState(false);
+  const [iframeKey, setIframeKey] = useState(0);
 
   // Modals
   const [isSubscribeModalOpen, setIsSubscribeModalOpen] = useState(false);
@@ -163,6 +167,12 @@ export function ResultsHub() {
       fetchSubscriptions();
     }
   }, [session, selectedCourse, selectedSemester]);
+
+  useEffect(() => {
+    if (activeTab === "live_gtu_gateway" && gatewayMode === "direct_form" && !liveSessionData) {
+      fetchLiveGTUSession();
+    }
+  }, [activeTab, gatewayMode]);
 
   const handleOpenEmbeddedResult = (resultItem?: any) => {
     setSelectedResultForEmbed(resultItem || null);
@@ -379,177 +389,266 @@ export function ResultsHub() {
         </div>
       )}
 
-      {/* TAB 2: LIVE GTU OFFICIAL SERVER GATEWAY WITH REAL CAPTCHA */}
+      {/* TAB 2: LIVE GTU OFFICIAL SERVER GATEWAY */}
       {activeTab === "live_gtu_gateway" && (
         <div className="space-y-6">
-          <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border shadow-xl space-y-6 max-w-2xl mx-auto">
-            <div className="border-b border-border/60 pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h2 className="text-lg sm:text-xl font-extrabold text-foreground">
-                    Direct GTU Result Server Query (gturesults.in)
-                  </h2>
-                </div>
-                <button
-                  onClick={() => handleOpenEmbeddedResult(null)}
-                  className="px-3 py-1 text-xs font-bold rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 hover:bg-blue-600/20 transition-all flex items-center gap-1"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                  <span>Open Full Viewer</span>
-                </button>
+          {/* Sub-tab Switcher Banner */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-3xl bg-card border border-border shadow-sm">
+            <div>
+              <div className="flex items-center gap-2">
+                <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-base sm:text-lg font-extrabold text-foreground">
+                  Direct GTU Result Server (gturesults.in)
+                </h2>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Direct live proxy to Gujarat Technological University ASP.NET examination server with real-time CAPTCHA verification.
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Official Gujarat Technological University examination marksheet gateway.
               </p>
             </div>
 
-            {liveError && (
-              <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs flex items-start gap-2.5">
-                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                <span>{liveError}</span>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5 p-1 bg-muted/60 rounded-2xl border border-border/60 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setGatewayMode("embedded")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  gatewayMode === "embedded"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🌐 Official Live Portal
+              </button>
+              <button
+                type="button"
+                onClick={() => setGatewayMode("direct_form")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  gatewayMode === "direct_form"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                ⚡ In-App Fast Search
+              </button>
+            </div>
+          </div>
 
-            <form onSubmit={handleFetchLiveResult} className="space-y-4">
-              {/* Exam Batch Selection */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
-                  Select Declared Examination Batch (Live from GTU) *
-                </label>
-                {loadingLiveSession ? (
-                  <div className="p-2.5 rounded-2xl bg-muted text-xs text-muted-foreground flex items-center gap-2">
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-primary" />
-                    <span>Connecting to gturesults.in live portal...</span>
-                  </div>
-                ) : (
-                  <select
-                    value={selectedLiveBatch}
-                    onChange={(e) => setSelectedLiveBatch(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {liveSessionData?.batches?.map((b: any) => (
-                      <option key={b.value} value={b.value}>
-                        {b.label}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-
-              {/* Enrollment Number */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
-                  GTU 12-Digit Enrollment Number *
-                </label>
-                <input
-                  type="text"
-                  required
-                  maxLength={12}
-                  value={liveEnrollment}
-                  onChange={(e) => setLiveEnrollment(e.target.value)}
-                  placeholder="e.g. 210120111001"
-                  className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border font-mono text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Captcha Image & Input */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
-                  Visual CAPTCHA Verification *
-                </label>
-                <div className="flex items-center gap-3">
-                  {liveSessionData?.captchaImage ? (
-                    <div className="relative border border-border rounded-2xl p-1 bg-white shrink-0">
-                      <img
-                        src={liveSessionData.captchaImage}
-                        alt="Live GTU Captcha"
-                        className="h-10 rounded-xl"
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-10 w-28 bg-muted rounded-2xl animate-pulse shrink-0" />
-                  )}
-
+          {/* MODE 1: OFFICIAL EMBEDDED GTU PORTAL */}
+          {gatewayMode === "embedded" && (
+            <div className="bg-card border border-border rounded-3xl shadow-xl overflow-hidden space-y-3 p-4 sm:p-6">
+              {/* Helper Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-500/20 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Your GTU Enrollment:</span>
+                  <span className="font-mono font-bold text-foreground bg-background px-2.5 py-1 rounded-xl border border-border">
+                    {liveEnrollment}
+                  </span>
                   <button
                     type="button"
-                    onClick={fetchLiveGTUSession}
-                    title="Refresh Captcha"
-                    className="p-2 rounded-xl border border-border bg-background hover:bg-muted text-muted-foreground hover:text-foreground transition-all shrink-0"
+                    onClick={() => {
+                      navigator.clipboard.writeText(liveEnrollment);
+                      setCopiedEnroll(true);
+                      setTimeout(() => setCopiedEnroll(false), 2000);
+                    }}
+                    className="px-2.5 py-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer shadow-sm"
                   >
-                    <RefreshCw className={`w-4 h-4 ${loadingLiveSession ? "animate-spin" : ""}`} />
+                    {copiedEnroll ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedEnroll ? "Copied!" : "1-Tap Copy"}</span>
                   </button>
+                </div>
 
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIframeKey((k) => k + 1)}
+                    className="px-2.5 py-1 rounded-xl border border-border hover:bg-muted text-xs font-medium flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Reload Portal</span>
+                  </button>
+                  <a
+                    href="https://www.gturesults.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 rounded-xl border border-border hover:bg-muted text-xs font-medium flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Open in Tab</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Iframe */}
+              <div className="w-full h-[750px] rounded-2xl border border-border overflow-hidden bg-white">
+                <iframe
+                  key={iframeKey}
+                  src={`/api/gtu/proxy?enroll=${encodeURIComponent(liveEnrollment)}`}
+                  className="w-full h-full border-0"
+                  title="Official GTU Results Portal"
+                  sandbox="allow-forms allow-scripts allow-same-origin"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* MODE 2: IN-APP FAST SEARCH */}
+          {gatewayMode === "direct_form" && (
+            <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border shadow-xl space-y-6 max-w-2xl mx-auto">
+              <div className="border-b border-border/60 pb-3">
+                <h3 className="font-extrabold text-base text-foreground">
+                  In-App Fast GTU Live Query
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Direct server query to gturesults.in. If no result was declared yet for your batch, official GTU status is reported.
+                </p>
+              </div>
+
+              {liveError && (
+                <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                  <span>{liveError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleFetchLiveResult} className="space-y-4">
+                {/* Exam Batch Selection */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Select Declared Examination Batch (Live from GTU) *
+                  </label>
+                  {loadingLiveSession ? (
+                    <div className="p-2.5 rounded-2xl bg-muted text-xs text-muted-foreground flex items-center gap-2">
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-primary" />
+                      <span>Connecting to gturesults.in live portal...</span>
+                    </div>
+                  ) : (
+                    <select
+                      value={selectedLiveBatch}
+                      onChange={(e) => setSelectedLiveBatch(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {liveSessionData?.batches?.map((b: any) => (
+                        <option key={b.value} value={b.value}>
+                          {b.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+
+                {/* Enrollment Number */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    GTU 12-Digit Enrollment Number *
+                  </label>
                   <input
                     type="text"
                     required
-                    maxLength={6}
-                    value={liveCaptchaCode}
-                    onChange={(e) => setLiveCaptchaCode(e.target.value)}
-                    placeholder="Enter Code"
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border font-mono text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    maxLength={12}
+                    value={liveEnrollment}
+                    onChange={(e) => setLiveEnrollment(e.target.value)}
+                    placeholder="e.g. 210120111001"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border font-mono text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                disabled={fetchingLiveResult || !liveCaptchaCode}
-                className="w-full py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-              >
-                {fetchingLiveResult ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Communicating with GTU Server...</span>
-                  </>
-                ) : (
-                  <>
-                    <FileCheck2 className="w-4 h-4" />
-                    <span>Fetch Live Result from gturesults.in</span>
-                  </>
-                )}
-              </button>
-            </form>
+                {/* Captcha Image & Input */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Visual CAPTCHA Verification *
+                  </label>
+                  <div className="flex items-center gap-3">
+                    {liveSessionData?.captchaImage ? (
+                      <div className="relative border border-border rounded-2xl p-1 bg-white shrink-0">
+                        <img
+                          src={liveSessionData.captchaImage}
+                          alt="Live GTU Captcha"
+                          className="h-10 rounded-xl"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-10 w-28 bg-muted rounded-2xl animate-pulse shrink-0" />
+                    )}
 
-            {/* Live Result Details */}
-            {liveResultData && (
-              <div className="p-5 rounded-3xl bg-muted/40 border border-border/80 space-y-4 animate-in fade-in">
-                <div className="flex items-center justify-between border-b border-border/60 pb-3">
-                  <div>
-                    <h3 className="font-bold text-base text-foreground">{liveResultData.studentName}</h3>
-                    <p className="text-xs text-muted-foreground">{liveResultData.branch} • {liveResultData.enrollmentNo}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-bold text-emerald-600 block">{liveResultData.resultStatus}</span>
-                    <span className="text-xs text-muted-foreground">SPI: {liveResultData.spi} | CPI: {liveResultData.cpi}</span>
+                    <button
+                      type="button"
+                      onClick={fetchLiveGTUSession}
+                      title="Refresh Captcha"
+                      className="p-2 rounded-xl border border-border bg-background hover:bg-muted text-muted-foreground hover:text-foreground transition-all shrink-0"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${loadingLiveSession ? "animate-spin" : ""}`} />
+                    </button>
+
+                    <input
+                      type="text"
+                      required
+                      maxLength={6}
+                      value={liveCaptchaCode}
+                      onChange={(e) => setLiveCaptchaCode(e.target.value)}
+                      placeholder="Enter Code"
+                      className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border font-mono text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left">
-                    <thead className="text-muted-foreground font-bold">
-                      <tr>
-                        <th className="py-1">Code</th>
-                        <th className="py-1">Subject</th>
-                        <th className="py-1 text-center">Theory</th>
-                        <th className="py-1 text-center">Grade</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/60">
-                      {liveResultData.subjects?.map((s: any, idx: number) => (
-                        <tr key={idx} className="hover:bg-muted/30">
-                          <td className="py-2 font-mono">{s.code}</td>
-                          <td className="py-2">{s.name}</td>
-                          <td className="py-2 text-center font-mono">{s.theoryE}</td>
-                          <td className="py-2 text-center font-bold text-primary">{s.grade}</td>
+                <button
+                  type="submit"
+                  disabled={fetchingLiveResult || !liveCaptchaCode}
+                  className="w-full py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                >
+                  {fetchingLiveResult ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Communicating with GTU Server...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FileCheck2 className="w-4 h-4" />
+                      <span>Fetch Live Result from gturesults.in</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Live Result Details */}
+              {liveResultData && (
+                <div className="p-5 rounded-3xl bg-muted/40 border border-border/80 space-y-4 animate-in fade-in">
+                  <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                    <div>
+                      <h3 className="font-bold text-base text-foreground">{liveResultData.studentName}</h3>
+                      <p className="text-xs text-muted-foreground">{liveResultData.branch} • {liveResultData.enrollmentNo}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-bold text-emerald-600 block">{liveResultData.resultStatus}</span>
+                      <span className="text-xs text-muted-foreground">SPI: {liveResultData.spi} | CPI: {liveResultData.cpi}</span>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left">
+                      <thead className="text-muted-foreground font-bold">
+                        <tr>
+                          <th className="py-1">Code</th>
+                          <th className="py-1">Subject</th>
+                          <th className="py-1 text-center">Theory</th>
+                          <th className="py-1 text-center">Grade</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-border/60">
+                        {liveResultData.subjects?.map((s: any, idx: number) => (
+                          <tr key={idx} className="hover:bg-muted/30">
+                            <td className="py-2 font-mono">{s.code}</td>
+                            <td className="py-2">{s.name}</td>
+                            <td className="py-2 text-center font-mono">{s.theoryE}</td>
+                            <td className="py-2 text-center font-bold text-primary">{s.grade}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

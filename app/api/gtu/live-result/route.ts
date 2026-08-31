@@ -47,52 +47,66 @@ export async function POST(req: Request) {
     });
 
     if (!res.ok) {
-      throw new Error(`GTU portal responded with status ${res.status}`);
+      throw new Error(`GTU server responded with status ${res.status}`);
     }
 
     const html = await res.text();
     const $ = cheerio.load(html);
 
-    // Check if error message is displayed (e.g. invalid captcha or result not found)
+    // Check if error message is displayed on GTU page
     const lblError = $("#lblmsg, #lblMsg, .errormsg, #lblerror").text().trim();
-    if (lblError && (lblError.toLowerCase().includes("captcha") || lblError.toLowerCase().includes("invalid") || lblError.toLowerCase().includes("not found"))) {
-      return NextResponse.json({
-        success: false,
-        error: lblError || "Invalid Captcha or Result not found for this enrollment on GTU server.",
-      }, { status: 400 });
+    if (lblError && lblError.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: lblError,
+        },
+        { status: 400 }
+      );
     }
 
     // Extract student details from live marksheet
-    const studentName = $("#lblName, #lblname, #lblStudentName").text().trim() ||
-      $("td:contains('Name')").next().text().trim();
-    const institute = $("#lblInstName, #lblCollege, #lblinstname").text().trim() ||
-      $("td:contains('Institute')").next().text().trim();
-    const branch = $("#lblBranch, #lblbranch").text().trim() ||
-      $("td:contains('Branch')").next().text().trim();
-    const exam = $("#lblExam, #lblexam").text().trim();
+    const studentName = $("#lblName, #lblname, #lblStudentName").text().trim();
+    const institute = $("#lblInstName, #lblCollege, #lblinstname").text().trim();
+    const branchName = $("#lblBranchName, #lblBranch, #lblbranch").text().trim();
+    const examName = $("#lblExamName, #lblExam, #lblexam").text().trim();
+    const declaredOn = $("#lblDeclaredOn").text().trim();
     const spi = $("#lblSPI, #lblspi").text().trim();
     const cpi = $("#lblCPI, #lblcpi").text().trim();
     const cgpa = $("#lblCGPA, #lblcgpa").text().trim();
     const resultStatus = $("#lblResult, #lblresult, #lblStatus").text().trim();
+    const currentBacklog = $("#lblCurrentSemBacklog, #lblcurback").text().trim();
+    const totalBacklog = $("#lblTotalBacklog, #lbltotback").text().trim();
 
     // Extract Subject-wise table
     const subjects: any[] = [];
     $("#GridView1 tr, table.table-bordered tr, table[id*='Grid'] tr").each((i, el) => {
-      if (i === 0) return; // Skip header
+      if (i === 0) return; // Skip header row
       const cols = $(el).find("td");
-      if (cols.length >= 4) {
+      if (cols.length >= 3) {
         const code = $(cols[0]).text().trim();
         const name = $(cols[1]).text().trim();
-        const theoryE = $(cols[2]).text().trim();
+        const theoryE = cols.length > 2 ? $(cols[2]).text().trim() : "--";
         const theoryM = cols.length > 3 ? $(cols[3]).text().trim() : "--";
-        const grade = cols.length > 4 ? $(cols[cols.length - 2]).text().trim() : "PASS";
-        const credits = cols.length > 5 ? $(cols[cols.length - 1]).text().trim() : "4";
+        const grade = cols.length > 4 ? $(cols[cols.length - 2]).text().trim() : "--";
+        const credits = cols.length > 5 ? $(cols[cols.length - 1]).text().trim() : "--";
 
-        if (code && name) {
+        if (code && name && code.match(/\d+/)) {
           subjects.push({ code, name, theoryE, theoryM, grade, credits });
         }
       }
     });
+
+    // If no student name or subjects were parsed, the record was not declared/found in this batch
+    if (!studentName && subjects.length === 0 && !spi) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "No result record found for enrollment " + enrollmentNo + " in the selected examination batch. Please ensure the correct exam session is selected.",
+        },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -101,18 +115,23 @@ export async function POST(req: Request) {
         enrollmentNo,
         studentName: studentName || "GTU Student",
         institute: institute || "GTU Affiliated College",
-        branch: branch || "Engineering",
-        exam: exam || batch,
-        spi: parseFloat(spi) || 8.85,
-        cpi: parseFloat(cpi) || 8.75,
-        cgpa: parseFloat(cgpa) || 8.75,
-        resultStatus: resultStatus || "PASS",
+        branch: branchName || "Engineering",
+        exam: examName || batch,
+        declaredOn: declaredOn || undefined,
+        spi: spi || "--",
+        cpi: cpi || "--",
+        cgpa: cgpa || "--",
+        resultStatus: resultStatus || "DECLARED",
+        currentBacklog: currentBacklog || "0",
+        totalBacklog: totalBacklog || "0",
         subjects,
-        rawHtmlAvailable: html.length > 500,
       },
     });
   } catch (error: any) {
-    console.error("Live GTU result fetch error:", error);
-    return NextResponse.json({ error: error.message || "Failed to fetch live result from GTU server" }, { status: 500 });
+    console.error("Live GTU result query error:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to query GTU examination portal" },
+      { status: 500 }
+    );
   }
 }
