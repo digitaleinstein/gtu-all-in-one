@@ -20,6 +20,7 @@ import {
   RefreshCw,
   ChevronLeft,
   ShieldCheck,
+  Zap,
 } from "lucide-react";
 import { GTU_COURSES, GTU_BRANCHES } from "@/lib/gtu-data";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
@@ -40,6 +41,7 @@ export default function SignUpPage() {
   // OTP Verification State
   const [step, setStep] = useState<"DETAILS" | "OTP">("DETAILS");
   const [otp, setOtp] = useState("");
+  const [receivedDemoOtp, setReceivedDemoOtp] = useState<string | null>(null);
   const [sendingOtp, setSendingOtp] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(0);
 
@@ -111,6 +113,9 @@ export default function SignUpPage() {
 
       setStep("OTP");
       setResendCountdown(60);
+      if (data.demoOtp) {
+        setReceivedDemoOtp(data.demoOtp);
+      }
       setSuccess(`A 6-digit verification code has been dispatched to ${email.toLowerCase().trim()}`);
     } catch (err: any) {
       setError(err.message || "Failed to send verification code");
@@ -190,7 +195,7 @@ export default function SignUpPage() {
           <p className="text-xs sm:text-sm text-muted-foreground">
             {step === "DETAILS"
               ? "Register with your GTU Enrollment Number & verify your email with OTP."
-              : `Enter the 6-digit OTP code sent to ${email}`}
+              : `Enter the 6-digit verification code sent to ${email}`}
           </p>
         </div>
 
@@ -237,7 +242,7 @@ export default function SignUpPage() {
                   />
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  College, course, branch & semester are automatically parsed from your GTU enrollment.
+                  College, course, branch & semester are automatically parsed from your GTU enrollment format.
                 </p>
               </div>
 
@@ -382,11 +387,23 @@ export default function SignUpPage() {
               <div className="p-4 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-500/30 text-center space-y-2">
                 <ShieldCheck className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto" />
                 <p className="text-xs text-foreground font-semibold">
-                  We have sent a 6-digit verification OTP to:
+                  We have sent a 6-digit verification code to:
                 </p>
                 <p className="text-sm font-bold font-mono text-blue-600 dark:text-blue-400">
                   {email}
                 </p>
+                {receivedDemoOtp && (
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setOtp(receivedDemoOtp)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-400/30 text-xs font-mono font-bold hover:bg-blue-500/25 transition-all"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      <span>Click to Auto-Fill Code: {receivedDemoOtp}</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2 text-center">

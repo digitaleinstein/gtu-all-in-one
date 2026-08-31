@@ -22,11 +22,13 @@ import {
   ShieldAlert,
   Server,
   Download,
+  Eye,
+  Maximize2,
 } from "lucide-react";
 import { formatDate, formatTimeAgo } from "@/lib/utils";
 import { GTU_COURSES } from "@/lib/gtu-data";
 import { ResultSubscriptionModal } from "./ResultSubscriptionModal";
-import { ResultGradeCardModal } from "./ResultGradeCardModal";
+import { EmbeddedResultModal } from "./EmbeddedResultModal";
 
 export function ResultsHub() {
   const { data: session } = useSession();
@@ -44,6 +46,10 @@ export function ResultsHub() {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [loadingSubs, setLoadingSubs] = useState(false);
 
+  // Embedded Result Modal state
+  const [selectedResultForEmbed, setSelectedResultForEmbed] = useState<any | null>(null);
+  const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+
   // Live GTU Gateway state
   const [liveSessionData, setLiveSessionData] = useState<any | null>(null);
   const [loadingLiveSession, setLoadingLiveSession] = useState(false);
@@ -54,13 +60,8 @@ export function ResultsHub() {
   const [liveResultData, setLiveResultData] = useState<any | null>(null);
   const [liveError, setLiveError] = useState("");
 
-  // Watcher sync state
-  const [syncingWatcher, setSyncingWatcher] = useState(false);
-  const [syncStatusMsg, setSyncStatusMsg] = useState("");
-
   // Modals
   const [isSubscribeModalOpen, setIsSubscribeModalOpen] = useState(false);
-  const [activeGradeCardModal, setActiveGradeCardModal] = useState<any | null>(null);
 
   const fetchDeclaredResults = async () => {
     try {
@@ -132,7 +133,6 @@ export function ResultsHub() {
         setLiveResultData(data.data);
       } else {
         setLiveError(data.error || "Failed to fetch live result. Please verify captcha code.");
-        // Refresh captcha on error
         fetchLiveGTUSession();
       }
     } catch (err: any) {
@@ -158,39 +158,18 @@ export function ResultsHub() {
   };
 
   useEffect(() => {
-    if (activeTab === "declared") {
-      fetchDeclaredResults();
-    } else if (activeTab === "live_gtu_gateway") {
-      fetchLiveGTUSession();
-    } else if (activeTab === "subscriptions") {
+    fetchDeclaredResults();
+    if (session?.user) {
       fetchSubscriptions();
     }
-  }, [activeTab, selectedCourse, selectedSemester]);
+  }, [session, selectedCourse, selectedSemester]);
 
-  const handleSyncWatcher = async () => {
-    try {
-      setSyncingWatcher(true);
-      setSyncStatusMsg("");
-      const res = await fetch("/api/results", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "checkWatcher" }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSyncStatusMsg(`Live sync complete! ${data.newResultsCount || 0} new declared exams synced from GTU server.`);
-        fetchDeclaredResults();
-        setTimeout(() => setSyncStatusMsg(""), 4000);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSyncingWatcher(false);
-    }
+  const handleOpenEmbeddedResult = (resultItem?: any) => {
+    setSelectedResultForEmbed(resultItem || null);
+    setIsEmbedModalOpen(true);
   };
 
   const handleDeleteSubscription = async (id: string) => {
-    if (!confirm("Are you sure you want to cancel this result alert subscription?")) return;
     try {
       const res = await fetch(`/api/results?id=${id}`, { method: "DELETE" });
       if (res.ok) {
@@ -202,50 +181,52 @@ export function ResultsHub() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 text-white shadow-xl">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
-            <Zap className="w-3.5 h-3.5" />
-            <span>Live GTU Results Integration (gturesults.in)</span>
+    <div className="space-y-6 max-w-7xl mx-auto pb-16">
+      {/* Hero Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 text-white shadow-xl">
+        <div className="space-y-2.5 max-w-2xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold">
+              <Zap className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Real-Time GTU Results Portal &amp; Live Alerts</span>
+            </div>
+            {isLiveFromGTU && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[11px] font-bold border border-blue-400/30 font-mono">
+                ● Live from gturesults.in
+              </span>
+            )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            GTU Results & Alert Watcher
+
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+            GTU Results Hub &amp; Embedded Gateway
           </h1>
-          <p className="text-xs sm:text-sm text-emerald-100/80 max-w-xl">
-            Real-time feed of newly declared examination results, live GTU server gateway with captcha verification, and instant push alerts.
+          <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed">
+            View declared university results inside our <strong>Embedded GTU Portal</strong>, query the live ASP.NET examination server, and subscribe for instant notifications for upcoming exam sessions.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        {/* Top Actions */}
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => handleOpenEmbeddedResult(null)}
+            className="px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <Eye className="w-4 h-4" />
+            <span>Open Embedded Result Portal</span>
+          </button>
+
           <button
             onClick={() => setIsSubscribeModalOpen(true)}
-            className="px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/25 transition-all flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/25 transition-all flex items-center gap-2 cursor-pointer"
           >
-            <PlusCircle className="w-4 h-4" />
-            <span>Create Result Alert</span>
-          </button>
-          <button
-            onClick={handleSyncWatcher}
-            disabled={syncingWatcher}
-            className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold backdrop-blur-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${syncingWatcher ? "animate-spin" : ""}`} />
-            <span>{syncingWatcher ? "Syncing..." : "Sync Live GTU"}</span>
+            <Bell className="w-4 h-4" />
+            <span>Subscribe Result Alerts</span>
           </button>
         </div>
       </div>
 
-      {syncStatusMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-medium flex items-center gap-2.5">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>{syncStatusMsg}</span>
-        </div>
-      )}
-
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-border/80 pb-3 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none border-b border-border/80">
         <button
           onClick={() => setActiveTab("declared")}
           className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
@@ -259,7 +240,10 @@ export function ResultsHub() {
         </button>
 
         <button
-          onClick={() => setActiveTab("live_gtu_gateway")}
+          onClick={() => {
+            setActiveTab("live_gtu_gateway");
+            if (!liveSessionData) fetchLiveGTUSession();
+          }}
           className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
             activeTab === "live_gtu_gateway"
               ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
@@ -292,9 +276,10 @@ export function ResultsHub() {
               <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search live declared exam (e.g. BE SEM 5, Remedial)..."
+                placeholder="Search declared result (e.g. BE SEM 5, Remedial)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && fetchDeclaredResults()}
                 className="w-full pl-10 pr-4 py-2 rounded-2xl bg-background border border-border text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
@@ -337,8 +322,18 @@ export function ResultsHub() {
               <span>Fetching live declared examination list from gturesults.in...</span>
             </div>
           ) : results.length === 0 ? (
-            <div className="p-12 text-center bg-card rounded-3xl border border-border text-muted-foreground text-xs">
-              No declared exam results found matching your filter criteria.
+            <div className="p-12 text-center bg-card rounded-3xl border border-border text-muted-foreground text-xs space-y-3">
+              <p>No declared exam results found matching your filter criteria.</p>
+              <button
+                onClick={() => {
+                  setSelectedCourse("ALL");
+                  setSelectedSemester("ALL");
+                  setSearchQuery("");
+                }}
+                className="px-4 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-bold"
+              >
+                Reset Filters
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -368,14 +363,13 @@ export function ResultsHub() {
                       Session: <strong className="text-foreground">{r.session}</strong>
                     </span>
 
+                    {/* Prominent Embedded View Button */}
                     <button
-                      onClick={() => {
-                        setActiveTab("live_gtu_gateway");
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600 text-emerald-600 hover:text-white dark:text-emerald-400 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                      onClick={() => handleOpenEmbeddedResult(r)}
+                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm shadow-blue-500/20 cursor-pointer"
                     >
-                      <span>Check on GTU Server</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View in Embedded Portal</span>
                     </button>
                   </div>
                 </div>
@@ -390,11 +384,20 @@ export function ResultsHub() {
         <div className="space-y-6">
           <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border shadow-xl space-y-6 max-w-2xl mx-auto">
             <div className="border-b border-border/60 pb-4">
-              <div className="flex items-center gap-2">
-                <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <h2 className="text-lg sm:text-xl font-extrabold text-foreground">
-                  Direct GTU Result Server Query (gturesults.in)
-                </h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <h2 className="text-lg sm:text-xl font-extrabold text-foreground">
+                    Direct GTU Result Server Query (gturesults.in)
+                  </h2>
+                </div>
+                <button
+                  onClick={() => handleOpenEmbeddedResult(null)}
+                  className="px-3 py-1 text-xs font-bold rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 hover:bg-blue-600/20 transition-all flex items-center gap-1"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>Open Full Viewer</span>
+                </button>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Direct live proxy to Gujarat Technological University ASP.NET examination server with real-time CAPTCHA verification.
@@ -416,7 +419,7 @@ export function ResultsHub() {
                 </label>
                 {loadingLiveSession ? (
                   <div className="p-2.5 rounded-2xl bg-muted text-xs text-muted-foreground flex items-center gap-2">
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-primary" />
                     <span>Connecting to gturesults.in live portal...</span>
                   </div>
                 ) : (
@@ -450,184 +453,186 @@ export function ResultsHub() {
                 />
               </div>
 
-              {/* Live CAPTCHA Box */}
+              {/* Captcha Image & Input */}
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-foreground">
-                    GTU Visual Security CAPTCHA *
-                  </label>
-                  <button
-                    type="button"
-                    onClick={fetchLiveGTUSession}
-                    className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <RefreshCw className="w-3 h-3" /> Refresh Captcha
-                  </button>
-                </div>
-
+                <label className="text-xs font-semibold text-foreground">
+                  Visual CAPTCHA Verification *
+                </label>
                 <div className="flex items-center gap-3">
                   {liveSessionData?.captchaImage ? (
-                    <div className="p-1 rounded-xl bg-white border border-border inline-block shadow-sm">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <div className="relative border border-border rounded-2xl p-1 bg-white shrink-0">
                       <img
                         src={liveSessionData.captchaImage}
-                        alt="GTU Security Captcha"
-                        className="h-10 w-28 object-contain rounded"
+                        alt="Live GTU Captcha"
+                        className="h-10 rounded-xl"
                       />
                     </div>
                   ) : (
-                    <div className="h-10 w-28 bg-muted rounded-xl flex items-center justify-center text-[10px] text-muted-foreground">
-                      Loading...
-                    </div>
+                    <div className="h-10 w-28 bg-muted rounded-2xl animate-pulse shrink-0" />
                   )}
+
+                  <button
+                    type="button"
+                    onClick={fetchLiveGTUSession}
+                    title="Refresh Captcha"
+                    className="p-2 rounded-xl border border-border bg-background hover:bg-muted text-muted-foreground hover:text-foreground transition-all shrink-0"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${loadingLiveSession ? "animate-spin" : ""}`} />
+                  </button>
 
                   <input
                     type="text"
                     required
-                    maxLength={8}
+                    maxLength={6}
                     value={liveCaptchaCode}
                     onChange={(e) => setLiveCaptchaCode(e.target.value)}
-                    placeholder="Enter Captcha"
-                    className="flex-1 px-3.5 py-2.5 rounded-2xl bg-background border border-border text-xs sm:text-sm font-mono tracking-widest uppercase focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter Code"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-background border border-border font-mono text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                disabled={fetchingLiveResult || loadingLiveSession}
-                className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                disabled={fetchingLiveResult || !liveCaptchaCode}
+                className="w-full py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {fetchingLiveResult ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Querying Live GTU Server...</span>
+                    <span>Communicating with GTU Server...</span>
                   </>
                 ) : (
                   <>
-                    <Zap className="w-4 h-4" />
-                    <span>Fetch Live Result from GTU.ac.in</span>
+                    <FileCheck2 className="w-4 h-4" />
+                    <span>Fetch Live Result from gturesults.in</span>
                   </>
                 )}
               </button>
             </form>
-          </div>
 
-          {/* Live Marksheet Result Card */}
-          {liveResultData && (
-            <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border shadow-xl space-y-6 max-w-3xl mx-auto animate-in fade-in">
-              <div className="flex items-center justify-between border-b border-border/60 pb-4">
-                <div>
-                  <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600">
-                    <CheckCircle2 className="w-3 h-3" /> Live From GTU Official Server
+            {/* Live Result Details */}
+            {liveResultData && (
+              <div className="p-5 rounded-3xl bg-muted/40 border border-border/80 space-y-4 animate-in fade-in">
+                <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                  <div>
+                    <h3 className="font-bold text-base text-foreground">{liveResultData.studentName}</h3>
+                    <p className="text-xs text-muted-foreground">{liveResultData.branch} • {liveResultData.enrollmentNo}</p>
                   </div>
-                  <h3 className="text-xl font-extrabold text-foreground mt-1">
-                    {liveResultData.studentName}
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Enrollment: <span className="font-mono font-bold text-foreground">{liveResultData.enrollmentNo}</span> • {liveResultData.institute}
-                  </p>
+                  <div className="text-right">
+                    <span className="text-xs font-bold text-emerald-600 block">{liveResultData.resultStatus}</span>
+                    <span className="text-xs text-muted-foreground">SPI: {liveResultData.spi} | CPI: {liveResultData.cpi}</span>
+                  </div>
                 </div>
 
-                <button
-                  onClick={() => window.print()}
-                  className="px-3.5 py-2 rounded-xl bg-muted hover:bg-accent text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Save Copy</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-muted/40 text-center">
-                <div>
-                  <span className="text-[11px] text-muted-foreground block font-medium">SPI</span>
-                  <span className="text-2xl font-black text-blue-600">{liveResultData.spi}</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-muted-foreground block font-medium">CPI</span>
-                  <span className="text-2xl font-black text-indigo-600">{liveResultData.cpi}</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-muted-foreground block font-medium">Result</span>
-                  <span className="text-2xl font-black text-emerald-600">{liveResultData.resultStatus}</span>
-                </div>
-              </div>
-
-              {liveResultData.subjects && liveResultData.subjects.length > 0 && (
-                <div className="overflow-x-auto rounded-2xl border border-border">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-muted text-muted-foreground text-[10px] uppercase font-bold">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left">
+                    <thead className="text-muted-foreground font-bold">
                       <tr>
-                        <th className="py-2.5 px-3">Subject Code</th>
-                        <th className="py-2.5 px-3">Subject Name</th>
-                        <th className="py-2.5 px-3">Theory</th>
-                        <th className="py-2.5 px-3">Practical</th>
-                        <th className="py-2.5 px-3 text-center">Grade</th>
+                        <th className="py-1">Code</th>
+                        <th className="py-1">Subject</th>
+                        <th className="py-1 text-center">Theory</th>
+                        <th className="py-1 text-center">Grade</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/60">
-                      {liveResultData.subjects.map((sub: any, idx: number) => (
-                        <tr key={idx}>
-                          <td className="py-2.5 px-3 font-mono font-bold">{sub.code}</td>
-                          <td className="py-2.5 px-3 font-medium">{sub.name}</td>
-                          <td className="py-2.5 px-3 font-mono">{sub.theoryE}</td>
-                          <td className="py-2.5 px-3 font-mono">{sub.theoryM}</td>
-                          <td className="py-2.5 px-3 text-center font-bold text-blue-600">{sub.grade}</td>
+                      {liveResultData.subjects?.map((s: any, idx: number) => (
+                        <tr key={idx} className="hover:bg-muted/30">
+                          <td className="py-2 font-mono">{s.code}</td>
+                          <td className="py-2">{s.name}</td>
+                          <td className="py-2 text-center font-mono">{s.theoryE}</td>
+                          <td className="py-2 text-center font-bold text-primary">{s.grade}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
-      {/* TAB 3: RESULT ALERTS SUBSCRIPTION */}
+      {/* TAB 3: USER SUBSCRIPTIONS */}
       {activeTab === "subscriptions" && (
         <div className="space-y-4">
-          <div className="p-6 rounded-3xl bg-card border border-border/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-3xl bg-card border border-border/80 shadow-sm">
             <div>
-              <h2 className="text-lg font-extrabold text-foreground">Your Active Result Watchers</h2>
+              <h2 className="text-base font-extrabold text-foreground">
+                Your Active Result Alert Subscriptions
+              </h2>
               <p className="text-xs text-muted-foreground">
-                Get notified instantly via Web Push and Email when GTU releases results for your enrolled course.
+                Our backend background watcher monitors GTU result portals every 15 minutes and dispatches alerts the moment your semester results are declared.
               </p>
             </div>
+
             <button
               onClick={() => setIsSubscribeModalOpen(true)}
-              className="px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-500/20"
+              className="px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-emerald-500/20 shrink-0 cursor-pointer"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>Add Watcher</span>
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Add New Alert Subscription</span>
             </button>
           </div>
 
           {loadingSubs ? (
-            <div className="p-8 text-center text-muted-foreground text-xs">Loading subscriptions...</div>
+            <div className="p-8 text-center text-xs text-muted-foreground">
+              <RefreshCw className="w-5 h-5 animate-spin mx-auto text-emerald-500 mb-2" />
+              <span>Loading your subscriptions...</span>
+            </div>
           ) : subscriptions.length === 0 ? (
-            <div className="p-12 text-center bg-card rounded-3xl border border-border text-muted-foreground text-xs">
-              You do not have any active result alerts. Click &quot;Add Watcher&quot; to subscribe to your semester result.
+            <div className="p-12 text-center bg-card rounded-3xl border border-border text-muted-foreground text-xs space-y-3">
+              <Bell className="w-8 h-8 mx-auto text-muted-foreground/50" />
+              <p>You have not subscribed to any upcoming GTU result alerts yet.</p>
+              <button
+                onClick={() => setIsSubscribeModalOpen(true)}
+                className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-sm"
+              >
+                Subscribe Now
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {subscriptions.map((sub) => (
-                <div key={sub.id} className="p-5 rounded-3xl bg-card border border-border flex items-center justify-between">
-                  <div>
-                    <span className="font-bold text-sm text-foreground block">
-                      {sub.course} {sub.branch} (Sem {sub.semester})
-                    </span>
-                    <span className="text-[11px] text-muted-foreground font-mono">
-                      Session: {sub.examSession} • {sub.examType}
-                    </span>
+              {subscriptions.map((s) => (
+                <div
+                  key={s.id}
+                  className="p-5 rounded-3xl bg-card border border-border/80 shadow-sm flex flex-col justify-between space-y-4"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                        {s.course} • Semester {s.semester}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md text-[11px] font-mono bg-muted text-muted-foreground">
+                        {s.examSession}
+                      </span>
+                    </div>
+
+                    <h3 className="font-bold text-sm text-foreground">{s.branch}</h3>
+                    <p className="text-xs text-muted-foreground font-mono">
+                      Enrollment: {s.enrollmentNo || "All branch students"}
+                    </p>
                   </div>
 
-                  <button
-                    onClick={() => handleDeleteSubscription(sub.id)}
-                    className="p-2 rounded-xl text-rose-500 hover:bg-rose-500/10 cursor-pointer"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center justify-between pt-3 border-t border-border/60">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      {s.notifyEmail && (
+                        <span title="Email Alerts Active">
+                          <Mail className="w-3.5 h-3.5 text-blue-500" />
+                        </span>
+                      )}
+                      <span className="text-[11px]">Push &amp; In-App Notifications Active</span>
+                    </div>
+
+                    <button
+                      onClick={() => handleDeleteSubscription(s.id)}
+                      className="p-1.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      title="Unsubscribe"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Remove</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -635,15 +640,26 @@ export function ResultsHub() {
         </div>
       )}
 
-      {/* Subscription Modal */}
+      {/* Result Subscription Modal */}
       {isSubscribeModalOpen && (
         <ResultSubscriptionModal
           isOpen={isSubscribeModalOpen}
           onClose={() => setIsSubscribeModalOpen(false)}
-          onSubscribed={() => {
-            setIsSubscribeModalOpen(false);
-            fetchSubscriptions();
+          onSubscribed={fetchSubscriptions}
+        />
+      )}
+
+      {/* Embedded Official GTU Result Modal */}
+      {isEmbedModalOpen && (
+        <EmbeddedResultModal
+          isOpen={isEmbedModalOpen}
+          onClose={() => {
+            setIsEmbedModalOpen(false);
+            setSelectedResultForEmbed(null);
           }}
+          resultItem={selectedResultForEmbed}
+          userEnrollment={(session?.user as any)?.enrollmentNo || "210120111001"}
+          userName={session?.user?.name || "GTU Student"}
         />
       )}
     </div>

@@ -23,9 +23,72 @@ import {
   SlidersHorizontal,
   Flame,
   X,
+  Tag,
 } from "lucide-react";
 import { GTUStudyMaterial, STUDY_DEPARTMENTS, RESOURCE_TYPES } from "@/lib/study-materials-data";
 import { MaterialModal } from "./MaterialModal";
+
+// Rich Acronym & Alias Mapping for GTU Engineering Subjects
+const SUBJECT_ACRONYMS: Record<string, string[]> = {
+  "ada": ["3150703"],
+  "pps": ["3110003"],
+  "os": ["3140702"],
+  "dbms": ["3130703", "4330702"],
+  "ds": ["3130702", "4330701"],
+  "coa": ["3140707"],
+  "cn": ["3150710", "4340702"],
+  "se": ["3150711"],
+  "wt": ["2160708", "3160713", "3360706"],
+  "toc": ["2160704", "3160704"],
+  "ai": ["2180703", "3170716"],
+  "ml": ["3170716", "3170722"],
+  "cd": ["2170701", "3170701"],
+  "egd": ["3110013"],
+  "bee": ["3110005"],
+  "bme": ["3110006"],
+  "maths 1": ["3110014", "4310001"],
+  "maths 2": ["3110015", "4320002"],
+  "maths-1": ["3110014", "4310001"],
+  "maths-2": ["3110015", "4320002"],
+  "math 1": ["3110014", "4310001"],
+  "math 2": ["3110015", "4320002"],
+  "m1": ["3110014", "4310001"],
+  "m2": ["3110015", "4320002"],
+  "etc": ["3130004"],
+  "ic": ["3130007"],
+  "df": ["3130704"],
+  "ps": ["3130006"],
+  "dm": ["3140708"],
+  "pem": ["3140709"],
+  "cvpd": ["3140610", "3130005"],
+  "cvpde": ["3140610", "3130005"],
+  "bct": ["3130607"],
+  "mos": ["3130608"],
+  "btp": ["3130609"],
+  "sa": ["3140603"],
+  "fmh": ["3140611", "3141906"],
+  "te": ["3150611"],
+  "dos": ["3150612"],
+  "msm": ["3131904"],
+  "et": ["3131905"],
+  "ktom": ["3131906"],
+  "mmm": ["3141901"],
+  "fmd": ["3141907"],
+  "mp": ["3141908"],
+  "ht": ["3151909"],
+  "or": ["3151910", "2171901"],
+  "dom": ["3151911"],
+  "cad": ["3161903"],
+  "cam": ["3161917", "2171903"],
+  "eca": ["3130906"],
+  "ade": ["3130907"],
+  "pe": ["3140915", "2170906"],
+  "python": ["3150713", "4350701"],
+  "java": ["3140705", "3160707", "3350703", "4340701", "2160707"],
+  "android": ["2180715", "3170726", "4360701"],
+  "php": ["4350702"],
+  "iot": ["3160716"],
+};
 
 export function StudyMaterialHub() {
   const [materials, setMaterials] = useState<GTUStudyMaterial[]>([]);
@@ -107,7 +170,89 @@ export function StudyMaterialHub() {
     { label: "Diploma Engineering", icon: GraduationCap },
   ];
 
-  // Available semester tabs
+  // Check if subject belongs to 1st year common curriculum
+  const isFirstYearCommon = (item: GTUStudyMaterial) => {
+    return item.degree === "BE" && (item.semester === 1 || item.semester === 2);
+  };
+
+  // Helper to match subject against search query (Code, Name, Acronym, Units, Keywords)
+  const matchesSearch = (item: GTUStudyMaterial, query: string): boolean => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase().trim();
+    const qClean = q.replace(/[\s\-_]/g, "");
+
+    // 1. Subject code match (exact or partial)
+    if (item.subjectCode.toLowerCase().includes(q) || item.subjectCode.includes(qClean)) {
+      return true;
+    }
+
+    // 2. Direct Subject Name match
+    const nameLower = item.subjectName.toLowerCase();
+    const nameClean = nameLower.replace(/[\s\-_]/g, "");
+    if (nameLower.includes(q) || nameClean.includes(qClean)) {
+      return true;
+    }
+
+    // 3. Acronym dictionary match
+    if (SUBJECT_ACRONYMS[q] && SUBJECT_ACRONYMS[q].includes(item.subjectCode)) {
+      return true;
+    }
+
+    // 4. Dynamic initials acronym (e.g., ADA, DBMS, PPS, TOC)
+    const initials = item.subjectName
+      .split(/[\s\-()&,]+/)
+      .filter((w) => w.length > 0 && !["and", "for", "of", "in", "the", "to", "with", "a", "an", "i", "ii", "iii"].includes(w.toLowerCase()))
+      .map((w) => w[0])
+      .join("")
+      .toLowerCase();
+
+    if (initials === q || initials.includes(q)) {
+      return true;
+    }
+
+    // 5. Department match
+    if (item.department.toLowerCase().includes(q)) {
+      return true;
+    }
+
+    // 6. Unit titles and topics match
+    if (
+      item.units.some(
+        (u) =>
+          u.title.toLowerCase().includes(q) ||
+          u.title.toLowerCase().replace(/[\s\-_]/g, "").includes(qClean)
+      )
+    ) {
+      return true;
+    }
+
+    // 7. Degree or Semester query (e.g., "sem 5", "semester 3")
+    if (q.includes("sem") || q.includes("semester")) {
+      const match = q.match(/\d+/);
+      if (match && Number(match[0]) === item.semester) return true;
+    }
+
+    return false;
+  };
+
+  // Helper to match subject against department filter
+  const matchesDepartment = (item: GTUStudyMaterial, dept: string): boolean => {
+    if (dept === "All Departments") return true;
+
+    if (dept === "Diploma Engineering") {
+      return item.degree === "Diploma" || item.department.toLowerCase().includes("diploma");
+    }
+
+    // For Degree engineering (Computer, Civil, Mechanical, Electrical):
+    // 1st Year (Sem 1 & 2) subjects are common to all degree branches
+    if (isFirstYearCommon(item)) {
+      return true;
+    }
+
+    return item.department.toLowerCase().includes(dept.toLowerCase());
+  };
+
+  // Available semester tabs based on selected department
   const semesterTabs: (number | "All")[] = useMemo(() => {
     if (selectedDept === "Diploma Engineering") {
       return ["All", 1, 2, 3, 4, 5, 6];
@@ -115,30 +260,18 @@ export function StudyMaterialHub() {
     return ["All", 1, 2, 3, 4, 5, 6, 7, 8];
   }, [selectedDept]);
 
-  // Main Filter Logic: Every filter is strictly combined
+  // Main Filter Logic: Department + Semester + Search + Resource Type + Bookmarks
   const filteredMaterials = useMemo(() => {
     return materials.filter((item) => {
       // 1. Saved Filter
       if (onlySaved && !savedIds.includes(item.id)) return false;
 
       // 2. Department Filter
-      if (selectedDept !== "All Departments") {
-        if (selectedDept === "Diploma Engineering") {
-          if (item.degree !== "Diploma" && !item.department.toLowerCase().includes("diploma")) {
-            return false;
-          }
-        } else {
-          if (!item.department.toLowerCase().includes(selectedDept.toLowerCase())) {
-            return false;
-          }
-        }
-      }
+      if (!matchesDepartment(item, selectedDept)) return false;
 
-      // 3. Semester Filter (Numeric comparison guaranteed)
+      // 3. Semester Filter
       if (selectedSem !== "All") {
-        if (Number(item.semester) !== Number(selectedSem)) {
-          return false;
-        }
+        if (Number(item.semester) !== Number(selectedSem)) return false;
       }
 
       // 4. Resource Type Filter
@@ -148,32 +281,24 @@ export function StudyMaterialHub() {
         }
       }
 
-      // 5. Search Query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matchesCode = item.subjectCode.toLowerCase().includes(q);
-        const matchesName = item.subjectName.toLowerCase().includes(q);
-        const matchesDept = item.department.toLowerCase().includes(q);
-        const matchesUnits = item.units.some((u) => u.title.toLowerCase().includes(q));
-        if (!matchesCode && !matchesName && !matchesDept && !matchesUnits) return false;
-      }
+      // 5. Intelligent Search Query
+      if (!matchesSearch(item, searchQuery)) return false;
 
       return true;
     });
   }, [materials, selectedDept, selectedSem, selectedType, searchQuery, onlySaved, savedIds]);
 
-  // Semester Counts for the current department filter
+  // Dynamic Semester Counts for the current department & search filter
   const semesterCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    
-    // Filter base by department & search to compute per-semester badges
+
     const baseList = materials.filter((item) => {
       if (onlySaved && !savedIds.includes(item.id)) return false;
-      if (selectedDept !== "All Departments") {
-        if (selectedDept === "Diploma Engineering") {
-          if (item.degree !== "Diploma" && !item.department.toLowerCase().includes("diploma")) return false;
-        } else {
-          if (!item.department.toLowerCase().includes(selectedDept.toLowerCase())) return false;
+      if (!matchesDepartment(item, selectedDept)) return false;
+      if (!matchesSearch(item, searchQuery)) return false;
+      if (selectedType !== "All Types") {
+        if (!item.resourceTypes.some((r) => r.toLowerCase().includes(selectedType.toLowerCase()))) {
+          return false;
         }
       }
       return true;
@@ -184,7 +309,7 @@ export function StudyMaterialHub() {
       counts[s] = baseList.filter((m) => Number(m.semester) === s).length;
     });
     return counts;
-  }, [materials, selectedDept, onlySaved, savedIds]);
+  }, [materials, selectedDept, searchQuery, selectedType, onlySaved, savedIds]);
 
   const resetFilters = () => {
     setSelectedDept("All Departments");
@@ -194,22 +319,24 @@ export function StudyMaterialHub() {
     setOnlySaved(false);
   };
 
+  const quickSearchTags = ["ADA", "PPS", "Data Structures", "DBMS", "Operating System", "Maths-1", "Maths-2", "EGD", "Python", "Android"];
+
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
       {/* Hero Header */}
-      <section className="relative overflow-hidden border-b border-border/80 bg-gradient-to-b from-blue-600/5 via-indigo-600/5 to-transparent pt-12 pb-14">
+      <section className="relative overflow-hidden border-b border-border/80 bg-gradient-to-b from-blue-600/5 via-indigo-600/5 to-transparent pt-12 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Powered by Darshan University & GTU Open Library</span>
+                <span>Powered by Darshan University & GTU Open Courseware</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 GTU Study Material Hub
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                Access 160+ curated GTU subjects with chapter-wise <strong>e-Notes (PDFs)</strong>, <strong>PowerPoint Presentations</strong>, <strong>Solved GTU Paper Solutions</strong>, and <strong>Laboratory Practical Manuals</strong> organized semester by semester.
+                Access 160+ curated GTU subjects with chapter-wise <strong>e-Notes (PDFs)</strong>, <strong>PowerPoint Presentations</strong>, <strong>Solved Paper Solutions</strong>, and <strong>Laboratory Manuals</strong> organized by department & semester.
               </p>
             </div>
 
@@ -230,24 +357,44 @@ export function StudyMaterialHub() {
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative max-w-3xl pt-2">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search by Subject Code (e.g. 3150703, 3110003), Subject Name (ADA, PPS, Maths), or Unit Topic..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-12 py-3.5 text-sm rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground"
-              >
-                Clear
-              </button>
-            )}
+          {/* Search Bar & Quick Tags */}
+          <div className="space-y-3 pt-2 max-w-3xl">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search Subject (e.g. ADA, PPS, DBMS, OS, Maths 1), Subject Code (3150703), or Topic..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-12 py-3.5 text-sm rounded-2xl bg-card border border-border shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            {/* Quick Filter Search Chips */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+              <span className="text-muted-foreground font-semibold text-[11px] whitespace-nowrap mr-1">Popular:</span>
+              {quickSearchTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSearchQuery(tag)}
+                  className={`px-2.5 py-1 rounded-xl font-bold transition-all shrink-0 ${
+                    searchQuery.toLowerCase() === tag.toLowerCase()
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-muted/70 hover:bg-muted text-foreground border border-border/60"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -387,6 +534,16 @@ export function StudyMaterialHub() {
               {selectedSem === "All" ? "All Semesters" : `Semester ${selectedSem}`}
             </span>
 
+            {/* Search query chip */}
+            {searchQuery && (
+              <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Query: &quot;{searchQuery}&quot;</span>
+                <button onClick={() => setSearchQuery("")} className="hover:text-foreground">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
             {/* Resource Type Dropdown */}
             <div className="inline-flex items-center gap-1.5 ml-2">
               <Filter className="w-3.5 h-3.5 text-muted-foreground" />
@@ -443,17 +600,17 @@ export function StudyMaterialHub() {
             </div>
             <div className="space-y-1">
               <h3 className="text-base font-bold text-foreground">
-                No Study Materials Found for Semester {selectedSem}
+                No Study Materials Found {selectedSem !== "All" ? `for Semester ${selectedSem}` : ""}
               </h3>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">
-                No subjects matched your selected department &quot;{selectedDept}&quot; and semester &quot;{selectedSem}&quot;.
+                No subjects matched your selected department &quot;{selectedDept}&quot; {selectedSem !== "All" ? `and semester "${selectedSem}"` : ""} {searchQuery ? `or query "${searchQuery}"` : ""}.
               </p>
             </div>
             <button
-              onClick={() => setSelectedSem("All")}
+              onClick={resetFilters}
               className="px-4 py-2 text-xs font-bold rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm"
             >
-              Show All Semesters
+              Reset Filters & Show All
             </button>
           </div>
         ) : (
