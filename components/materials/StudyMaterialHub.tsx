@@ -192,13 +192,13 @@ export function StudyMaterialHub() {
     return item.degree === "BE" && (item.semester === 1 || item.semester === 2);
   };
 
-  // Helper to match subject against search query (Code, Name, Acronym, Units, Keywords)
+  // Helper to match subject against search query (Code, Name, Acronym, Units, Keywords, Multi-word)
   const matchesSearch = (item: GTUStudyMaterial, query: string): boolean => {
     if (!query.trim()) return true;
     const q = query.toLowerCase().trim();
     const qClean = q.replace(/[\s\-_]/g, "");
 
-    // 1. Subject code match (exact or partial)
+    // 1. Subject code match (exact or partial, e.g. 3150703)
     if (item.subjectCode.toLowerCase().includes(q) || item.subjectCode.includes(qClean)) {
       return true;
     }
@@ -210,12 +210,25 @@ export function StudyMaterialHub() {
       return true;
     }
 
-    // 3. Acronym dictionary match
+    // 3. Multi-word tokens match (e.g. "data struct", "maths 1", "operating system", "python programming")
+    const words = q.split(/\s+/).filter(Boolean);
+    if (words.length > 1) {
+      const allWordsMatch = words.every(
+        (word) =>
+          nameLower.includes(word) ||
+          item.subjectCode.includes(word) ||
+          item.department.toLowerCase().includes(word) ||
+          item.units.some((u) => u.title.toLowerCase().includes(word))
+      );
+      if (allWordsMatch) return true;
+    }
+
+    // 4. Acronym dictionary match (e.g. ADA, PPS, DBMS, OS, TOC, WT, SE, CN, etc.)
     if (SUBJECT_ACRONYMS[q] && SUBJECT_ACRONYMS[q].includes(item.subjectCode)) {
       return true;
     }
 
-    // 4. Dynamic initials acronym (e.g., ADA, DBMS, PPS, TOC)
+    // 5. Dynamic initials acronym (e.g., ADA, DBMS, PPS, TOC)
     const initials = item.subjectName
       .split(/[\s\-()&,]+/)
       .filter((w) => w.length > 0 && !["and", "for", "of", "in", "the", "to", "with", "a", "an", "i", "ii", "iii"].includes(w.toLowerCase()))
@@ -227,12 +240,12 @@ export function StudyMaterialHub() {
       return true;
     }
 
-    // 5. Department match
+    // 6. Department match
     if (item.department.toLowerCase().includes(q)) {
       return true;
     }
 
-    // 6. Unit titles and topics match
+    // 7. Unit titles and topics match
     if (
       item.units.some(
         (u) =>
@@ -243,7 +256,7 @@ export function StudyMaterialHub() {
       return true;
     }
 
-    // 7. Degree or Semester query (e.g., "sem 5", "semester 3")
+    // 8. Degree or Semester query (e.g., "sem 5", "semester 3")
     if (q.includes("sem") || q.includes("semester")) {
       const match = q.match(/\d+/);
       if (match && Number(match[0]) === item.semester) return true;
@@ -288,17 +301,9 @@ export function StudyMaterialHub() {
         return item.subjectCode === selectedSubjectCode || item.id === selectedSubjectCode;
       }
 
-      // 3. Search Query Matching
+      // 3. Search Query Matching (Search ALWAYS matches across all subjects!)
       if (searchQuery.trim()) {
-        const matches = matchesSearch(item, searchQuery);
-        if (!matches) return false;
-        if (selectedDept !== "All Departments" && !matchesDepartment(item, selectedDept)) {
-          return false;
-        }
-        if (selectedSem !== "All" && Number(item.semester) !== Number(selectedSem)) {
-          return false;
-        }
-        return true;
+        return matchesSearch(item, searchQuery);
       }
 
       // 4. Department Filter

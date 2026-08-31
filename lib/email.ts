@@ -148,3 +148,102 @@ export async function sendOtpEmail({
 
   return { success: true, provider: "simulator" };
 }
+
+interface SendResultAlertOptions {
+  to: string;
+  name?: string;
+  examName: string;
+  declaredDate?: string;
+  resultUrl?: string;
+}
+
+export async function sendResultAlertEmail({
+  to,
+  name,
+  examName,
+  declaredDate = new Date().toLocaleDateString("en-IN"),
+  resultUrl = "https://gtu-all-in-one.vercel.app/results",
+}: SendResultAlertOptions): Promise<{ success: boolean; error?: string; provider?: string }> {
+  const recipientName = name ? name.trim() : "GTU Student";
+  const emailFrom = process.env.EMAIL_FROM || '"GTU All In One" <notifications@gtu-all-in-one.com>';
+
+  const htmlContent = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; background-color: #f8fafc; border-radius: 16px;">
+      <div style="background: linear-gradient(135deg, #059669, #10b981); padding: 24px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">GTU Result Declared! 🎓</h1>
+        <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.9;">Gujarat Technological University Notification</p>
+      </div>
+
+      <div style="background-color: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <p style="font-size: 15px; color: #334155; margin-top: 0;">Hello <strong>${recipientName}</strong>,</p>
+        <p style="font-size: 14px; color: #475569; line-height: 1.5;">
+          The official examination result you subscribed to has just been declared by GTU:
+        </p>
+
+        <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 16px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin: 0 0 6px 0; font-size: 16px; color: #065f46;">${examName}</h3>
+          <p style="margin: 0; font-size: 13px; color: #047857;">Declared on: <strong>${declaredDate}</strong></p>
+        </div>
+
+        <div style="text-align: center; margin: 26px 0;">
+          <a href="${resultUrl}" style="display: inline-block; background-color: #059669; color: white; text-decoration: none; font-size: 15px; font-weight: 700; padding: 14px 28px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3);">
+            Check My GTU Result ➔
+          </a>
+        </div>
+
+        <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 0;">
+          You received this email because you enabled instant result alerts on GTU All In One.
+        </p>
+      </div>
+    </div>
+  `;
+
+  // 1. Resend API
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: emailFrom.includes("@") ? emailFrom : "GTU Alerts <alerts@resend.dev>",
+          to: [to],
+          subject: `🎓 GTU Result Declared: ${examName}`,
+          html: htmlContent,
+        }),
+      });
+      if (res.ok) return { success: true, provider: "resend" };
+    } catch (e) {}
+  }
+
+  // 2. SMTP
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = parseInt(process.env.SMTP_PORT || "587", 10);
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASSWORD || process.env.SMTP_PASS;
+
+  if (smtpHost && smtpUser && smtpPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort === 465,
+        auth: { user: smtpUser, pass: smtpPass },
+      });
+      await transporter.sendMail({
+        from: emailFrom,
+        to,
+        subject: `🎓 GTU Result Declared: ${examName}`,
+        html: htmlContent,
+      });
+      return { success: true, provider: "smtp" };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  return { success: true, provider: "simulator" };
+}
+

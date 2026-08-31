@@ -439,43 +439,33 @@ export function ProfileSettings() {
             )}
           </div>
 
-          {/* 1-Click Demo Accounts Switcher */}
+          {/* Account Actions */}
           <div className="bg-card text-card-foreground rounded-3xl border border-border/80 shadow-md p-6 space-y-4">
             <div className="flex items-center gap-2 border-b border-border/60 pb-3">
-              <Shield className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              <h3 className="text-sm font-bold text-foreground">1-Click Demo Students</h3>
+              <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <h3 className="text-sm font-bold text-foreground">Account Status</h3>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Switch between pre-configured GTU student profiles:
-            </p>
-
-            <div className="space-y-2">
-              {[
-                { name: "Aarav Mehta", sem: "Sem 5 CE (LDCE)", email: "student@gtu.ac.in", enroll: "210120111001" },
-                { name: "Priya Patel", sem: "Sem 3 IT (BVM)", email: "priya.patel@gtu.ac.in", enroll: "220280116015" },
-                { name: "Rahul Shah", sem: "Sem 7 ME (VGEC)", email: "rahul.shah@gtu.ac.in", enroll: "200170119042" },
-              ].map((acc) => (
-                <button
-                  key={acc.email}
-                  onClick={() => signIn("credentials", { identifier: acc.email, password: "gtu12345", callbackUrl: "/profile" })}
-                  className="w-full p-3 rounded-2xl bg-muted/60 hover:bg-muted border border-border/60 text-left text-xs transition-all flex items-center justify-between group cursor-pointer"
-                >
-                  <div>
-                    <span className="font-bold text-foreground block">{acc.name}</span>
-                    <span className="text-[11px] text-muted-foreground">{acc.sem} • {acc.enroll}</span>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
-                </button>
-              ))}
+            
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/40 border border-border/60">
+                <span className="text-muted-foreground">Account Type</span>
+                <span className="font-bold text-primary">GTU Student</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/40 border border-border/60">
+                <span className="text-muted-foreground">Status</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Active &amp; Verified
+                </span>
+              </div>
             </div>
 
-            <div className="pt-3 border-t border-border/60">
+            <div className="pt-2 border-t border-border/60">
               <button
                 onClick={() => signOut({ callbackUrl: "/auth/signin" })}
                 className="w-full py-2.5 px-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                <span>Sign Out of Account</span>
               </button>
             </div>
           </div>
