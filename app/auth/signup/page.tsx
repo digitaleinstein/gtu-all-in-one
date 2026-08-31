@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   ShieldCheck,
   Zap,
+  Info,
 } from "lucide-react";
 import { GTU_COURSES, GTU_BRANCHES } from "@/lib/gtu-data";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
@@ -115,8 +116,10 @@ export default function SignUpPage() {
       setResendCountdown(60);
       if (data.demoOtp) {
         setReceivedDemoOtp(data.demoOtp);
+        // Pre-fill automatically for instant frictionless registration
+        setOtp(data.demoOtp);
       }
-      setSuccess(`A 6-digit verification code has been dispatched to ${email.toLowerCase().trim()}`);
+      setSuccess(`Verification code dispatched for ${email.toLowerCase().trim()}`);
     } catch (err: any) {
       setError(err.message || "Failed to send verification code");
     } finally {
@@ -195,7 +198,7 @@ export default function SignUpPage() {
           <p className="text-xs sm:text-sm text-muted-foreground">
             {step === "DETAILS"
               ? "Register with your GTU Enrollment Number & verify your email with OTP."
-              : `Enter the 6-digit verification code sent to ${email}`}
+              : `Enter the 6-digit verification code for ${email}`}
           </p>
         </div>
 
@@ -371,7 +374,7 @@ export default function SignUpPage() {
                 {sendingOtp ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Sending Verification OTP...</span>
+                    <span>Generating &amp; Sending OTP...</span>
                   </>
                 ) : (
                   <>
@@ -384,26 +387,44 @@ export default function SignUpPage() {
           ) : (
             /* STEP 2: ENTER OTP */
             <form onSubmit={handleVerifyAndRegister} className="space-y-5">
-              <div className="p-4 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-500/30 text-center space-y-2">
-                <ShieldCheck className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto" />
-                <p className="text-xs text-foreground font-semibold">
-                  We have sent a 6-digit verification code to:
-                </p>
-                <p className="text-sm font-bold font-mono text-blue-600 dark:text-blue-400">
-                  {email}
-                </p>
+              <div className="p-5 rounded-3xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-500/30 text-center space-y-3">
+                <ShieldCheck className="w-9 h-9 text-blue-600 dark:text-blue-400 mx-auto" />
+                
+                <div>
+                  <p className="text-xs text-foreground font-semibold">
+                    Verification code for registered address:
+                  </p>
+                  <p className="text-sm font-black font-mono text-blue-600 dark:text-blue-400 mt-0.5">
+                    {email}
+                  </p>
+                </div>
+
+                {/* Instant Verification Helper Banner */}
                 {receivedDemoOtp && (
-                  <div className="pt-2">
+                  <div className="p-3 rounded-2xl bg-card border border-border/80 shadow-sm space-y-2">
+                    <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      <Sparkles className="w-4 h-4 text-emerald-500" />
+                      <span>Security Verification OTP:</span>
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/15 font-mono text-base font-black text-foreground">
+                        {receivedDemoOtp}
+                      </span>
+                    </div>
+
                     <button
                       type="button"
                       onClick={() => setOtp(receivedDemoOtp)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-400/30 text-xs font-mono font-bold hover:bg-blue-500/25 transition-all"
+                      className="w-full py-1.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
                     >
-                      <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                      <span>Click to Auto-Fill Code: {receivedDemoOtp}</span>
+                      <Zap className="w-3.5 h-3.5 fill-current" />
+                      <span>1-Tap Auto-Fill Code ({receivedDemoOtp})</span>
                     </button>
                   </div>
                 )}
+
+                <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground pt-1">
+                  <Info className="w-3.5 h-3.5" />
+                  <span>Also check Spam/Promotions folder if your email inbox is strict.</span>
+                </div>
               </div>
 
               <div className="space-y-2 text-center">
@@ -417,7 +438,7 @@ export default function SignUpPage() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                   placeholder="• • • • • •"
-                  className="w-48 mx-auto px-4 py-3 rounded-2xl bg-background border-2 border-primary text-center text-2xl font-mono font-black tracking-widest focus:outline-none focus:ring-4 focus:ring-primary/20"
+                  className="w-52 mx-auto px-4 py-3 rounded-2xl bg-background border-2 border-primary text-center text-2xl font-mono font-black tracking-widest focus:outline-none focus:ring-4 focus:ring-primary/20"
                 />
               </div>
 
@@ -428,7 +449,7 @@ export default function SignUpPage() {
                     setStep("DETAILS");
                     setError("");
                   }}
-                  className="text-muted-foreground hover:text-foreground font-semibold flex items-center gap-1"
+                  className="text-muted-foreground hover:text-foreground font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Edit Details</span>
@@ -438,7 +459,7 @@ export default function SignUpPage() {
                   type="button"
                   disabled={resendCountdown > 0 || sendingOtp}
                   onClick={handleSendOtp}
-                  className="text-primary hover:underline font-bold disabled:text-muted-foreground disabled:no-underline"
+                  className="text-primary hover:underline font-bold disabled:text-muted-foreground disabled:no-underline cursor-pointer"
                 >
                   {resendCountdown > 0 ? `Resend code in ${resendCountdown}s` : "Resend OTP"}
                 </button>
@@ -452,12 +473,12 @@ export default function SignUpPage() {
                 {loading ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Verifying & Creating Account...</span>
+                    <span>Verifying &amp; Creating Account...</span>
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Verify OTP & Complete Registration</span>
+                    <span>Verify OTP &amp; Complete Registration</span>
                   </>
                 )}
               </button>
