@@ -130,10 +130,11 @@ export function Footer() {
         </div>
 
         <div className="pt-6 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
-          <p>© {new Date().getFullYear()} GTU All In One. Crafted for GTU Engineers & Scholars across Gujarat.</p>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-muted-foreground">
-              Built with Next.js 14, Prisma & Tailwind
+          <p>© {new Date().getFullYear()} GTU All In One. Crafted for GTU Engineers &amp; Scholars across Gujarat.</p>
+          <div className="flex items-center gap-1.5 font-medium text-foreground">
+            <span>Developed by</span>
+            <span className="font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20">
+              Dhrumil Prajapati
             </span>
           </div>
         </div>
