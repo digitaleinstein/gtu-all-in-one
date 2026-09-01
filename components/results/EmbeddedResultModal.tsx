@@ -20,6 +20,8 @@ import {
   ChevronRight,
   Zap,
   CheckCircle2,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 
 interface EmbeddedResultModalProps {
@@ -42,6 +44,7 @@ export function EmbeddedResultModal({
   const [viewMode, setViewMode] = useState<"embedded_portal" | "direct_api">("embedded_portal");
   const [iframeKey, setIframeKey] = useState(0);
   const [iframeLoading, setIframeLoading] = useState(true);
+  const [zoomLevel, setZoomLevel] = useState(100);
 
   // Direct API Proxy state
   const [liveSession, setLiveSession] = useState<any | null>(null);
@@ -150,91 +153,92 @@ export function EmbeddedResultModal({
   const proxyUrl = `/api/gtu/proxy?enroll=${encodeURIComponent(enrollmentInput || userEnrollment)}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-1 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className={`bg-card text-card-foreground border border-border/80 rounded-3xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
+        className={`bg-card text-card-foreground border border-border/80 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
           isFullscreen
             ? "w-full h-full rounded-none"
-            : "w-full max-w-6xl max-h-[92vh] h-[850px]"
+            : "w-full max-w-6xl max-h-[96vh] sm:max-h-[92vh] h-[92vh] sm:h-[850px]"
         }`}
       >
         {/* Modal Top Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border/70 bg-muted/40">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-              <GraduationCap className="w-5 h-5" />
+        <div className="flex flex-wrap items-center justify-between gap-2.5 px-3.5 sm:px-5 py-3 sm:py-4 border-b border-border/70 bg-muted/40 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold shrink-0">
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-black text-foreground">
-                  GTU Official Results Gateway
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <h2 className="text-xs sm:text-base font-black text-foreground truncate">
+                  GTU Results Gateway
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
-                  ● Live ASP.NET Server
+                <span className="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 shrink-0">
+                  ● Live
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground truncate hidden sm:block">
                 {resultItem ? resultItem.examTitle : "Gujarat Technological University Examination Results Portal (gturesults.in)"}
               </p>
             </div>
           </div>
 
           {/* Quick Copy & Mode Toggles */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* 1-Tap Copy Enrollment Number */}
             <button
               onClick={handleCopyEnrollment}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-mono font-bold border transition-all cursor-pointer ${
                 copiedEnroll
                   ? "bg-emerald-500 text-white border-emerald-600 shadow-sm"
                   : "bg-background border-border text-foreground hover:bg-muted"
               }`}
               title="Copy enrollment number to clipboard"
             >
-              {copiedEnroll ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
-              <span>{copiedEnroll ? "Copied!" : `Copy: ${enrollmentInput || "Enrollment"}`}</span>
+              {copiedEnroll ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3 text-blue-600 dark:text-blue-400" />}
+              <span className="hidden sm:inline">{copiedEnroll ? "Copied!" : `Copy: ${enrollmentInput || "Enrollment"}`}</span>
+              <span className="sm:hidden">{copiedEnroll ? "Copied!" : "Copy"}</span>
             </button>
 
             {/* Switch Views: Embedded Webview vs In-App Direct Proxy */}
-            <div className="inline-flex rounded-xl bg-background p-1 border border-border">
+            <div className="inline-flex rounded-lg sm:rounded-xl bg-background p-0.5 sm:p-1 border border-border">
               <button
                 onClick={() => setViewMode("embedded_portal")}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold rounded-md sm:rounded-lg transition-all cursor-pointer ${
                   viewMode === "embedded_portal"
                     ? "bg-blue-600 text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Embedded Portal
+                Portal
               </button>
               <button
                 onClick={() => setViewMode("direct_api")}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold rounded-md sm:rounded-lg transition-all cursor-pointer ${
                   viewMode === "direct_api"
                     ? "bg-blue-600 text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                ⚡ In-App Fast Query
+                ⚡ Fast Query
               </button>
             </div>
 
             {/* Fullscreen Toggle */}
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-2 rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
               title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
             >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
             </button>
 
             {/* Close */}
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer"
               title="Close modal"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
@@ -244,51 +248,87 @@ export function EmbeddedResultModal({
         {/* ========================================================================= */}
         {viewMode === "embedded_portal" && (
           <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Embedded Control Toolbar */}
-            <div className="px-5 py-2.5 bg-muted/20 border-b border-border flex flex-wrap items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground font-semibold">Live GTU ASP.NET Gateway:</span>
-                <span className="font-mono text-xs px-2.5 py-0.5 rounded-lg bg-background border border-border text-foreground font-bold">
+            {/* Embedded Control Toolbar with Mobile Zoom Controls */}
+            <div className="px-3 sm:px-5 py-2 bg-muted/20 border-b border-border flex flex-wrap items-center justify-between gap-2 text-xs shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-mono text-[11px] sm:text-xs px-2 py-0.5 rounded-lg bg-background border border-border text-foreground font-bold truncate">
                   gturesults.in (Official Exam Server)
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Mobile Zoom Controls & Reload */}
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                {/* Zoom out */}
+                <button
+                  type="button"
+                  onClick={() => setZoomLevel((prev) => Math.max(70, prev - 15))}
+                  className="p-1.5 rounded-lg bg-background border border-border hover:bg-muted text-foreground transition-all cursor-pointer"
+                  title="Zoom out"
+                >
+                  <ZoomOut className="w-3.5 h-3.5" />
+                </button>
+
+                {/* Reset zoom */}
+                <button
+                  type="button"
+                  onClick={() => setZoomLevel(100)}
+                  className="px-2 py-1 rounded-lg bg-background border border-border hover:bg-muted text-[10px] sm:text-xs font-mono font-bold text-foreground transition-all cursor-pointer"
+                  title="Reset Zoom"
+                >
+                  {zoomLevel}%
+                </button>
+
+                {/* Zoom in */}
+                <button
+                  type="button"
+                  onClick={() => setZoomLevel((prev) => Math.min(180, prev + 15))}
+                  className="p-1.5 rounded-lg bg-background border border-border hover:bg-muted text-foreground transition-all cursor-pointer"
+                  title="Zoom in"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                </button>
+
                 <button
                   onClick={reloadIframe}
-                  className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-background border border-border hover:bg-muted text-foreground transition-all cursor-pointer"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-background border border-border hover:bg-muted text-foreground transition-all cursor-pointer"
                   title="Reload frame"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${iframeLoading ? "animate-spin text-primary" : ""}`} />
-                  <span>Reload</span>
+                  <span className="hidden sm:inline">Reload</span>
                 </button>
 
                 <a
                   href="https://www.gturesults.in"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all text-xs"
                 >
-                  <span>Open in External Tab</span>
+                  <span className="hidden sm:inline">External Tab</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
 
-            {/* Quick Step Guidance Banner */}
-            <div className="px-5 py-2 bg-blue-50/70 dark:bg-blue-950/20 border-b border-blue-200 dark:border-blue-900/40 flex items-center justify-between text-xs text-blue-900 dark:text-blue-200">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>
-                  <strong>Steps:</strong> 1. Select Declared Exam Batch &rarr; 2. Paste Enrollment No (use <strong>Copy Button</strong>) &rarr; 3. Enter Security Captcha &rarr; 4. Click Search!
+            {/* Quick Step Guidance Banner & Mobile Scroll Hint */}
+            <div className="px-3 sm:px-5 py-1.5 bg-blue-50/80 dark:bg-blue-950/30 border-b border-blue-200 dark:border-blue-900/40 flex items-center justify-between text-[11px] sm:text-xs text-blue-900 dark:text-blue-200 shrink-0">
+              <div className="flex items-center gap-1.5 truncate">
+                <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span className="truncate">
+                  <strong>Swipe horizontally & vertically</strong> to view the full marksheet table.
                 </span>
               </div>
             </div>
 
-            {/* Responsive Proxied Iframe Container */}
-            <div className="relative flex-1 w-full bg-white dark:bg-slate-950">
+            {/* Responsive Proxied Iframe Container with Native Touch Scrolling */}
+            <div
+              className="relative flex-1 w-full bg-white dark:bg-slate-950 overflow-auto overscroll-contain"
+              style={{
+                WebkitOverflowScrolling: "touch",
+                touchAction: "pan-x pan-y pinch-zoom",
+              }}
+            >
               {iframeLoading && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm z-10 space-y-3">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm z-10 space-y-3 p-4 text-center">
                   <RefreshCw className="w-7 h-7 animate-spin text-blue-600" />
                   <p className="text-xs font-semibold text-muted-foreground">
                     Establishing secure live session with GTU examination portal...
@@ -300,7 +340,14 @@ export function EmbeddedResultModal({
                 key={iframeKey}
                 src={proxyUrl}
                 title="GTU Official Results Portal"
-                className="w-full h-full border-0"
+                className="border-0"
+                style={{
+                  minWidth: zoomLevel > 100 ? `${zoomLevel}%` : "100%",
+                  width: `${zoomLevel}%`,
+                  height: "100%",
+                  minHeight: "750px",
+                  display: "block",
+                }}
                 onLoad={() => setIframeLoading(false)}
               />
             </div>

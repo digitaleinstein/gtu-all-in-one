@@ -18,24 +18,41 @@ function rewriteGtuHtml(rawHtml: string, enroll: string = "", batch: string = ""
   // 4. Rewrite Form Action to proxy POST
   html = html.replace(/action=["'](\.\/)?(Default\.aspx)?["']/gi, 'action="/api/gtu/proxy"');
 
-  // 5. Inject Clean Responsive Styling & Auto-Fill Script
+  // 5. Inject Clean Responsive Styling & Touch-Scroll Support
   const injectedStyleAndScript = `
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes">
     <style>
-      body {
+      html, body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         margin: 0 !important;
-        padding: 12px 16px !important;
+        padding: 8px 10px !important;
         background-color: #f8fafc !important;
         color: #0f172a !important;
+        width: 100% !important;
+        min-height: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-x pan-y !important;
+        box-sizing: border-box !important;
       }
-      .toptable, .header, table {
+      * {
+        box-sizing: border-box !important;
+      }
+      form {
+        width: 100% !important;
+        max-width: 1000px !important;
+        margin: 0 auto !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      .toptable, .header {
         width: 100% !important;
         max-width: 1000px !important;
         margin: 0 auto !important;
       }
       .logo img, img[alt="GTU"] {
-        max-height: 70px !important;
+        max-height: 56px !important;
         height: auto !important;
         width: auto !important;
       }
@@ -44,15 +61,18 @@ function rewriteGtuHtml(rawHtml: string, enroll: string = "", batch: string = ""
         border-radius: 8px !important;
         background: white !important;
         vertical-align: middle !important;
+        max-width: 120px !important;
+        height: auto !important;
       }
       input[type="text"], select {
         padding: 9px 12px !important;
         border-radius: 8px !important;
         border: 1.5px solid #cbd5e1 !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         outline: none !important;
         background: white !important;
         box-sizing: border-box !important;
+        max-width: 100% !important;
       }
       input[type="text"]:focus, select:focus {
         border-color: #2563eb !important;
@@ -62,11 +82,11 @@ function rewriteGtuHtml(rawHtml: string, enroll: string = "", batch: string = ""
         background: linear-gradient(135deg, #1e40af, #2563eb) !important;
         color: white !important;
         font-weight: 700 !important;
-        padding: 9px 22px !important;
+        padding: 10px 22px !important;
         border-radius: 8px !important;
         border: none !important;
         cursor: pointer !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2) !important;
         transition: all 0.2s ease !important;
       }
@@ -74,20 +94,27 @@ function rewriteGtuHtml(rawHtml: string, enroll: string = "", batch: string = ""
         background: #1d4ed8 !important;
         transform: translateY(-1px) !important;
       }
-      #Panel1, table[id*="Grid"], table.table-bordered {
+      #Panel1, table[id*="Grid"], table.table-bordered, div[id*="Panel"] {
         width: 100% !important;
         background: #ffffff !important;
         border-radius: 12px !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
-        padding: 16px !important;
-        margin-top: 20px !important;
+        padding: 12px !important;
+        margin-top: 16px !important;
         border: 1px solid #e2e8f0 !important;
         overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        display: block !important;
+      }
+      table[id*="Grid"] {
+        min-width: 600px !important;
+        display: table !important;
       }
       #Panel1 td, table[id*="Grid"] td, table[id*="Grid"] th {
-        padding: 10px 14px !important;
+        padding: 8px 10px !important;
         border: 1px solid #e2e8f0 !important;
         font-size: 12px !important;
+        white-space: nowrap !important;
       }
       table[id*="Grid"] th {
         background: #f1f5f9 !important;
@@ -107,6 +134,14 @@ function rewriteGtuHtml(rawHtml: string, enroll: string = "", batch: string = ""
         border: none;
         cursor: pointer;
         font-size: 12px;
+      }
+      @media (max-width: 640px) {
+        body {
+          padding: 6px !important;
+        }
+        #ddlbatch, #txtenroll {
+          width: 100% !important;
+        }
       }
     </style>
     <script>

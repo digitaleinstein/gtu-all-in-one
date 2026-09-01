@@ -477,12 +477,15 @@ export function ResultsHub() {
                 </div>
               </div>
 
-              {/* Iframe */}
-              <div className="w-full h-[750px] rounded-2xl border border-border overflow-hidden bg-white">
+              {/* Iframe with Mobile Touch-Scrolling & Pan */}
+              <div
+                className="w-full h-[650px] sm:h-[750px] rounded-2xl border border-border overflow-auto overscroll-contain bg-white"
+                style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x pan-y pinch-zoom" }}
+              >
                 <iframe
                   key={iframeKey}
                   src={`/api/gtu/proxy?enroll=${encodeURIComponent(liveEnrollment)}`}
-                  className="w-full h-full border-0"
+                  className="w-full h-full min-w-full min-h-[650px] border-0 block"
                   title="Official GTU Results Portal"
                   sandbox="allow-forms allow-scripts allow-same-origin"
                 />
