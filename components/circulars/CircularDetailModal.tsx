@@ -3,6 +3,7 @@
 import React from "react";
 import { X, Download, ExternalLink, Calendar, Tag, ShieldCheck, Printer } from "lucide-react";
 import { formatDate, getCircularCategoryColor } from "@/lib/utils";
+import { downloadGTUFile } from "@/lib/download-helper";
 
 interface CircularDetailModalProps {
   circular: {
@@ -99,15 +100,17 @@ export function CircularDetailModal({
           </a>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <a
-              href={circular.pdfUrl}
-              target="_blank"
-              download
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground font-semibold text-xs rounded-xl shadow-sm hover:bg-primary/90 transition-colors"
+            <button
+              type="button"
+              onClick={() => {
+                const safeName = `GTU_Circular_${circular.gtuRefNo ? circular.gtuRefNo.replace(/[^a-zA-Z0-9_-]/g, "_") : circular.id}.pdf`;
+                downloadGTUFile(circular.pdfUrl, safeName, "application/pdf");
+              }}
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground font-semibold text-xs rounded-xl shadow-sm hover:bg-primary/90 transition-colors cursor-pointer"
             >
               <Download className="w-4 h-4" />
               <span>Download Circular PDF</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>

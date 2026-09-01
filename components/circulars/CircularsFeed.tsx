@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { formatDate, formatTimeAgo, getCircularCategoryColor } from "@/lib/utils";
+import { downloadGTUFile } from "@/lib/download-helper";
 import { CircularDetailModal } from "./CircularDetailModal";
 
 const CATEGORIES = [
@@ -229,15 +230,17 @@ export function CircularsFeed() {
                           <span>Preview Notice</span>
                         </button>
 
-                        <a
-                          href={c.pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const safeName = `GTU_Circular_${c.gtuRefNo ? c.gtuRefNo.replace(/[^a-zA-Z0-9_-]/g, "_") : c.id}.pdf`;
+                            downloadGTUFile(c.pdfUrl, safeName, "application/pdf");
+                          }}
+                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
                         >
                           <span>PDF</span>
                           <Download className="w-3 h-3" />
-                        </a>
+                        </button>
                       </div>
                     </div>
                   );
@@ -295,15 +298,17 @@ export function CircularsFeed() {
                         <span>Preview</span>
                       </button>
 
-                      <a
-                        href={c.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-xl border border-border hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const safeName = `GTU_Circular_${c.gtuRefNo ? c.gtuRefNo.replace(/[^a-zA-Z0-9_-]/g, "_") : c.id}.pdf`;
+                          downloadGTUFile(c.pdfUrl, safeName, "application/pdf");
+                        }}
+                        className="p-2 rounded-xl border border-border hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                         title="Download PDF"
                       >
                         <Download className="w-3.5 h-3.5" />
-                      </a>
+                      </button>
                     </div>
                   </div>
                 );

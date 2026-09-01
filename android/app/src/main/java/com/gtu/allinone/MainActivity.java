@@ -1,27 +1,29 @@
 package com.gtu.allinone;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.getcapacitor.BridgeActivity;
@@ -30,6 +32,10 @@ public class MainActivity extends BridgeActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 101;
     private static final String APP_URL = "https://gtu-all-in-one.vercel.app";
+    // Standard Mobile Chrome UA that Google OAuth accepts without launching external browser
+    private static final String CHROME_MOBILE_UA = "Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36";
+
+    private Dialog authPopupDialog = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,15 +67,10 @@ public class MainActivity extends BridgeActivity {
 
         WebSettings settings = webView.getSettings();
 
-        // 1. Clean User-Agent to allow Google OAuth inside WebView without "disallowed_useragent"
-        String originalUa = settings.getUserAgentString();
-        String cleanUa = originalUa
-                .replace("; wv", "")
-                .replaceAll("Version/\\d+\\.\\d+\\s", "")
-                .replace("Capacitor", "");
-        settings.setUserAgentString(cleanUa);
+        // 1. Set clean standard Chrome User-Agent to prevent Google OAuth from opening external browser
+        settings.setUserAgentString(CHROME_MOBILE_UA);
 
-        // 2. Enable modern Web capabilities for high performance & offline caching
+        // 2. Enable modern Web capabilities for high performance & authentication
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
@@ -80,7 +81,7 @@ public class MainActivity extends BridgeActivity {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
 
-        // 3. Cookie management for Auth sessions
+        // 3. Cookie management for Auth sessions & OAuth cookies
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
@@ -88,7 +89,7 @@ public class MainActivity extends BridgeActivity {
         // 4. Register Native Android Download Interface for JavaScript
         webView.addJavascriptInterface(new WebAppInterface(this), "AndroidBridge");
 
-        // 5. Native Download Listener with Android DownloadManager & System Notifications
+        // 5. Native Download Listener for all direct PDF / document clicks
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
@@ -96,33 +97,76 @@ public class MainActivity extends BridgeActivity {
             }
         });
 
-        // 6. Handle Google Sign-In & Multiple Windows / Popups inside the App
+        // 6. Handle Google OAuth Popups & Windows inside the App
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-                WebView newWebView = new WebView(MainActivity.this);
-                WebSettings newSettings = newWebView.getSettings();
-                newSettings.setJavaScriptEnabled(true);
-                newSettings.setUserAgentString(cleanUa);
-                newSettings.setDomStorageEnabled(true);
-                CookieManager.getInstance().setAcceptThirdPartyCookies(newWebView, true);
+                authPopupDialog = new Dialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+                
+                WebView popupWebView = new WebView(MainActivity.this);
+                WebSettings popupSettings = popupWebView.getSettings();
+                popupSettings.setJavaScriptEnabled(true);
+                popupSettings.setUserAgentString(CHROME_MOBILE_UA);
+                popupSettings.setDomStorageEnabled(true);
+                popupSettings.setDatabaseEnabled(true);
+                popupSettings.setSupportMultipleWindows(true);
+                popupSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-                newWebView.setWebViewClient(new WebViewClient() {
+                CookieManager.getInstance().setAcceptCookie(true);
+                CookieManager.getInstance().setAcceptThirdPartyCookies(popupWebView, true);
+
+                popupWebView.setWebViewClient(new WebViewClient() {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest request) {
                         String targetUrl = request.getUrl().toString();
-                        if (targetUrl.contains("gtu-all-in-one.vercel.app") || targetUrl.contains("/api/auth/callback")) {
+                        
+                        // Check if OAuth has redirected back to GTU Portal
+                        if (targetUrl.contains("gtu-all-in-one.vercel.app") || targetUrl.contains("/api/auth/callback") || targetUrl.contains("/profile")) {
+                            CookieManager.getInstance().flush();
                             webView.loadUrl(targetUrl);
+                            if (authPopupDialog != null && authPopupDialog.isShowing()) {
+                                authPopupDialog.dismiss();
+                                authPopupDialog = null;
+                            }
                             return true;
                         }
                         return false;
                     }
+
+                    @Override
+                    public void onPageFinished(WebView v, String url) {
+                        super.onPageFinished(v, url);
+                        CookieManager.getInstance().flush();
+                        if (url.contains("gtu-all-in-one.vercel.app") && !url.contains("/api/auth/signin")) {
+                            webView.loadUrl(url);
+                            if (authPopupDialog != null && authPopupDialog.isShowing()) {
+                                authPopupDialog.dismiss();
+                                authPopupDialog = null;
+                            }
+                        }
+                    }
                 });
 
+                authPopupDialog.setContentView(popupWebView, new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                ));
+                authPopupDialog.show();
+
                 WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
-                transport.setWebView(newWebView);
+                transport.setWebView(popupWebView);
                 resultMsg.sendToTarget();
                 return true;
+            }
+
+            @Override
+            public void onCloseWindow(WebView window) {
+                if (authPopupDialog != null && authPopupDialog.isShowing()) {
+                    authPopupDialog.dismiss();
+                    authPopupDialog = null;
+                }
+                CookieManager.getInstance().flush();
+                webView.reload();
             }
         });
     }
@@ -131,7 +175,7 @@ public class MainActivity extends BridgeActivity {
         try {
             if (url == null || url.isEmpty()) return;
 
-            // Handle relative URLs
+            // Resolve relative URLs to production domain
             String absoluteUrl = url;
             if (url.startsWith("/")) {
                 absoluteUrl = APP_URL + url;
@@ -139,8 +183,10 @@ public class MainActivity extends BridgeActivity {
 
             // Determine accurate file name
             String filename = URLUtil.guessFileName(absoluteUrl, contentDisposition, mimeType);
-            if (filename == null || filename.isEmpty() || filename.equals("downloadfile")) {
-                if (absoluteUrl.contains("subjectCode=")) {
+            if (filename == null || filename.isEmpty() || filename.equals("downloadfile") || filename.equals("download")) {
+                if (absoluteUrl.contains("circular") || absoluteUrl.contains("Circular")) {
+                    filename = "GTU_Circular_" + System.currentTimeMillis() + ".pdf";
+                } else if (absoluteUrl.contains("subjectCode=")) {
                     filename = "GTU_Paper_" + System.currentTimeMillis() + ".pdf";
                 } else {
                     filename = "GTU_Document_" + System.currentTimeMillis() + ".pdf";
@@ -154,6 +200,8 @@ public class MainActivity extends BridgeActivity {
                 request.setMimeType(mimeType);
             } else if (filename.endsWith(".pdf")) {
                 request.setMimeType("application/pdf");
+            } else if (filename.endsWith(".ppt") || filename.endsWith(".pptx")) {
+                request.setMimeType("application/vnd.ms-powerpoint");
             }
 
             // Pass authentication cookies
@@ -161,11 +209,11 @@ public class MainActivity extends BridgeActivity {
             if (cookies != null) {
                 request.addRequestHeader("cookie", cookies);
             }
-            request.addRequestHeader("User-Agent", this.bridge.getWebView().getSettings().getUserAgentString());
+            request.addRequestHeader("User-Agent", CHROME_MOBILE_UA);
 
-            // Android System Notification Settings: Shows downloading & downloaded notification!
+            // Android System Notification Settings: Shows progress & completion notifications!
             request.setTitle(filename);
-            request.setDescription("GTU All In One: Downloading examination paper / notes...");
+            request.setDescription("GTU All In One: Downloading examination paper / circular...");
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
             request.allowScanningByMediaScanner();
@@ -211,6 +259,11 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onBackPressed() {
+        if (authPopupDialog != null && authPopupDialog.isShowing()) {
+            authPopupDialog.dismiss();
+            authPopupDialog = null;
+            return;
+        }
         if (this.bridge != null && this.bridge.getWebView() != null && this.bridge.getWebView().canGoBack()) {
             this.bridge.getWebView().goBack();
         } else {

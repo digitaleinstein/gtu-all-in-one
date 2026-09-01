@@ -2,12 +2,23 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "com.gtu.allinone",
-  appName: "GTU All In One",
+  appName: "GTU All in one",
   webDir: "public",
   server: {
     url: "https://gtu-all-in-one.vercel.app",
     cleartext: true,
-    androidScheme: "https"
+    androidScheme: "https",
+    allowNavigation: [
+      "https://gtu-all-in-one.vercel.app*",
+      "https://accounts.google.com*",
+      "https://accounts.youtube.com*",
+      "https://apis.google.com*",
+      "https://*.google.com*",
+      "https://*.googleusercontent.com*",
+      "https://*.gstatic.com*",
+      "https://*.gtu.ac.in*",
+      "https://*.darshan.ac.in*"
+    ]
   },
   plugins: {
     SplashScreen: {
