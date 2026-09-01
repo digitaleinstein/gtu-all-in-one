@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { GTU_COURSES, GTU_BRANCHES } from "@/lib/gtu-data";
 import { decodeGTUEnrollment } from "@/lib/gtu-decoder";
+import { showNativeDeviceNotification } from "@/lib/native-notifications";
 
 export function ProfileSettings() {
   const { data: session, update } = useSession();
@@ -210,6 +211,15 @@ export function ProfileSettings() {
         body: JSON.stringify({ action: "testAlert", type }),
       });
       if (res.ok) {
+        const data = await res.json();
+        if (data.notification) {
+          showNativeDeviceNotification(
+            data.notification.title,
+            data.notification.message,
+            type,
+            data.notification.link || (type === "RESULT" ? "/results" : "/circulars")
+          );
+        }
         setTestSent(true);
         setTimeout(() => setTestSent(false), 3500);
       }

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { X, Bell, Newspaper, CheckCircle2, AlertCircle, Sparkles, Send } from "lucide-react";
+import { showNativeDeviceNotification } from "@/lib/native-notifications";
 
 interface CircularSubscriptionModalProps {
   isOpen: boolean;
@@ -132,6 +133,15 @@ export function CircularSubscriptionModal({
         body: JSON.stringify({ action: "testAlert", type: "CIRCULAR" }),
       });
       if (res.ok) {
+        const data = await res.json();
+        if (data.notification) {
+          showNativeDeviceNotification(
+            data.notification.title,
+            data.notification.message,
+            "CIRCULAR",
+            data.notification.link || "/circulars"
+          );
+        }
         setTestSent(true);
         setTimeout(() => setTestSent(false), 3000);
       }

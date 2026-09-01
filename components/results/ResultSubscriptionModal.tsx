@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { X, Bell, Mail, Smartphone, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
 import { GTU_COURSES, GTU_BRANCHES, GTU_EXAM_SESSIONS } from "@/lib/gtu-data";
+import { showNativeDeviceNotification } from "@/lib/native-notifications";
 
 interface ResultSubscriptionModalProps {
   isOpen: boolean;
@@ -270,12 +271,22 @@ export function ResultSubscriptionModal({
               type="button"
               onClick={async () => {
                 try {
-                  await fetch("/api/notifications", {
+                  const res = await fetch("/api/notifications", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "testAlert", type: "RESULT" }),
                   });
-                  alert("Test in-app notification sent! Check the bell icon in your navbar.");
+                  if (res.ok) {
+                    const data = await res.json();
+                    if (data.notification) {
+                      showNativeDeviceNotification(
+                        data.notification.title,
+                        data.notification.message,
+                        "RESULT",
+                        data.notification.link || "/results"
+                      );
+                    }
+                  }
                 } catch (e) {}
               }}
               className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border hover:bg-muted text-foreground flex items-center gap-1.5 cursor-pointer"

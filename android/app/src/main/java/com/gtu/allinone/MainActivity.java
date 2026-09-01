@@ -3,6 +3,9 @@ package com.gtu.allinone;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,6 +28,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import com.getcapacitor.BridgeActivity;
 
@@ -32,6 +37,9 @@ public class MainActivity extends BridgeActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 101;
     private static final String APP_URL = "https://gtu-all-in-one.vercel.app";
+    private static final String CHANNEL_ID = "gtu_live_alerts_channel";
+    private static final String CHANNEL_NAME = "GTU Result & Circular Alerts";
+
     // Standard Mobile Chrome UA that Google OAuth accepts without launching external browser
     private static final String CHROME_MOBILE_UA = "Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36";
 
@@ -41,11 +49,56 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check & request notification and storage permissions
+        // 1. Create Android Notification Channel for system alerts
+        createNotificationChannel();
+
+        // 2. Check & request notification and storage permissions
         requestRequiredPermissions();
 
-        // Configure WebView once Capacitor bridge is ready
-        this.bridge.getWebView().post(this::setupAdvancedWebView);
+        // 3. Configure WebView once Capacitor bridge is ready
+        this.bridge.getWebView().post(() -> {
+            setupAdvancedWebView();
+            handleIntentUrl(getIntent());
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntentUrl(intent);
+    }
+
+    private void handleIntentUrl(Intent intent) {
+        if (intent != null && intent.hasExtra("target_url")) {
+            String targetUrl = intent.getStringExtra("target_url");
+            if (targetUrl != null && !targetUrl.isEmpty() && this.bridge != null && this.bridge.getWebView() != null) {
+                if (targetUrl.startsWith("/")) {
+                    this.bridge.getWebView().loadUrl(APP_URL + targetUrl);
+                } else {
+                    this.bridge.getWebView().loadUrl(targetUrl);
+                }
+            }
+        }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Real-time GTU Result Declarations, Examination Notices, and Circular Alerts");
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            channel.setShowBadge(true);
+            
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
     }
 
     private void requestRequiredPermissions() {
@@ -86,7 +139,7 @@ public class MainActivity extends BridgeActivity {
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
 
-        // 4. Register Native Android Download Interface for JavaScript
+        // 4. Register Native Android Bridge Interface for JavaScript
         webView.addJavascriptInterface(new WebAppInterface(this), "AndroidBridge");
 
         // 5. Native Download Listener for all direct PDF / document clicks
@@ -198,6 +251,49 @@ public class MainActivity extends BridgeActivity {
         });
     }
 
+    /**
+     * Shows a real native Android system notification outside the app in the notification tray
+     */
+    public void triggerAndroidNotification(String title, String message, String type, String url) {
+        try {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            if (url != null && !url.isEmpty()) {
+                intent.putExtra("target_url", url);
+            }
+
+            int pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                pendingFlags |= PendingIntent.FLAG_IMMUTABLE;
+            }
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    this,
+                    (int) System.currentTimeMillis(),
+                    intent,
+                    pendingFlags
+            );
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                int notificationId = (int) (System.currentTimeMillis() % 100000);
+                notificationManager.notify(notificationId, builder.build());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void triggerSystemDownload(String url, String contentDisposition, String mimeType) {
         try {
             if (url == null || url.isEmpty()) return;
@@ -273,6 +369,13 @@ public class MainActivity extends BridgeActivity {
         public void downloadFile(String url, String filename, String mimeType) {
             runOnUiThread(() -> {
                 triggerSystemDownload(url, "attachment; filename=\"" + filename + "\"", mimeType);
+            });
+        }
+
+        @JavascriptInterface
+        public void showNativeNotification(String title, String message, String type, String url) {
+            runOnUiThread(() -> {
+                triggerAndroidNotification(title, message, type, url);
             });
         }
 
