@@ -70,6 +70,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Cleared read notifications" });
     }
 
+    // 4. Send Instant In-App Test Notification
+    if (action === "testAlert") {
+      const { type } = body;
+      const { sendTestNotification } = await import("@/lib/notification-dispatcher");
+      const notification = await sendTestNotification(userId, type || "RESULT");
+      return NextResponse.json({ success: true, notification });
+    }
+
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error: any) {
     console.error("Notifications POST error:", error);

@@ -21,11 +21,14 @@ model User {
   isEmailVerified Boolean              @default(false)
   role            String               @default("STUDENT")
   avatar          String?
+  notificationPreferences String?      // JSON configuration for user alert preferences
+  lastLoginAt     DateTime?
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
 
   notifications   Notification[]
   subscriptions   ResultSubscription[]
+  circularSubs    CircularSubscription[]
   midsemRecords   MidsemRecord[]
   pmmsChecklists  PMMSMilestone[]
   savedPapers     SavedPaper[]
@@ -97,6 +100,22 @@ model ResultSubscription {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([course, branch, semester, examSession])
+}
+
+model CircularSubscription {
+  id           String   @id @default(cuid())
+  userId       String
+  category     String   // All, Examinations, Timetables, Academic, Scholarships, General, PMMS & Research
+  keywords     String?  // Optional filter keywords
+  emailAlerts  Boolean  @default(true)
+  inAppAlerts  Boolean  @default(true)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, category])
 }
 
 model Notification {

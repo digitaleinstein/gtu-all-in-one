@@ -15,10 +15,12 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
+  Bell,
 } from "lucide-react";
 import { formatDate, formatTimeAgo, getCircularCategoryColor } from "@/lib/utils";
 import { downloadGTUFile } from "@/lib/download-helper";
 import { CircularDetailModal } from "./CircularDetailModal";
+import { CircularSubscriptionModal } from "./CircularSubscriptionModal";
 
 const CATEGORIES = [
   "ALL",
@@ -38,6 +40,7 @@ export function CircularsFeed() {
   const [syncMessage, setSyncMessage] = useState("");
 
   const [activeModalCircular, setActiveModalCircular] = useState<any | null>(null);
+  const [isSubModalOpen, setIsSubModalOpen] = useState(false);
 
   const fetchCirculars = async () => {
     try {
@@ -109,14 +112,24 @@ export function CircularsFeed() {
           </p>
         </div>
 
-        <button
-          onClick={handleSyncWithGTU}
-          disabled={syncing}
-          className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all shadow-sm shrink-0"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin" : ""}`} />
-          <span>{syncing ? "Scraping gtu.ac.in..." : "Sync Official Feed"}</span>
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => setIsSubModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 transition-all shadow-md cursor-pointer"
+          >
+            <Bell className="w-3.5 h-3.5" />
+            <span>Alert Choices</span>
+          </button>
+
+          <button
+            onClick={handleSyncWithGTU}
+            disabled={syncing}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all shadow-sm cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin" : ""}`} />
+            <span>{syncing ? "Scraping..." : "Sync Feed"}</span>
+          </button>
+        </div>
       </div>
 
       {syncMessage && (
@@ -318,7 +331,7 @@ export function CircularsFeed() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Circular Detail Modal */}
       {activeModalCircular && (
         <CircularDetailModal
           circular={activeModalCircular}
@@ -326,6 +339,13 @@ export function CircularsFeed() {
           onClose={() => setActiveModalCircular(null)}
         />
       )}
+
+      {/* Circular Subscription & Alert Choices Modal */}
+      <CircularSubscriptionModal
+        isOpen={isSubModalOpen}
+        onClose={() => setIsSubModalOpen(false)}
+        onSubscribed={() => fetchCirculars()}
+      />
     </div>
   );
 }

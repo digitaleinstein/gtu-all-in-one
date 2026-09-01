@@ -55,6 +55,12 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
+        // Update last login timestamp in DB
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        }).catch(() => null);
+
         return {
           id: user.id,
           name: user.name,
@@ -87,14 +93,59 @@ export const authOptions: NextAuthOptions = {
                 name: user.name || "GTU Student",
                 email: emailLower,
                 password: randomPasswordHash,
+                avatar: user.image || null,
                 course: "BE",
                 branch: "Computer Engineering",
                 semester: 5,
                 college: "028 - L.D. College of Engineering, Ahmedabad",
                 role: "STUDENT",
                 isEmailVerified: true,
+                lastLoginAt: new Date(),
+                notificationPreferences: JSON.stringify({
+                  emailAlerts: true,
+                  inAppAlerts: true,
+                  resultAlerts: true,
+                  circularAlerts: true,
+                  selectedCategories: ["Examinations", "Timetables", "Academic", "Scholarships"],
+                }),
               },
             });
+
+            // Initialize default subscriptions for this student
+            await prisma.resultSubscription.create({
+              data: {
+                userId: newUser.id,
+                course: "BE",
+                branch: "Computer Engineering",
+                semester: 5,
+                examSession: "Summer 2026",
+                examType: "Regular",
+                emailAlerts: true,
+                pushAlerts: true,
+                isActive: true,
+              },
+            }).catch(() => null);
+
+            await prisma.circularSubscription.createMany({
+              data: [
+                { userId: newUser.id, category: "Examinations", emailAlerts: true, inAppAlerts: true, isActive: true },
+                { userId: newUser.id, category: "Timetables", emailAlerts: true, inAppAlerts: true, isActive: true },
+                { userId: newUser.id, category: "Scholarships", emailAlerts: true, inAppAlerts: true, isActive: true },
+              ],
+            }).catch(() => null);
+
+            // Send Welcome In-App Notification
+            await prisma.notification.create({
+              data: {
+                userId: newUser.id,
+                title: "🎓 Welcome to GTU All In One!",
+                message: "Your student profile is active! You will automatically receive live in-app notifications for your branch results and GTU circulars.",
+                type: "SYSTEM",
+                link: "/profile",
+                isRead: false,
+              },
+            }).catch(() => null);
+
             (user as any).id = newUser.id;
             (user as any).enrollmentNo = newUser.enrollmentNo;
             (user as any).course = newUser.course;
@@ -104,12 +155,16 @@ export const authOptions: NextAuthOptions = {
             (user as any).role = newUser.role;
             (user as any).isEmailVerified = true;
           } else {
-            if (!existingUser.isEmailVerified) {
-              await prisma.user.update({
-                where: { id: existingUser.id },
-                data: { isEmailVerified: true },
-              });
-            }
+            // Update lastLoginAt and image for existing user
+            await prisma.user.update({
+              where: { id: existingUser.id },
+              data: {
+                isEmailVerified: true,
+                lastLoginAt: new Date(),
+                avatar: user.image || existingUser.avatar,
+              },
+            }).catch(() => null);
+
             (user as any).id = existingUser.id;
             (user as any).enrollmentNo = existingUser.enrollmentNo;
             (user as any).course = existingUser.course;

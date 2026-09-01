@@ -265,21 +265,41 @@ export function ResultSubscriptionModal({
             </div>
           </div>
 
-          <div className="pt-3 flex items-center justify-end gap-2">
+          <div className="pt-3 flex items-center justify-between gap-2">
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-xs font-medium rounded-xl border border-border hover:bg-muted text-muted-foreground hover:text-foreground"
+              onClick={async () => {
+                try {
+                  await fetch("/api/notifications", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "testAlert", type: "RESULT" }),
+                  });
+                  alert("Test in-app notification sent! Check the bell icon in your navbar.");
+                } catch (e) {}
+              }}
+              className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border hover:bg-muted text-foreground flex items-center gap-1.5 cursor-pointer"
             >
-              Cancel
+              <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+              <span>Test Alert</span>
             </button>
-            <button
-              type="submit"
-              disabled={loading || success}
-              className="px-5 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-xl shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-            >
-              {loading ? "Activating..." : "Save Alert Subscription"}
-            </button>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-xs font-medium rounded-xl border border-border hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading || success}
+                className="px-5 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-xl shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                {loading ? "Activating..." : "Save Alert Subscription"}
+              </button>
+            </div>
           </div>
         </form>
       </div>

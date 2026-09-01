@@ -195,10 +195,9 @@ export async function scrapeLiveResults(): Promise<ScrapedResult[]> {
   }
 }
 
-/**
- * Synchronizes real live data from gtu.ac.in and gturesults.in to Database
- */
 export async function syncGTUDataToDatabase() {
+  const { dispatchCircularAlerts, dispatchResultAlerts } = await import("./notification-dispatcher");
+
   const [liveCirculars, liveResults] = await Promise.all([
     scrapeLiveCirculars(),
     scrapeLiveResults(),
@@ -212,6 +211,8 @@ export async function syncGTUDataToDatabase() {
     if (!existing) {
       await prisma.circular.create({ data: c });
       circularsCount++;
+      // Dispatch in-app alerts to students subscribed to this circular category
+      await dispatchCircularAlerts(c).catch((e) => console.error("Circular alert dispatch error:", e));
     } else {
       await prisma.circular.update({
         where: { id: existing.id },
@@ -228,6 +229,8 @@ export async function syncGTUDataToDatabase() {
     if (!existing) {
       await prisma.liveResult.create({ data: r });
       resultsCount++;
+      // Dispatch in-app alerts to students subscribed to this course & semester
+      await dispatchResultAlerts(r).catch((e) => console.error("Result alert dispatch error:", e));
     }
   }
 
