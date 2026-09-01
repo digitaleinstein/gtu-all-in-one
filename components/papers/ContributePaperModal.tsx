@@ -21,7 +21,7 @@ export function ContributePaperModal({
   const [subjectCode, setSubjectCode] = useState("");
   const [subjectName, setSubjectName] = useState("");
   const [examSeason, setExamSeason] = useState("Summer");
-  const [year, setYear] = useState("2024");
+  const [year, setYear] = useState("2026");
   const [pdfUrl, setPdfUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -224,7 +224,7 @@ export function ContributePaperModal({
                 onChange={(e) => setYear(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary"
               >
-                {[2024, 2023, 2022, 2021, 2020].map((y) => (
+                {[2026, 2025, 2024, 2023, 2022, 2021, 2020].map((y) => (
                   <option key={y} value={y}>
                     {y}
                   </option>

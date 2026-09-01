@@ -140,7 +140,7 @@ export function DashboardOverview() {
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/15 text-xs font-semibold text-blue-200">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>GTU Academic Year 2024-25 Companion</span>
+              <span>GTU Academic Year 2025-26 Companion</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
               Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-200 to-indigo-200">{studentName}</span>
