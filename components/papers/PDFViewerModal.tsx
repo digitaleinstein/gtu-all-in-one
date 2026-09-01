@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { getGTUSubjectQuestions } from "@/lib/gtu-paper-questions";
+import { downloadGTUFile } from "@/lib/download-helper";
 
 interface PaperData {
   id: string;
@@ -57,13 +58,9 @@ export function PDFViewerModal({
     try {
       setDownloading(true);
       const downloadUrl = `/api/papers/download?id=${paper.id}&subjectCode=${paper.subjectCode}&subjectName=${encodeURIComponent(paper.subjectName)}&branch=${encodeURIComponent(paper.branch)}&year=${paper.year}&season=${paper.examSeason}&course=${paper.course}&sem=${paper.semester}`;
+      const filename = `GTU_${paper.course}_Sem${paper.semester}_${paper.subjectCode}_${paper.examSeason}${paper.year}.pdf`;
       
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.setAttribute("download", `GTU_${paper.course}_Sem${paper.semester}_${paper.subjectCode}_${paper.examSeason}${paper.year}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      downloadGTUFile(downloadUrl, filename, "application/pdf");
 
       setDownloadSuccess(true);
       setTimeout(() => setDownloadSuccess(false), 3000);

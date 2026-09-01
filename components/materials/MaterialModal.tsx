@@ -20,6 +20,7 @@ import {
   FileCheck2,
 } from "lucide-react";
 import { GTUStudyMaterial, StudyUnit } from "@/lib/study-materials-data";
+import { downloadGTUFile } from "@/lib/download-helper";
 
 interface MaterialModalProps {
   material: GTUStudyMaterial | null;
@@ -213,15 +214,19 @@ export function MaterialModal({
                       </div>
 
                       <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                        <a
-                          href={unit.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm transition-all"
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const ext = unit.url.toLowerCase().endsWith(".ppt") ? ".ppt" : ".pdf";
+                            const safeTitle = unit.title.replace(/[^a-zA-Z0-9_-]/g, "_");
+                            const filename = `${material.subjectCode}_${safeTitle}${ext}`;
+                            downloadGTUFile(unit.url, filename, ext === ".ppt" ? "application/vnd.ms-powerpoint" : "application/pdf");
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm transition-all cursor-pointer"
                         >
                           <Download className="w-3.5 h-3.5" />
-                          <span>Open PDF / Resource</span>
-                        </a>
+                          <span>Open / Download Note</span>
+                        </button>
                       </div>
                     </div>
                   ))

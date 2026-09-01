@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { GTU_COURSES, GTU_BRANCHES, GTU_EXAM_SESSIONS, GTU_POPULAR_SUBJECTS } from "@/lib/gtu-data";
 import { GTU_STUDY_MATERIALS } from "@/lib/study-materials-data";
+import { downloadGTUFile } from "@/lib/download-helper";
 import { PDFViewerModal } from "./PDFViewerModal";
 import { ContributePaperModal } from "./ContributePaperModal";
 
@@ -174,19 +175,15 @@ export function PapersHub() {
   const handleDirectDownload = async (paper: any) => {
     try {
       const downloadUrl = `/api/papers/download?id=${paper.id}&subjectCode=${paper.subjectCode}&subjectName=${encodeURIComponent(paper.subjectName)}&branch=${encodeURIComponent(paper.branch)}&year=${paper.year}&season=${paper.examSeason}&course=${paper.course}&sem=${paper.semester}`;
-      
+      const filename = `GTU_${paper.course}_Sem${paper.semester}_${paper.subjectCode}_${paper.examSeason}${paper.year}.pdf`;
+
       setPapers((prev) =>
         prev.map((p) =>
           p.id === paper.id ? { ...p, downloadsCount: (p.downloadsCount || 0) + 1 } : p
         )
       );
 
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.setAttribute("download", `GTU_${paper.course}_Sem${paper.semester}_${paper.subjectCode}_${paper.examSeason}${paper.year}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      downloadGTUFile(downloadUrl, filename, "application/pdf");
     } catch (e) {
       console.error("Direct download failed:", e);
     }
