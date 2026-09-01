@@ -97,7 +97,34 @@ public class MainActivity extends BridgeActivity {
             }
         });
 
-        // 6. Handle Google OAuth Popups & Windows inside the App
+        // 6. Keep all Google Sign In and App navigations strictly inside this WebView (NO external browser redirect)
+        webView.setWebViewClient(new com.getcapacitor.BridgeWebViewClient(this.bridge) {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String targetUrl = request.getUrl().toString();
+                if (targetUrl.startsWith("https://accounts.google.") ||
+                    targetUrl.contains("google.com") ||
+                    targetUrl.contains("googleusercontent.com") ||
+                    targetUrl.contains("gstatic.com") ||
+                    targetUrl.contains("googleapis.com") ||
+                    targetUrl.contains("gtu-all-in-one.vercel.app") ||
+                    targetUrl.contains("vercel.app") ||
+                    targetUrl.contains("gtu.ac.in") ||
+                    targetUrl.contains("gturesults.in") ||
+                    targetUrl.contains("darshan.ac.in")) {
+                    return false; // Load directly in app WebView
+                }
+                return super.shouldOverrideUrlLoading(view, request);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                CookieManager.getInstance().flush();
+            }
+        });
+
+        // 7. Handle Google OAuth Popups & Windows inside the App
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {

@@ -9,15 +9,24 @@ const config: CapacitorConfig = {
     cleartext: true,
     androidScheme: "https",
     allowNavigation: [
-      "https://gtu-all-in-one.vercel.app*",
-      "https://accounts.google.com*",
-      "https://accounts.youtube.com*",
-      "https://apis.google.com*",
-      "https://*.google.com*",
-      "https://*.googleusercontent.com*",
-      "https://*.gstatic.com*",
-      "https://*.gtu.ac.in*",
-      "https://*.darshan.ac.in*"
+      "*",
+      "accounts.google.com",
+      "accounts.google.co.in",
+      "accounts.youtube.com",
+      "apis.google.com",
+      "*.google.com",
+      "*.google.co.in",
+      "*.googleusercontent.com",
+      "*.gstatic.com",
+      "*.googleapis.com",
+      "gtu-all-in-one.vercel.app",
+      "*.vercel.app",
+      "gtu.ac.in",
+      "*.gtu.ac.in",
+      "gturesults.in",
+      "*.gturesults.in",
+      "darshan.ac.in",
+      "*.darshan.ac.in"
     ]
   },
   plugins: {
