@@ -1,21 +1,32 @@
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Preserve SourceFile and LineNumberTable for readable stack traces in crash reports
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve all annotations and JavaScript interfaces
+-keepattributes *Annotation*
+-keepattributes JavascriptInterface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep our native WebAppInterface and MainActivity
+-keep class com.gtu.allinone.MainActivity$WebAppInterface {
+    public *;
+}
+-keep class com.gtu.allinone.** { *; }
+
+# Keep Capacitor Bridge and Plugins
+-keep class com.getcapacitor.** { *; }
+-keep class * extends com.getcapacitor.Plugin { *; }
+-keep class * extends com.getcapacitor.BridgeActivity { *; }
+
+# Keep Cordova plugins if any
+-keep class org.apache.cordova.** { *; }
+
+# Suppress harmless warnings from third-party libraries
+-dontwarn com.google.android.gms.**
+-dontwarn org.apache.cordova.**
