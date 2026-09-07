@@ -24,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { formatTimeAgo, formatDate, getCircularCategoryColor } from "@/lib/utils";
+import { GtuSeoGuide } from "./GtuSeoGuide";
 
 export function DashboardOverview() {
   const { data: session } = useSession();
@@ -448,6 +449,9 @@ export function DashboardOverview() {
           </div>
         </div>
       </div>
+
+      {/* SEO Educational Guide & Frequently Asked Questions */}
+      <GtuSeoGuide />
     </div>
   );
 }
