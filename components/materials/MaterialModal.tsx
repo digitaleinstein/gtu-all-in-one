@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { GTUStudyMaterial, StudyUnit } from "@/lib/study-materials-data";
 import { downloadGTUFile } from "@/lib/download-helper";
+import { openExternalPortal } from "@/lib/open-external";
 
 interface MaterialModalProps {
   material: GTUStudyMaterial | null;
@@ -258,6 +259,7 @@ export function MaterialModal({
                     href={material.darshanUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => openExternalPortal(material.darshanUrl, e)}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
                   >
                     <span>View all {type} on Darshan Portal</span>
@@ -314,6 +316,7 @@ export function MaterialModal({
             href={material.darshanUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => openExternalPortal(material.darshanUrl, e)}
             className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />

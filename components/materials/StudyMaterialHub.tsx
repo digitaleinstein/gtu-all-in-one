@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { GTUStudyMaterial, GTU_STUDY_MATERIALS, STUDY_DEPARTMENTS, RESOURCE_TYPES } from "@/lib/study-materials-data";
 import { MaterialModal } from "./MaterialModal";
+import { openExternalPortal } from "@/lib/open-external";
 
 // Rich Acronym & Alias Mapping for GTU Engineering Subjects
 const SUBJECT_ACRONYMS: Record<string, string[]> = {
@@ -866,6 +867,7 @@ export function StudyMaterialHub() {
                       href={sub.darshanUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => openExternalPortal(sub.darshanUrl, e)}
                       className="p-2 rounded-xl border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                       title="Open on Darshan University"
                     >

@@ -23,6 +23,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
+import { openExternalPortal } from "@/lib/open-external";
 
 interface EmbeddedResultModalProps {
   isOpen: boolean;
@@ -301,6 +302,7 @@ export function EmbeddedResultModal({
                   href="https://www.gturesults.in"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => openExternalPortal("https://www.gturesults.in", e)}
                   className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all text-xs"
                 >
                   <span className="hidden sm:inline">External Tab</span>

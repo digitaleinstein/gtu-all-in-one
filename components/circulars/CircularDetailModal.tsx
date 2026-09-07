@@ -4,6 +4,7 @@ import React from "react";
 import { X, Download, ExternalLink, Calendar, Tag, ShieldCheck, Printer } from "lucide-react";
 import { formatDate, getCircularCategoryColor } from "@/lib/utils";
 import { downloadGTUFile } from "@/lib/download-helper";
+import { openExternalPortal } from "@/lib/open-external";
 
 interface CircularDetailModalProps {
   circular: {
@@ -93,6 +94,7 @@ export function CircularDetailModal({
             href={circular.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => openExternalPortal(circular.pdfUrl, e)}
             className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5"
           >
             <span>Open on GTU Official Web Server</span>

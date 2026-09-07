@@ -150,21 +150,25 @@ public class MainActivity extends BridgeActivity {
             }
         });
 
-        // 6. Keep all Google Sign In and App navigations strictly inside this WebView (NO external browser redirect)
+        // 6. Handle URL loading: external portals open in system browser, Google Auth stays inside app WebView
         webView.setWebViewClient(new com.getcapacitor.BridgeWebViewClient(this.bridge) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String targetUrl = request.getUrl().toString();
+
+                // Check if external portal (GTU official, Darshan, PMMS, Timetable, etc.)
+                if (request.isForMainFrame() && isExternalPortal(targetUrl)) {
+                    openInExternalBrowser(targetUrl);
+                    return true;
+                }
+
                 if (targetUrl.startsWith("https://accounts.google.") ||
                     targetUrl.contains("google.com") ||
                     targetUrl.contains("googleusercontent.com") ||
                     targetUrl.contains("gstatic.com") ||
                     targetUrl.contains("googleapis.com") ||
                     targetUrl.contains("gtu-all-in-one.vercel.app") ||
-                    targetUrl.contains("vercel.app") ||
-                    targetUrl.contains("gtu.ac.in") ||
-                    targetUrl.contains("gturesults.in") ||
-                    targetUrl.contains("darshan.ac.in")) {
+                    targetUrl.contains("vercel.app")) {
                     return false; // Load directly in app WebView
                 }
                 return super.shouldOverrideUrlLoading(view, request);
@@ -181,6 +185,14 @@ public class MainActivity extends BridgeActivity {
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+                // If this window request is for an external portal, launch external browser directly
+                WebView.HitTestResult hitResult = view.getHitTestResult();
+                String hitUrl = (hitResult != null) ? hitResult.getExtra() : null;
+                if (hitUrl != null && isExternalPortal(hitUrl)) {
+                    openInExternalBrowser(hitUrl);
+                    return false;
+                }
+
                 authPopupDialog = new Dialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
                 
                 WebView popupWebView = new WebView(MainActivity.this);
@@ -210,6 +222,17 @@ public class MainActivity extends BridgeActivity {
                             }
                             return true;
                         }
+
+                        // Check if external portal (redirect to browser and dismiss popup)
+                        if (isExternalPortal(targetUrl)) {
+                            openInExternalBrowser(targetUrl);
+                            if (authPopupDialog != null && authPopupDialog.isShowing()) {
+                                authPopupDialog.dismiss();
+                                authPopupDialog = null;
+                            }
+                            return true;
+                        }
+
                         return false;
                     }
 
@@ -249,6 +272,52 @@ public class MainActivity extends BridgeActivity {
                 webView.reload();
             }
         });
+    }
+
+    /**
+     * Determines whether a URL points to an external GTU portal or third-party website
+     * while preserving in-app navigation and Google OAuth flows.
+     */
+    public boolean isExternalPortal(String url) {
+        if (url == null || url.trim().isEmpty()) return false;
+        String cleanUrl = url.trim().toLowerCase();
+
+        // App-internal & OAuth routes stay inside app
+        if (cleanUrl.startsWith("capacitor://") ||
+            cleanUrl.startsWith("http://localhost") ||
+            cleanUrl.startsWith("https://localhost") ||
+            cleanUrl.contains("gtu-all-in-one.vercel.app") ||
+            cleanUrl.contains("accounts.google.") ||
+            cleanUrl.contains("google.com/o/oauth") ||
+            cleanUrl.contains("google.com/accounts") ||
+            cleanUrl.contains("googleusercontent.com") ||
+            cleanUrl.contains("gstatic.com") ||
+            cleanUrl.contains("apis.google.com") ||
+            cleanUrl.contains("firebaseapp.com")) {
+            return false;
+        }
+
+        // Any external web URL (GTU, Darshan, PMMS, Nic, etc.)
+        if (cleanUrl.startsWith("http://") || cleanUrl.startsWith("https://")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Opens an external portal in the system default web browser
+     */
+    public void openInExternalBrowser(String url) {
+        if (url == null || url.trim().isEmpty()) return;
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.trim()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Could not launch external browser", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -376,6 +445,13 @@ public class MainActivity extends BridgeActivity {
         public void showNativeNotification(String title, String message, String type, String url) {
             runOnUiThread(() -> {
                 triggerAndroidNotification(title, message, type, url);
+            });
+        }
+
+        @JavascriptInterface
+        public void openExternalUrl(String url) {
+            runOnUiThread(() -> {
+                openInExternalBrowser(url);
             });
         }
 

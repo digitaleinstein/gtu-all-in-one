@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { GraduationCap, ExternalLink, ShieldCheck, Heart, Sparkles } from "lucide-react";
+import { openExternalPortal } from "@/lib/open-external";
 
 export function Footer() {
   const gtuOfficialLinks = [
@@ -89,7 +90,8 @@ export function Footer() {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 hover:text-primary transition-colors"
+                    onClick={(e) => openExternalPortal(link.url, e)}
+                    className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
                   >
                     <span>{link.label}</span>
                     <ExternalLink className="w-3 h-3 opacity-60" />

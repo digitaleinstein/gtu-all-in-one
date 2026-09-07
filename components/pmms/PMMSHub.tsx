@@ -20,6 +20,7 @@ import {
   Layers,
   Search,
 } from "lucide-react";
+import { openExternalPortal } from "@/lib/open-external";
 
 export function PMMSHub() {
   const { data: session } = useSession();
@@ -113,7 +114,8 @@ export function PMMSHub() {
             href="https://pmms.gtu.ac.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-purple-500 hover:bg-purple-600 text-white rounded-xl shadow-md transition-colors"
+            onClick={(e) => openExternalPortal("https://pmms.gtu.ac.in", e)}
+            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-purple-500 hover:bg-purple-600 text-white rounded-xl shadow-md transition-colors cursor-pointer"
           >
             <span>Open pmms.gtu.ac.in</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -308,6 +310,7 @@ export function PMMSHub() {
               href="https://pmms.gtu.ac.in"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => openExternalPortal("https://pmms.gtu.ac.in", e)}
               className="px-3.5 py-1.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 flex items-center gap-1.5 shrink-0"
             >
               <span>Open in New Tab</span>
@@ -440,6 +443,7 @@ export function PMMSHub() {
               href="https://ipindiaservices.gov.in/publicsearch"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => openExternalPortal("https://ipindiaservices.gov.in/publicsearch", e)}
               className="p-4 rounded-2xl border border-border bg-muted/20 hover:border-primary transition-all space-y-1.5"
             >
               <div className="flex items-center justify-between">
@@ -455,6 +459,7 @@ export function PMMSHub() {
               href="https://patents.google.com"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => openExternalPortal("https://patents.google.com", e)}
               className="p-4 rounded-2xl border border-border bg-muted/20 hover:border-primary transition-all space-y-1.5"
             >
               <div className="flex items-center justify-between">
@@ -470,6 +475,7 @@ export function PMMSHub() {
               href="https://patentscope.wipo.int"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => openExternalPortal("https://patentscope.wipo.int", e)}
               className="p-4 rounded-2xl border border-border bg-muted/20 hover:border-primary transition-all space-y-1.5"
             >
               <div className="flex items-center justify-between">

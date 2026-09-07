@@ -30,6 +30,7 @@ import { formatDate, formatTimeAgo } from "@/lib/utils";
 import { GTU_COURSES } from "@/lib/gtu-data";
 import { ResultSubscriptionModal } from "./ResultSubscriptionModal";
 import { EmbeddedResultModal } from "./EmbeddedResultModal";
+import { openExternalPortal } from "@/lib/open-external";
 
 export function ResultsHub() {
   const { data: session } = useSession();
@@ -469,6 +470,7 @@ export function ResultsHub() {
                     href="https://www.gturesults.in"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => openExternalPortal("https://www.gturesults.in", e)}
                     className="px-2.5 py-1 rounded-xl border border-border hover:bg-muted text-xs font-medium flex items-center gap-1"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
